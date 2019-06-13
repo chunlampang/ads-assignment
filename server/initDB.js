@@ -1,11 +1,11 @@
 
 const MongoClient = require('mongodb').MongoClient;
-const url = "mongodb://localhost:27017/";
+const config = require('./config');
 
 module.exports = async function initDB() {
   try {
-    const db = await MongoClient.connect(url);
-    const dbo = db.db("adsdb");
+    const db = await MongoClient.connect(config.db.url, { useNewUrlParser: true });
+    const dbo = db.db(config.db.name);
 
     if (!dbo.getCollection('departments').exists())
       await dbo.createCollection("departments");
