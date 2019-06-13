@@ -1,4 +1,7 @@
 const express = require('express');
+
+require('./initDB')();
+
 const app = express();
 
 app.get('/', function (req, res) {

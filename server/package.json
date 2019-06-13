@@ -4,6 +4,7 @@
   "description": "Assignment for ADS",
   "main": "index.js",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongodb": "^3.2.7"
   }
 }

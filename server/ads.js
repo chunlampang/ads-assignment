@@ -33,7 +33,7 @@ fastest searching for the five requiremnts
 
 Offer and Enrolled in same document
 (allow transaction)
-(for update class size when enroll)
+(for update AvailablePlaces when enroll)
 */
 db = {
     Offer: [
@@ -63,7 +63,7 @@ no data redundancy
 
 Offer and Enrolled in same document
 (allow transaction)
-(for update class size when enroll)
+(for update AvailablePlaces when enroll)
 */
 db = {
     Departments: [
