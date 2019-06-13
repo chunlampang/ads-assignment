@@ -1,5 +1,5 @@
 {
-  "name": "ads-assignment",
+  "name": "ads-assignment-server",
   "version": "1.0.0",
   "description": "Assignment for ADS",
   "main": "index.js",
