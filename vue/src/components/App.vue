@@ -1,15 +1,12 @@
 <template>
-  <router-view :key="$route.params.locale"/>
+  <AppFrame/>
 </template>
 
 <script>
+import AppFrame from "./frame/AppFrame";
+
 export default {
   name: "App",
-  async created() {
-    await this.$api.loadConfig();
-
-    //if cookies has token
-    //check auth
-  }
+  components: { AppFrame }
 };
 </script>

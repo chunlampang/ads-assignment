@@ -1,7 +1,7 @@
 <template>
   <v-footer class="pa-3" absolute>
     <v-spacer></v-spacer>
-    <div>{{$t.messages.copyright(new Date().getFullYear())}}</div>
+    <div>Group 5</div>
   </v-footer>
 </template>
 
