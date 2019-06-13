@@ -27,61 +27,28 @@ db = {
 };
 
 /*
-fastest searching for the five requiremnts
-(without joining from other document)
-(Department,Course,Student information not always update)
+no data redundancy
 
-Offer and Enrolled in same document
-(allow transaction)
-(for update AvailablePlaces when enroll)
+Data Consistency (for update AvailablePlaces when enroll)
+(Offer and Enrolled in same document -> allow transaction)
 */
 db = {
-    Offer: [
-        {
-            Department: {
-                DeptID: 'CS', DeptName: 'Computer Science', Location: 'Green Zone'
-            },
-            Course: {
-                CourseID: 'CS101', Title: 'Introduction to Data Science', Level: 6
-            },
-            Year: 2016, ClassSize: 40, AvailablePlaces: 40,
-            Enrolled: [
-                {
-                    Student: {
-                        StudentID: '15101010', StuName: 'Chan Tai Man', DOB: '10/08/2009'
-                    },
-                    EnrolDate: '15/05/2016'
-                }
-            ],
-        }
-    ]
-};
-
-/*
-no data redundancy 
-(slow when joining other info when searching offer)
-
-Offer and Enrolled in same document
-(allow transaction)
-(for update AvailablePlaces when enroll)
-*/
-db = {
-    Departments: [
-        { DeptID: 'CS', DeptName: 'Computer Science', Location: 'Green Zone' }
+    departments: [
+        { _id: 'CS', deptName: 'Computer Science', location: 'Green Zone' }
     ],
-    Courses: [
-        { CourseID: 'CS101', Title: 'Introduction to Data Science', Level: 6 }
+    courses: [
+        { _id: 'CS101', title: 'Introduction to Data Science', level: 6 }
     ],
-    Offer: [
+    offer: [
         {
-            DeptID: 'CS', CourseID: 'CS101', Year: 2016,
-            ClassSize: 40, AvailablePlaces: 40,
-            Enrolled: [
-                { StudentID: '15101010', EnrolDate: '15/05/2016' }
+            department: 'CS', course: 'CS101', year: 2016,
+            classSize: 40, availablePlaces: 40,
+            enrolled: [
+                { student: '15101010', enrolDate: '15/05/2016' }
             ]
         }
     ],
-    Students: [
-        { StudentID: '15101010', StuName: 'Chan Tai Man', DOB: '10/08/2009' }
+    students: [
+        { _id: '15101010', stuName: 'Chan Tai Man', dOB: '10/08/2009' }
     ],
 };
