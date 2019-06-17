@@ -6,18 +6,15 @@ exports.appendOptions = function (cursor, query = {}) {
     let { fields, page, sort } = query;
 
     if (fields) {
-        if (typeof fields === 'string')
-            fields = fields.split(',');
-
         const projectOptions = {};
-        for (let field of fields) {
+        for (let field of this.parseArray('fields', fields)) {
             projectOptions[field] = true;
         }
         cursor.project(projectOptions);
     }
     //paging
-    if (page) {
-        let size = parseInt(page.size);
+    if (page && page.size) {
+        let size = this.parseInteger('page.size', page.size);
         if (size) {
             let number = parseInt(page.number) || 1;
             cursor.skip((number - 1) * size)
@@ -26,11 +23,8 @@ exports.appendOptions = function (cursor, query = {}) {
     }
     //sorting
     if (sort) {
-        if (typeof sort === 'string')
-            sort = sort.split(',');
-
         const sortOptions = [];
-        for (let field of fields) {
+        for (let field of this.parseArray('sort', sort)) {
             if (!field)
                 continue;
 
