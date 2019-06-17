@@ -1,5 +1,7 @@
 {
     "db": {
-        "url": "mongodb://localhost:27017/adsdb"
+        "url": "mongodb://localhost:27017",
+        "name":"adsdb",
+        "poolSize": 20
     }
 }
