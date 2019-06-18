@@ -55,7 +55,7 @@ module.exports = function (api) {
                     }
                 });
                 join.push({
-                    $unwind: "$departments"
+                    $unwind: "$department"
                 });
             }
             if (include.includes('student')) {
