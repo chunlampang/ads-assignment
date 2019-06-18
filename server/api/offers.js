@@ -16,65 +16,78 @@ module.exports = function (api) {
 
             let filter = req.query.filter || {};
 
-            let queryFilter = {};
+            let options = [];
+
             if (filter.year) {
-                queryFilter.year = {
-                    $eq: queryHelper.parseInteger('year', filter.year)
-                };
+                options.push({
+                    $match: {
+                        year: {
+                            $eq: queryHelper.parseInteger('year', filter.year)
+                        }
+                    }
+                });
             }
             if (filter.department) {
-                queryFilter.department = {
-                    $in: queryHelper.parseArray('department', filter.department)
-                };
+                options.push({
+                    $match: {
+                        department: {
+                            $in: queryHelper.parseArray('department', filter.department)
+                        }
+                    }
+                });
             }
 
             let join = queryHelper.parseArray('join', req.query.join || []);
 
-            let options = [];
             if (join.includes('course')) {
-                options.push({
-                    $lookup: {
-                        from: 'courses',
-                        localField: 'course',
-                        foreignField: '_id',
-                        as: 'course'
-                    }
-                });
-                options.push({
-                    $unwind: "$course"
-                });
+                options.push(
+                    {
+                        $lookup: {
+                            from: 'courses',
+                            localField: 'course',
+                            foreignField: '_id',
+                            as: '_join.course'
+                        }
+                    },
+                    { $unwind: '$_join.course' }
+                );
             }
             if (join.includes('department')) {
-                options.push({
-                    $lookup: {
-                        from: 'departments',
-                        localField: 'department',
-                        foreignField: '_id',
-                        as: 'department'
-                    }
-                });
-                options.push({
-                    $unwind: "$department"
-                });
+                options.push(
+                    {
+                        $lookup: {
+                            from: 'departments',
+                            localField: 'department',
+                            foreignField: '_id',
+                            as: '_join.department'
+                        }
+                    },
+                    { $unwind: '$_join.department' }
+                );
             }
-            if (join.includes('enrolled.student')) {
+            if (join.includes('students')) {
                 options.push({
                     $lookup: {
                         from: 'students',
                         localField: 'enrolled.student',
                         foreignField: '_id',
-                        as: 'in.student'
+                        as: '_join.students'
                     }
                 });
 
-                if (filter.student) {
-
+                if (filter.stuName) {
+                    options.push({
+                        $match: {
+                            '_join.students': {
+                                $elemMatch: {
+                                    stuName: new RegExp(queryHelper.parseString('stuName', filter.stuName))
+                                }
+                            }
+                        }
+                    });
                 }
             }
 
-            options.push({
-                $match: queryFilter
-            });
 
             out = await queryHelper.aggregateList(offers, options, req.query);
         } catch (err) {
