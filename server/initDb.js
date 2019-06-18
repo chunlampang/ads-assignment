@@ -7,11 +7,15 @@ const mongoPool = require('./utils/mongoPool');
         console.log('Reseting database');
         await db.dropDatabase();
 
-        async function insert(collectionName, data) {
-            console.log(`Start inserting ${collectionName} data`);
+        async function insert(collectionName, data, created) {
             let collection = await db.createCollection(collectionName);
+            console.log(`Created collection: ${collectionName}`);
+            if (created)
+                await created(collection);//for create indexs
+            //insert data
             let result = await collection.insertMany(data, { w: 1 });
-            console.log(result);
+            if (result.ok)
+                console.log(`Inserted ${collectionName} data`);
             return result;
         }
 
@@ -19,7 +23,9 @@ const mongoPool = require('./utils/mongoPool');
             insert('departments', require('./data/departments.data')),
             insert('courses', require('./data/courses.data')),
             insert('students', require('./data/students.data')),
-            insert('offers', require('./data/offers.data')),
+            insert('offers', require('./data/offers.data'), collection => {
+                collection.createIndex({ year: 1, department: 1 });
+            }),
         ]);
         console.log('All Completed');
     } catch (err) {
