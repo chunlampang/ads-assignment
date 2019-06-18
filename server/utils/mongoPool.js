@@ -9,7 +9,7 @@ class MongoPool {
         this.config = config;
     }
 
-    async connect(){
+    async connect() {
         console.log(`Connecting to ${this.config.url}`);
         this.mongoClient = await MongoClient.connect(this.config.url, {
             useNewUrlParser: true,
