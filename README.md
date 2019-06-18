@@ -31,7 +31,6 @@ npm run serve
 ```
 
 ### Compiles and minifies for production
-Put the compiled files into /server/public after build
 ```
 npm run build
 ```

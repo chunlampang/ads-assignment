@@ -1,8 +1,12 @@
+server/public/*
+!server/public/.gitkeep
+
 #mongodb
 mongodb/log/*
 mongodb/db/*
 !mongodb/log/.gitkeep
 !mongodb/db/.gitkeep
+
 #basic
 .DS_Store
 node_modules

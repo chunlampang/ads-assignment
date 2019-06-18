@@ -1,7 +1,7 @@
 
 module.exports = {
 	publicPath: '/',
-	outputDir: 'dist',
+	outputDir: '../server/public',
 	assetsDir: 'assets',
 	productionSourceMap: false,
 	devServer: {
