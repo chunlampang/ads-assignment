@@ -23,7 +23,7 @@ exports.appendOptions = function (cursor, query = {}) {
     }
     //sorting
     if (sort) {
-        const sortOptions = [];
+        const sortOptions = {};
         for (let field of this.parseArray('sort', sort)) {
             if (!field)
                 continue;
@@ -35,7 +35,7 @@ exports.appendOptions = function (cursor, query = {}) {
             } else
                 asc = 1;//asc
 
-            sortOptions.push([field, asc]);
+            sortOptions[field] = asc;
         }
         cursor.sort(sortOptions);
     }
