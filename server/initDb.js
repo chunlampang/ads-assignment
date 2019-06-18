@@ -4,6 +4,8 @@ const mongoPool = require('./utils/mongoPool');
 (async function () {
     try {
         const db = await mongoPool.getDb();
+        console.log('Reseting database');
+        await db.dropDatabase();
 
         async function insert(collectionName, data) {
             console.log(`Start inserting ${collectionName} data`);
@@ -19,6 +21,7 @@ const mongoPool = require('./utils/mongoPool');
             insert('students', require('./data/students.data')),
             insert('offers', require('./data/offers.data')),
         ]);
+        console.log('All Completed');
     } catch (err) {
         console.error(err.message);
     } finally {

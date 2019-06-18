@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Assignment for ADS",
   "main": "index.js",
+  "scripts": {
+    "initdb": "node ./initDb"
+  },
   "dependencies": {
     "express": "^4.17.1",
     "moment": "^2.24.0",
