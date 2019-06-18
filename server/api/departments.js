@@ -1,5 +1,5 @@
 const mongoPool = require.main.require('./utils/mongoPool');
-const queryReader = require.main.require('./utils/queryReader');
+const queryHelper = require.main.require('./utils/queryHelper');
 
 module.exports = function (api) {
     const route = api.route('/departments');
@@ -8,22 +8,9 @@ module.exports = function (api) {
         let out = {};
 
         try {
-            let queryFilter = {};
-
             const db = await mongoPool.getDb();
             const departments = db.collection('departments');
-
-            let found = departments.find(queryFilter);
-
-            let count = await found.count();
-            let data = await queryReader
-                .appendOptions(found, req.query)
-                .toArray();
-
-            out = {
-                meta: { count },
-                data
-            };
+            out = await queryHelper.aggregateList(departments, [], req.query);
         } catch (err) {
             out.error = err.message;
             res.status(400);

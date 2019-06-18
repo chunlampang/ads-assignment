@@ -1,5 +1,5 @@
 const mongoPool = require.main.require('./utils/mongoPool');
-const queryReader = require.main.require('./utils/queryReader');
+const queryHelper = require.main.require('./utils/queryHelper');
 
 module.exports = function (api) {
     const route = api.route('/offers');
@@ -20,20 +20,20 @@ module.exports = function (api) {
             let queryFilter = {};
             if (filter.year) {
                 queryFilter.year = {
-                    $eq: queryReader.parseInteger('year', filter.year)
+                    $eq: queryHelper.parseInteger('year', filter.year)
                 };
             }
             if (filter.department) {
                 queryFilter.department = {
-                    $in: queryReader.parseArray('department', filter.department)
+                    $in: queryHelper.parseArray('department', filter.department)
                 };
             }
 
-            let include = queryReader.parseArray('include', req.query.include || []);
+            let include = queryHelper.parseArray('include', req.query.include || []);
 
-            let join = [];
+            let options = [];
             if (include.includes('course')) {
-                join.push({
+                options.push({
                     $lookup: {
                         from: 'courses',
                         localField: 'course',
@@ -41,12 +41,12 @@ module.exports = function (api) {
                         as: 'course'
                     }
                 });
-                join.push({
+                options.push({
                     $unwind: "$course"
                 });
             }
             if (include.includes('department')) {
-                join.push({
+                options.push({
                     $lookup: {
                         from: 'departments',
                         localField: 'department',
@@ -54,21 +54,18 @@ module.exports = function (api) {
                         as: 'department'
                     }
                 });
-                join.push({
+                options.push({
                     $unwind: "$department"
                 });
             }
-            if (include.includes('student')) {
-                join.push({
+            if (include.includes('enrolled.student')) {
+                options.push({
                     $lookup: {
                         from: 'students',
                         localField: 'enrolled.student',
                         foreignField: '_id',
-                        as: 'enrolled.student'
+                        as: 'in.student'
                     }
-                });
-                join.push({
-                    $unwind: "$enrolled.student"
                 });
 
                 if (filter.student) {
@@ -76,17 +73,11 @@ module.exports = function (api) {
                 }
             }
 
-            let aggregate = offers.aggregate(join);
+            options.push({
+                $match: queryFilter
+            });
 
-            //let count = await aggregate.count();
-            let data = await queryReader
-                .appendOptions(aggregate, req.query)
-                .toArray();
-
-            out = {
-                //meta: { count },
-                data
-            };
+            out = await queryHelper.aggregateList(offers, options, req.query);
         } catch (err) {
             out.error = err.message;
             res.status(400);
