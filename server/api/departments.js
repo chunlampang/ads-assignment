@@ -5,14 +5,13 @@ module.exports = function (api) {
     const route = api.route('/departments');
 
     route.get(async function (req, res) {
-        let out = {};
-
+        let out;
         try {
             const db = await mongoPool.getDb();
             const departments = db.collection('departments');
             out = await queryHelper.aggregateList(departments, [], req.query);
         } catch (err) {
-            out.error = err.message;
+            out = { error: err.message };
             res.status(400);
         }
 

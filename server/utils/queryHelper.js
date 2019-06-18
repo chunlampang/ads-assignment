@@ -59,10 +59,22 @@ exports.aggregateList = async function (collection, options = [], query = {}) {
     }
 
     let result = await collection.aggregate(options).toArray();
+    if (result.length === 0){
+        return {
+            meta: { total: 0 },
+            data: []
+        };
+    }
     return {
         meta: { total: result[0].total },
         data: result[0].data
     };
+}
+
+exports.parseString = function (title, val) {
+    if (typeof val === 'string')
+        return val;
+    throw new Error(title + ' mush be a String.');
 }
 
 exports.parseArray = function (title, val) {

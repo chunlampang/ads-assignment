@@ -9,8 +9,7 @@ module.exports = function (api) {
     //d) List the numbers of students for each course, who have enrolled the course offered by the CS department in 2016.
     //e) List the courses offered by the CS department that the student Chan Tai Man has enrolled in 2016.
     route.get(async function (req, res) {
-        let out = {};
-
+        let out;
         try {
             const db = await mongoPool.getDb();
             const offers = db.collection('offers');
@@ -79,7 +78,7 @@ module.exports = function (api) {
 
             out = await queryHelper.aggregateList(offers, options, req.query);
         } catch (err) {
-            out.error = err.message;
+            out = { error: err.message };
             res.status(400);
         }
 
