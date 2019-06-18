@@ -69,7 +69,7 @@ db = {
     courses: [
         { _id: 'CS101', title: 'Introduction to Data Science', level: 6 }
     ],
-    offer: [
+    offers: [
         {
             department: 'CS', course: 'CS101', year: 2016,
             classSize: 40, availablePlaces: 40,
