@@ -28,10 +28,10 @@ module.exports = function (api) {
                 };
             }
 
-            let include = queryHelper.parseArray('include', req.query.include || []);
+            let join = queryHelper.parseArray('join', req.query.join || []);
 
             let options = [];
-            if (include.includes('course')) {
+            if (join.includes('course')) {
                 options.push({
                     $lookup: {
                         from: 'courses',
@@ -44,7 +44,7 @@ module.exports = function (api) {
                     $unwind: "$course"
                 });
             }
-            if (include.includes('department')) {
+            if (join.includes('department')) {
                 options.push({
                     $lookup: {
                         from: 'departments',
@@ -57,7 +57,7 @@ module.exports = function (api) {
                     $unwind: "$department"
                 });
             }
-            if (include.includes('enrolled.student')) {
+            if (join.includes('enrolled.student')) {
                 options.push({
                     $lookup: {
                         from: 'students',
