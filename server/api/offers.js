@@ -95,7 +95,6 @@ module.exports = function (api) {
             res.status(400);
         }
 
-        res.header("Content-Type", 'application/json')
-            .send(JSON.stringify(out, null, 2));
+        res.send(out);
     });
 }
