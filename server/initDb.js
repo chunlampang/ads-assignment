@@ -13,10 +13,10 @@ const mongoPool = require('./utils/mongoPool');
             if (created)
                 await created(collection);//for create indexs
             //insert data
-            let result = await collection.insertMany(data, { w: 1 });
-            if (result.ok)
+            let res = await collection.insertMany(data, { w: 1 });
+            if (res.result.ok)
                 console.log(`Inserted ${collectionName} data`);
-            return result;
+            return res;
         }
 
         await Promise.all([
