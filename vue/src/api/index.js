@@ -1,15 +1,90 @@
 import axios from "axios";
+import qs from "qs";
 
 export default {
     install(Vue) {
         Vue.prototype.$api = this;
     },
-    async getCourses({ department, year }) {
+    async sendRequest(method, path, params) {
+        let out;
         try {
-            let response = await axios.get('/courses', { department, year });
-            return response.data;
+            let response = await axios.request({
+                baseURL: 'http://localhost/api',
+                paramsSerializer: handleNestedParams,
+                url: path,
+                method, params
+            });
+            console.log(path, response);
+
+            out = response.data;
         } catch (err) {
-            console.log(err);
+            out = { error: err.message };
+        } finally {
+            return out;
         }
-    }
+    },
+    getDepartments({ page, sort } = {}) {
+        return this.sendRequest('get', '/departments', { page, sort });
+    },
+    /**
+     * Find Student by name for e)
+     * @param {*} filter { stuName }
+     * @param {Object} options { page, sort }
+     */
+    getStudents(filter, { page, sort } = {}) {
+        return this.sendRequest('get', '/students', { filter, page, sort });
+    },
+    /**
+     * a) Find the titles of courses offered by the CS department in 2016.
+     * e) List the courses offered by the CS department that the student Chan Tai Man has enrolled in 2016.
+     * @param {*} filter { department, year, student }
+     * @param {Object} options { page, sort }
+     */
+    async getCoursesTitle(filter, { page, sort } = {}) {
+        return this.sendRequest('get', '/offers', {
+            filter,
+            join: ['course'],
+            fields: ['year', 'department', '_join.course'],
+            page, sort
+        });
+    },
+    /**
+     * b) List the information of courses offered by the CS or IS departments in 2016.
+     * @param {Object} filter { department, year }
+     * @param {Object} options { page, sort }
+     */
+    async getJoinedOffers(filter, { page, sort } = {}) {
+        return this.sendRequest('get', '/offers', {
+            filter,
+            join: ['course', 'department'],
+            page, sort
+        });
+    },
+    /**
+     * c) Find the information of the course which is the most popular course enrolled by students.
+     * @param {Number} year 
+     */
+    async getMostPopularCourse(year) {
+        return this.sendRequest('get', '/offers', {
+            filter: { year },
+            join: ['course', 'department'],
+            page: { size: 1, number: 1 },
+            sort: '-enrolledCount'
+        });
+    },
+    /**
+     * d) List the numbers of students for each course, who have enrolled the course offered by the CS department in 2016.
+     * @param {Object} filter { department, year }
+     * @param {Object} options { page, sort }
+     */
+    async getOffers(filter, { page, sort } = {}) {
+        return this.sendRequest('get', '/offers', {
+            filter,
+            page, sort
+        });
+    },
 };
+
+function handleNestedParams(params) {
+    return qs.stringify(params, { arrayFormat: 'brackets' })
+}
