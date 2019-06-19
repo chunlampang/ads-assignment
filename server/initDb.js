@@ -27,6 +27,7 @@ const mongoPool = require('./utils/mongoPool');
             }),
             insert('offers', require('./data/offers.data'), collection => {
                 collection.createIndex({ department: 1, course: 1, year: 1 }, { unique: true });
+                collection.createIndex({ enrolledCount: 1 });
             }),
         ]);
         console.log('All Completed');
