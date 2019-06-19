@@ -10,6 +10,13 @@ module.exports = function (api) {
             let options = [];
             //filter
             let filter = req.query.filter || {};
+            if (filter._id) {
+                options.push({
+                    $match: {
+                        _id: new RegExp(queryHelper.parseString('_id', filter._id), 'i')
+                    }
+                });
+            }
             if (filter.stuName) {
                 options.push({
                     $match: {
