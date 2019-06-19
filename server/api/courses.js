@@ -2,7 +2,7 @@ const mongoPool = require.main.require('./utils/mongoPool');
 const queryHelper = require.main.require('./utils/queryHelper');
 
 module.exports = function (api) {
-    const route = api.route('/departments');
+    const route = api.route('/courses');
 
     route.get(async function (req, res) {
         let out;
@@ -15,15 +15,15 @@ module.exports = function (api) {
                     $lookup: {
                         from: 'offers',
                         localField: '_id',
-                        foreignField: 'department',
+                        foreignField: 'course',
                         as: '_join.offers'
                     }
                 });
             }
 
             const db = await mongoPool.getDb();
-            const departments = db.collection('departments');
-            out = await queryHelper.aggregateList(departments, options, req.query);
+            const courses = db.collection('courses');
+            out = await queryHelper.aggregateList(courses, options, req.query);
         } catch (err) {
             out = { error: err.message };
             res.status(400);
