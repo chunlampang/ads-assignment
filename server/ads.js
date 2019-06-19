@@ -72,7 +72,7 @@ db = {
     offers: [
         {
             department: 'CS', course: 'CS101', year: 2016,
-            classSize: 40, enrolledCount: 40,
+            classSize: 40, availablePlaces: 39, enrolledCount: 1,
             enrolled: [
                 { student: '15101010', enrolDate: '15/05/2016' }
             ]
