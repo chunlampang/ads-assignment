@@ -36,7 +36,7 @@ module.exports = function (api) {
                 options.push({
                     $match: {
                         'enrolled.student': {
-                            $eq: queryHelper.parsePositiveInteger('student', filter.student)
+                            $eq: queryHelper.parseString('student', filter.student)
                         }
                     }
                 });

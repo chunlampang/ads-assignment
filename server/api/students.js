@@ -10,17 +10,14 @@ module.exports = function (api) {
             let options = [];
             //filter
             let filter = req.query.filter || {};
-            if (filter._id) {
+            if (filter.search) {
+                let regex = new RegExp(queryHelper.parseString('_id', filter.search), 'i')
                 options.push({
                     $match: {
-                        _id: new RegExp(queryHelper.parseString('_id', filter._id), 'i')
-                    }
-                });
-            }
-            if (filter.stuName) {
-                options.push({
-                    $match: {
-                        stuName: new RegExp(queryHelper.parseString('stuName', filter.stuName), 'i')
+                        $or: [
+                            { _id: regex },
+                            { stuName: regex }
+                        ]
                     }
                 });
             }
