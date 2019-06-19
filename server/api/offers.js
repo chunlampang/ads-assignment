@@ -11,18 +11,14 @@ module.exports = function (api) {
     route.get(async function (req, res) {
         let out;
         try {
-            const db = await mongoPool.getDb();
-            const offers = db.collection('offers');
-
-            let filter = req.query.filter || {};
-
             let options = [];
-
+            //filter
+            let filter = req.query.filter || {};
             if (filter.year) {
                 options.push({
                     $match: {
                         year: {
-                            $eq: queryHelper.parseInteger('year', filter.year)
+                            $eq: queryHelper.parsePositiveInteger('year', filter.year)
                         }
                     }
                 });
@@ -36,9 +32,18 @@ module.exports = function (api) {
                     }
                 });
             }
-
+            if (filter.student) {
+                options.push({
+                    $match: {
+                        'enrolled.student': {
+                            $eq: queryHelper.parsePositiveInteger('student', filter.student)
+                        }
+                    }
+                });
+            }
+            
+            //join
             let join = queryHelper.parseArray('join', req.query.join || []);
-
             if (join.includes('course')) {
                 options.push(
                     {
@@ -88,7 +93,8 @@ module.exports = function (api) {
                 }
             }
 
-
+            const db = await mongoPool.getDb();
+            const offers = db.collection('offers');
             out = await queryHelper.aggregateList(offers, options, req.query);
         } catch (err) {
             out = { error: err.message };
