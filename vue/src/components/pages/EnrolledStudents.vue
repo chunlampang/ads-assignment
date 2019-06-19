@@ -34,17 +34,22 @@
           row
           wrap
         >
-          <template v-slot:items="props">
+          <template v-slot:item="props">
             <v-flex xs12 sm6 md4 lg3>
               <v-card>
                 <v-card-title>
-                  <h4>{{ props.item.course }}</h4>
-                  <div>{{ props.item.department }}</div>
-                  <div>{{ props.item.year }}</div>
+                  <div>
+                    <h4>{{ props.item.course }}</h4>
+                    <div>{{ props.item.department }}</div>
+                    <div>{{ props.item.year }}</div>
+                  </div>
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-list dense>
-                  <v-list-tile v-for="enrolled in props.item.enrolled" :key="props.item._id + enrolled">
+                  <v-list-tile
+                    v-for="enrolled in props.item.enrolled"
+                    :key="props.item._id + enrolled"
+                  >
                     <v-list-tile-content>{{ enrolled.student }}</v-list-tile-content>
                   </v-list-tile>
                 </v-list>
@@ -119,7 +124,6 @@ export default {
         console.error(result.error);
       } else {
         this.items = result;
-        console.log(this.items)
       }
       this.loading = false;
     }
