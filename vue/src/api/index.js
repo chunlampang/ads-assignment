@@ -62,11 +62,11 @@ export default {
     },
     /**
      * c) Find the information of the course which is the most popular course enrolled by students.
-     * @param {Number} year 
+     * @param {Object} filter { department, year } 
      */
-    async getMostPopularCourse(year) {
+    async getMostPopularCourse(filter) {
         return this.sendRequest('get', '/offers', {
-            filter: { year },
+            filter,
             join: ['course', 'department'],
             page: { size: 1, number: 1 },
             sort: '-enrolledCount'

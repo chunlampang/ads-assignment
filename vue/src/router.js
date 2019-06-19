@@ -13,6 +13,38 @@ export default new Router({
       component: () => import('@/components/pages/Index')
     },
     {
+      path: '/courses',
+      name: 'courses',
+      meta: {
+        menu: { title: "Courses", icon: "bookmark" }
+      },
+      component: () => import('@/components/pages/Courses')
+    },
+    {
+      path: '/courses-info',
+      name: 'coursesInfo',
+      meta: {
+        menu: { title: "Courses Info", icon: "bookmark" }
+      },
+      component: () => import('@/components/pages/CoursesInfo')
+    },
+    {
+      path: '/courses-popular',
+      name: 'coursePopular',
+      meta: {
+        menu: { title: "Popular Courses", icon: "bookmark" }
+      },
+      component: () => import('@/components/pages/CoursePopular')
+    },
+    {
+      path: '/enrolled-students',
+      name: 'enrolledStudents',
+      meta: {
+        menu: { title: "Enrolled Students", icon: "bookmark" }
+      },
+      component: () => import('@/components/pages/EnrolledStudents')
+    },
+    {
       path: ':path*',
       component: () => import('@/components/pages/Error'),
       props: { code: 404 }
