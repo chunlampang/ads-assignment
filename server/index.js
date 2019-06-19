@@ -1,6 +1,5 @@
 const express = require('express');
 const history = require('connect-history-api-fallback');
-const moment = require('moment');
 const mongoPool = require.main.require('./utils/mongoPool');
 
 (async function init() {
@@ -9,10 +8,7 @@ const mongoPool = require.main.require('./utils/mongoPool');
 
     const app = express();
     //api
-    app.use('/api', (req, res, next) => {
-      console.log(moment().format('YYYY-MM-DD HH:mm:ss'), req.ip, req.method, req.query);
-      next();
-    }, require('./api'));
+    app.use('/api', require('./api'));
 
     //static route
     const staticFileMiddleware = express.static('public');
@@ -21,8 +17,8 @@ const mongoPool = require.main.require('./utils/mongoPool');
     app.use(staticFileMiddleware);
 
     //start server
-    app.listen(8080, () => {
-      console.log('Server start listening on http://localhost:8080');
+    app.listen(80, '0.0.0.0', () => {
+      console.log('Server start listening on http://localhost');
     });
   } catch (err) {
     console.error(err.message);
