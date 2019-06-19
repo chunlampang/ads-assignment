@@ -1,6 +1,7 @@
 const express = require('express');
 const history = require('connect-history-api-fallback');
-const mongoPool = require.main.require('./utils/mongoPool');
+const mongoPool = require('./utils/mongoPool');
+const config = require('./config');
 
 (async function init() {
   try {
@@ -17,8 +18,9 @@ const mongoPool = require.main.require('./utils/mongoPool');
     app.use(staticFileMiddleware);
 
     //start server
-    app.listen(80, '0.0.0.0', () => {
-      console.log('Server start listening on http://localhost');
+    let port = config.server.port;
+    app.listen(port, '0.0.0.0', () => {
+      console.log('Server start listening on http://localhost' + (port == 80 ? '' : ':' + port));
     });
   } catch (err) {
     console.error(err.message);
