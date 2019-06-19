@@ -41,7 +41,7 @@ module.exports = function (api) {
                     }
                 });
             }
-            
+
             //join
             let join = queryHelper.parseArray('join', req.query.join || []);
             if (join.includes('course')) {
@@ -85,7 +85,7 @@ module.exports = function (api) {
                         $match: {
                             '_join.students': {
                                 $elemMatch: {
-                                    stuName: new RegExp(queryHelper.parseString('stuName', filter.stuName))
+                                    stuName: new RegExp(queryHelper.parseString('stuName', filter.stuName), 'i')
                                 }
                             }
                         }

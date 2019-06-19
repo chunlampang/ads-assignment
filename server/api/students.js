@@ -13,7 +13,7 @@ module.exports = function (api) {
             if (filter.stuName) {
                 options.push({
                     $match: {
-                        stuName: new RegExp(queryHelper.parseString('stuName', filter.stuName))
+                        stuName: new RegExp(queryHelper.parseString('stuName', filter.stuName), 'i')
                     }
                 });
             }
