@@ -2,5 +2,7 @@ const express = require('express');
 
 const api = module.exports = express.Router({ mergeParams: true });
 
-require('./offers')(api);
-require('./departments')(api);
+require("fs").readdirSync(__dirname).forEach((file) => {
+    if (file !== 'index.js')
+        require("./" + file)(api);
+});
