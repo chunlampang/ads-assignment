@@ -45,7 +45,7 @@ export default new Router({
       component: () => import('@/components/pages/EnrolledStudents')
     },
     {
-      path: ':path*',
+      path: '/:path*',
       component: () => import('@/components/pages/Error'),
       props: { code: 404 }
     }
