@@ -46,10 +46,7 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-list dense>
-                  <v-list-tile
-                    v-for="enrolled in props.item.enrolled"
-                    :key="props.item._id + enrolled"
-                  >
+                  <v-list-tile v-for="(enrolled, index) in props.item.enrolled" :key="index">
                     <v-list-tile-content>{{ enrolled.student }}</v-list-tile-content>
                   </v-list-tile>
                 </v-list>
