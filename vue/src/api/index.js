@@ -50,6 +50,7 @@ export default {
     },
     /**
      * b) List the information of courses offered by the CS or IS departments in 2016.
+     * c) Find the information of the course which is the most popular course enrolled by students.
      * @param {Object} filter { department, year }
      * @param {Object} options { page, sort }
      */
@@ -58,18 +59,6 @@ export default {
             filter,
             join: ['course', 'department'],
             page, sort
-        });
-    },
-    /**
-     * c) Find the information of the course which is the most popular course enrolled by students.
-     * @param {Object} filter { department, year } 
-     */
-    async getMostPopularCourse(filter) {
-        return this.sendRequest('get', '/offers', {
-            filter,
-            join: ['course', 'department'],
-            page: { size: 1, number: 1 },
-            sort: '-enrolledCount'
         });
     },
     /**
