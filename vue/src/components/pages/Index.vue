@@ -1,10 +1,14 @@
 <template>
-  <v-container>
-    <v-layout text-xs-center wrap>
+  <v-container fluid grid-list-lg>
+    <v-layout row wrap>
       <v-flex xs12>
-        <v-img :src="require('@/assets/logo.png')" class="my-3" contain height="200"></v-img>
+        <v-card>
+          <v-card-title>
+            <div class="headline">Group 5</div>
+          </v-card-title>
+          <v-card-text>Pang Chun Lam</v-card-text>
+        </v-card>
       </v-flex>
-
     </v-layout>
   </v-container>
 </template>

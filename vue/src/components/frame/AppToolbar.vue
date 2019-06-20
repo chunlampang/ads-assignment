@@ -2,14 +2,14 @@
   <div>
     <v-toolbar app>
       <v-toolbar-side-icon @click="showNav = !showNav"/>
-      <v-toolbar-title class="headline">ASD</v-toolbar-title>
+      <v-toolbar-title class="headline">Assignment 2 (Part B)</v-toolbar-title>
     </v-toolbar>
 
     <v-navigation-drawer :permanent="showNav" app width="250">
       <v-list class="pa-0">
         <v-list-tile>
           <v-list-tile-content>
-            <v-list-tile-title class="title">ASD</v-list-tile-title>
+            <v-list-tile-title class="title">ADS</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-divider></v-divider>
