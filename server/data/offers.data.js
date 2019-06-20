@@ -17,6 +17,14 @@ module.exports = [
     {
         department: 'CS', course: 'CS102', year: 2017,
         classSize: 30, availablePlaces: 30, enrolledCount: 0,
-        enrolled: []
+        enrolled: [
+        ]
+    },
+    {
+        department: 'CS', course: 'CS103', year: 2017,
+        classSize: 30, availablePlaces: 29, enrolledCount: 1,
+        enrolled: [
+            { student: '15101010', enrolDate: new Date('2016-05-15') },
+        ]
     }
 ]
