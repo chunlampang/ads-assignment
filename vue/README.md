@@ -17,3 +17,8 @@ npm run serve
 ```
 npm run build
 ```
+
+## References
+1. Vue https://vuejs.org/
+2. Vue CLI https://cli.vuejs.org/
+3. Vuetify https://vuetifyjs.com
