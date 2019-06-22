@@ -9,6 +9,9 @@ Install Node.js https://nodejs.org
 
 ## Editor
 Visual Studio Code https://code.visualstudio.com/
+
 Use VSCode to format your code before commit!
+
 Use VSCode to format your code before commit!
+
 Use VSCode to format your code before commit!
