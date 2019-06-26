@@ -13,5 +13,5 @@ api.use((req, res, next) => {
 
 require("fs").readdirSync(__dirname).forEach((file) => {
   if (file !== 'index.js')
-    require("./" + file)(api);
+  api.use(require("./" + file));
 });
