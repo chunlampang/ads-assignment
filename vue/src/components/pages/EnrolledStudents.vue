@@ -86,9 +86,12 @@ export default {
   },
   computed: {
     apiOptions() {
+      let size = this.pagination.rowsPerPage;
+      if (size === -1) size = "";
+      
       return {
         page: {
-          size: this.pagination.rowsPerPage,
+          size,
           number: this.pagination.page
         }
       };

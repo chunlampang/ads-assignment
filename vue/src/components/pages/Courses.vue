@@ -112,9 +112,13 @@ export default {
     apiOptions() {
       let sort = this.pagination.sortBy;
       if (this.pagination.descending) sort = "-" + sort;
+
+      let size = this.pagination.rowsPerPage;
+      if (size === -1) size = "";
+      
       return {
         page: {
-          size: this.pagination.rowsPerPage,
+          size,
           number: this.pagination.page
         },
         sort
