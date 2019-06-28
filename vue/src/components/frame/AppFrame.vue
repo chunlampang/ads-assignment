@@ -2,7 +2,7 @@
   <v-app>
     <AppToolbar/>
     <v-content>
-      <router-view/>
+      <router-view class="pb-5"/>
       <AppFooter/>
     </v-content>
   </v-app>
