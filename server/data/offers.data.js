@@ -11,7 +11,7 @@ for (let year = 2010; year <= 2018; year++) {
             continue;
 
         let offer = {
-            department: getRandomItem(departments),
+            department: getRandomItem(departments)._id,
             course: course._id,
             year: year,
             classSize: getRandomItem(classSize),
