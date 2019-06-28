@@ -51,7 +51,7 @@
         <v-data-table
           :headers="headers"
           :items="items.data"
-          :total-items="items.total"
+          :total-items="items.meta.total"
           :pagination.sync="pagination"
           :loading="loading"
           disable-initial-sort
@@ -115,7 +115,7 @@ export default {
 
       let size = this.pagination.rowsPerPage;
       if (size === -1) size = "";
-      
+
       return {
         page: {
           size,

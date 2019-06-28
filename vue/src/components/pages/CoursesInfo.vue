@@ -29,7 +29,7 @@
         <v-data-table
           :headers="headers"
           :items="items.data"
-          :total-items="items.total"
+          :total-items="items.meta.total"
           :pagination.sync="pagination"
           :loading="loading"
           disable-initial-sort
@@ -88,7 +88,7 @@ export default {
     apiOptions() {
       let sort = this.pagination.sortBy;
       if (this.pagination.descending) sort = "-" + sort;
-      
+
       let size = this.pagination.rowsPerPage;
       if (size === -1) size = "";
       

@@ -27,7 +27,7 @@
       <v-flex xs12>
         <v-data-iterator
           :items="items.data"
-          :total-items="items.total"
+          :total-items="items.meta.total"
           :pagination.sync="pagination"
           :loading="loading"
           content-tag="v-layout"
