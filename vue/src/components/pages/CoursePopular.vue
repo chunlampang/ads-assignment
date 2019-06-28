@@ -34,7 +34,7 @@
             <v-card-text>
               <v-layout row wrap>
                 <v-flex xs12>{{item._join.department.deptName + ` (${item.year})`}}</v-flex>
-                <v-flex xs12>Enrolled: {{item.enrolledCount}}</v-flex>
+                <v-flex xs12>Enrolled: {{printEnrolled(item)}}</v-flex>
               </v-layout>
             </v-card-text>
           </v-card>
@@ -49,7 +49,7 @@
               <v-list-tile-content>
                 <v-list-tile-title>{{item.course + ' - ' + item._join.course.title}}</v-list-tile-title>
                 <v-list-tile-sub-title>{{item._join.department.deptName + ` (${item.year})`}}</v-list-tile-sub-title>
-                <v-list-tile-sub-title>Enrolled: {{item.enrolledCount}}</v-list-tile-sub-title>
+                <v-list-tile-sub-title>Enrolled: {{printEnrolled(item)}}</v-list-tile-sub-title>
               </v-list-tile-content>
             </v-list-tile>
           </template>
@@ -105,6 +105,9 @@ export default {
         this.items = result.data;
       }
       this.loading = false;
+    },
+    printEnrolled(item){
+      return `${item.enrolledCount}/${item.classSize} (${item.enrolledCount/item.classSize*100}%)`;
     }
   }
 };
