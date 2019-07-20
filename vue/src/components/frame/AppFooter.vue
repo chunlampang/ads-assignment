@@ -1,7 +1,7 @@
 <template>
   <v-footer class="pa-3" absolute>
     <v-spacer></v-spacer>
-    <div>Group 5</div>
+    <div>Advanced Database Systems - Group 5A</div>
   </v-footer>
 </template>
 

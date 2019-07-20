@@ -2,11 +2,10 @@
   <v-container fluid grid-list-lg>
     <v-layout row wrap>
       <v-flex xs12>
+        <div class="headline">Courses</div>
+      </v-flex>
+      <v-flex xs12>
         <v-card>
-          <v-card-title>
-            <div>a) Find the titles of courses offered by the CS department in 2016.</div>
-            <div>e) List the courses offered by the CS department that the student Chan Tai Man has enrolled in 2016.</div>
-          </v-card-title>
           <v-card-text>
             <v-layout row wrap>
               <v-flex xs12 sm6>
@@ -21,7 +20,7 @@
                 ></v-select>
               </v-flex>
               <v-flex xs12 sm6>
-                <v-text-field type="number" v-model="filter.year" label="Year"/>
+                <v-text-field type="number" v-model="filter.year" label="Year" />
               </v-flex>
               <v-flex xs12>
                 <v-autocomplete

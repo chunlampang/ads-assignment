@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar app>
+    <v-toolbar app color="pink darken-1" dark>
       <v-toolbar-side-icon @click="showNav = !showNav"/>
       <v-toolbar-title class="headline">Assignment 2 (Part B)</v-toolbar-title>
     </v-toolbar>
