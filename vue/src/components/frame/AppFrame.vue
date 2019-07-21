@@ -17,8 +17,8 @@
           </v-flex>
         </v-layout>
       </v-container>
-      <AppFooter />
     </v-content>
+    <AppFooter />
   </v-app>
 </template>
 
