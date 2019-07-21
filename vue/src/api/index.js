@@ -82,6 +82,19 @@ export default {
             page, sort
         });
     },
+
+    async insert(path, data) {
+        return this.sendRequest('post', path, data);
+    },
+    async delete(path, id) {
+        return this.sendRequest('delete', path + '/' + id);
+    },
+    async get(path, id) {
+        return this.sendRequest('get', path + '/' + id);
+    },
+    async query(path, params) {
+        return this.sendRequest('get', path, params);
+    },
 };
 
 function handleNestedParams(params) {

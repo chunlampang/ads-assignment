@@ -1,9 +1,11 @@
 const express = require('express');
 const mongoPool = require.main.require('./utils/mongoPool');
 const queryHelper = require.main.require('./utils/queryHelper');
+const common = require('../common');
 
 const router = express.Router();
 const route = router.route('/departments');
+const itemRouter = router.route('/departments/:id');
 
 const collectionName = 'departments';
 
@@ -34,5 +36,9 @@ route.get(async function (req, res) {
 
     res.send(out);
 });
+
+itemRouter.get(common.get(collectionName));
+itemRouter.put(common.update(collectionName));
+itemRouter.delete(common.delete(collectionName));
 
 module.exports = router;

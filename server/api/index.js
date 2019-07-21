@@ -8,6 +8,7 @@ api.use((req, res, next) => {
     req.ip, req.method, req.path, req.query);
 
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
   next();
 });
 

@@ -3,6 +3,8 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 
+import Department from '@/models/Department';
+
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
@@ -11,6 +13,21 @@ export default new Router({
       path: '/',
       name: 'index',
       component: () => import('@/components/pages/Index')
+    },
+    {
+      path: '/departments',
+      name: 'departments',
+      meta: {
+        menu: { title: "Departments", icon: "build" }
+      },
+      component: () => import('@/components/pages/maint/List'),
+      props: { value: Department }
+    },
+    {
+      path: '/departments/:id',
+      name: 'department',
+      component: () => import('@/components/pages/maint/Edit'),
+      props: { value: Department }
     },
     {
       path: '/courses',

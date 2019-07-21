@@ -10,7 +10,7 @@
                 <v-layout row wrap>
                   <v-flex xs12>
                     <v-container>
-                      <router-view />
+                      <router-view :key="$route.path"/>
                     </v-container>
                   </v-flex>
                 </v-layout>
