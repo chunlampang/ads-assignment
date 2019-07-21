@@ -1,11 +1,15 @@
 <template>
   <div>
-    <v-toolbar app color="pink darken-1" dark>
-      <v-toolbar-side-icon @click="showNav = !showNav"/>
-      <v-toolbar-title class="headline">Assignment 2 (Part B)</v-toolbar-title>
+    <v-toolbar app color="primary" dark>
+      <v-toolbar-side-icon @click="showNav = !showNav" />
+      <v-toolbar-title
+        class="headline"
+        @click="gotoHome"
+        style="cursor:pointer"
+      >Advanced Database Systems - Assignment 2 (Part B)</v-toolbar-title>
     </v-toolbar>
 
-    <v-navigation-drawer :permanent="showNav" app width="250">
+    <v-navigation-drawer v-model="showNav" app width="250" temporary>
       <v-list class="pa-0">
         <v-list-tile>
           <v-list-tile-content>
@@ -43,12 +47,16 @@
 
 <script>
 export default {
-  name: "AppToolbar",
   data() {
     return {
-      showNav: true,
+      showNav: false,
       menu: this.$router.options.routes
     };
+  },
+  methods: {
+    gotoHome() {
+      this.$router.push({ name: "index" });
+    }
   }
 };
 </script>
