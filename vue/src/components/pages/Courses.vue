@@ -1,71 +1,66 @@
 <template>
-  <v-container fluid grid-list-lg>
-    <v-layout row wrap>
-      <v-flex xs12>
-        <div class="headline">Courses</div>
-      </v-flex>
-      <v-flex xs12>
-        <v-card>
-          <v-card-text>
-            <v-layout row wrap>
-              <v-flex xs12 sm6>
-                <v-select
-                  :items="departments"
-                  item-text="deptName"
-                  item-value="_id"
-                  label="Department(s)"
-                  v-model="filter.department"
-                  clearable
-                  chips
-                ></v-select>
-              </v-flex>
-              <v-flex xs12 sm6>
-                <v-text-field type="number" v-model="filter.year" label="Year" />
-              </v-flex>
-              <v-flex xs12>
-                <v-autocomplete
-                  v-model="filter.student"
-                  :loading="students.loading"
-                  :items="students.items"
-                  item-value="_id"
-                  item-text="_id"
-                  :search-input.sync="students.search"
-                  flat
-                  no-filter
-                  label="Student ID"
-                >
-                  <template v-slot:item="data">
-                    <v-list-tile-content>
-                      <v-list-tile-title v-html="data.item.stuName"></v-list-tile-title>
-                      <v-list-tile-sub-title v-html="data.item._id"></v-list-tile-sub-title>
-                    </v-list-tile-content>
-                  </template>
-                </v-autocomplete>
-              </v-flex>
-            </v-layout>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-      <v-flex xs12>
-        <v-data-table
-          :headers="headers"
-          :items="items.data"
-          :total-items="items.meta.total"
-          :pagination.sync="pagination"
-          :loading="loading"
-          disable-initial-sort
-          class="elevation-1"
-        >
-          <template v-slot:items="props">
-            <td>{{ props.item._join.course._id }}</td>
-            <td>{{ props.item._join.course.title }}</td>
-            <td>{{ props.item.department }}</td>
-            <td>{{ props.item.year }}</td>
-          </template>
-        </v-data-table>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <v-layout row wrap>
+    <v-flex xs12>
+      <div class="headline">Courses</div>
+      <v-divider class="primary" />
+    </v-flex>
+    <v-flex xs12>
+      <v-layout row wrap>
+        <v-flex xs12 sm6>
+          <v-select
+            :items="departments"
+            item-text="deptName"
+            item-value="_id"
+            label="Department(s)"
+            v-model="filter.department"
+            clearable
+            chips
+          ></v-select>
+        </v-flex>
+        <v-flex xs12 sm6>
+          <v-text-field type="number" v-model="filter.year" label="Year" />
+        </v-flex>
+        <v-flex xs12>
+          <v-autocomplete
+            v-model="filter.student"
+            :loading="students.loading"
+            :items="students.items"
+            item-value="_id"
+            item-text="_id"
+            :search-input.sync="students.search"
+            flat
+            no-filter
+            label="Student ID"
+          >
+            <template v-slot:item="data">
+              <v-list-tile-content>
+                <v-list-tile-title v-html="data.item.stuName"></v-list-tile-title>
+                <v-list-tile-sub-title v-html="data.item._id"></v-list-tile-sub-title>
+              </v-list-tile-content>
+            </template>
+          </v-autocomplete>
+        </v-flex>
+      </v-layout>
+    </v-flex>
+    <v-flex xs12>
+      <v-data-table
+        :headers="headers"
+        :items="items.data"
+        :total-items="items.meta.total"
+        :pagination.sync="pagination"
+        :loading="loading"
+        disable-initial-sort
+        class="elevation-1"
+      >
+        <template v-slot:items="props">
+          <td>{{ props.item._join.course._id }}</td>
+          <td>{{ props.item._join.course.title }}</td>
+          <td>{{ props.item.department }}</td>
+          <td>{{ props.item.year }}</td>
+        </template>
+      </v-data-table>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>

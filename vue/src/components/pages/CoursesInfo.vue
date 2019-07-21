@@ -1,52 +1,49 @@
 <template>
-  <v-container fluid grid-list-lg>
-    <v-layout row wrap>
-      <v-flex xs12>
-        <v-card>
-          b) List the information of courses offered by the CS or IS departments in 2016.
-          <v-card-text>
-            <v-layout row wrap>
-              <v-flex xs12 sm6>
-                <v-select
-                  :items="departments"
-                  item-text="deptName"
-                  item-value="_id"
-                  label="Department(s)"
-                  v-model="filter.department"
-                  multiple
-                  clearable
-                  chips
-                ></v-select>
-              </v-flex>
-              <v-flex xs12 sm6>
-                <v-text-field type="number" v-model="filter.year" label="Year"/>
-              </v-flex>
-            </v-layout>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-      <v-flex xs12>
-        <v-data-table
-          :headers="headers"
-          :items="items.data"
-          :total-items="items.meta.total"
-          :pagination.sync="pagination"
-          :loading="loading"
-          disable-initial-sort
-          class="elevation-1"
-        >
-          <template v-slot:items="props">
-            <td>{{ props.item._join.course._id }}</td>
-            <td>{{ props.item._join.course.title }}</td>
-            <td>{{ props.item.department }}</td>
-            <td>{{ props.item.year }}</td>
-            <td>{{ props.item.classSize }}</td>
-            <td>{{ props.item.availablePlaces }}</td>
-          </template>
-        </v-data-table>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <v-layout row wrap>
+    <v-flex xs12>
+      <div class="headline">Courses Info</div>
+      <v-divider class="primary" />
+    </v-flex>
+    <v-flex xs12>
+      <v-layout row wrap>
+        <v-flex xs12 sm6>
+          <v-select
+            :items="departments"
+            item-text="deptName"
+            item-value="_id"
+            label="Department(s)"
+            v-model="filter.department"
+            multiple
+            clearable
+            chips
+          ></v-select>
+        </v-flex>
+        <v-flex xs12 sm6>
+          <v-text-field type="number" v-model="filter.year" label="Year" />
+        </v-flex>
+      </v-layout>
+    </v-flex>
+    <v-flex xs12>
+      <v-data-table
+        :headers="headers"
+        :items="items.data"
+        :total-items="items.meta.total"
+        :pagination.sync="pagination"
+        :loading="loading"
+        disable-initial-sort
+        class="elevation-1"
+      >
+        <template v-slot:items="props">
+          <td>{{ props.item._join.course._id }}</td>
+          <td>{{ props.item._join.course.title }}</td>
+          <td>{{ props.item.department }}</td>
+          <td>{{ props.item.year }}</td>
+          <td>{{ props.item.classSize }}</td>
+          <td>{{ props.item.availablePlaces }}</td>
+        </template>
+      </v-data-table>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
@@ -91,7 +88,7 @@ export default {
 
       let size = this.pagination.rowsPerPage;
       if (size === -1) size = "";
-      
+
       return {
         page: {
           size,

@@ -9,7 +9,9 @@
               <v-card-text>
                 <v-layout row wrap>
                   <v-flex xs12>
-                    <router-view />
+                    <v-container >
+                      <router-view />
+                    </v-container>
                   </v-flex>
                 </v-layout>
               </v-card-text>
