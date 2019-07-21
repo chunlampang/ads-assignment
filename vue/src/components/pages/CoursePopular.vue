@@ -1,12 +1,12 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12>
-      <div class="headline">Popular courses</div>
+      <div class="headline">Popular Courses</div>
       <v-divider class="primary" />
     </v-flex>
     <v-flex xs12>
       <v-layout row wrap>
-        <v-flex xs12 sm6>
+        <v-flex xs12>
           <v-select
             :items="departments"
             item-text="deptName"
@@ -17,27 +17,33 @@
             chips
           ></v-select>
         </v-flex>
-        <v-flex xs12 sm6>
+        <v-flex xs12>
           <v-text-field type="number" v-model="filter.year" label="Year" />
         </v-flex>
       </v-layout>
     </v-flex>
-    <template v-for="(item, index) in items">
-      <v-flex v-if="index < 3" :key="index" xs12 sm4>
-        <v-card>
-          <v-card-title>
-            <div class="headline">{{index+1}}</div>
-            {{item.course + ' - ' + item._join.course.title}}
-          </v-card-title>
-          <v-card-text>
-            <v-layout row wrap>
-              <v-flex xs12>{{item._join.department.deptName + ` (${item.year})`}}</v-flex>
-              <v-flex xs12>Enrolled: {{printEnrolled(item)}}</v-flex>
-            </v-layout>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-    </template>
+    <v-flex xs12>
+      <v-container grid-list-xl>
+        <v-layout row wrap justify-center justify-space-between>
+          <template v-for="(item, index) in items.slice(0,3)">
+            <v-flex :key="index" sm12 md4>
+              <v-card>
+                <v-card-title>
+                  <div class="headline">{{index+1}}</div>
+                  <div>{{item.course + ' - ' + item._join.course.title}}</div>
+                </v-card-title>
+                <v-card-text>
+                  <v-layout row wrap>
+                    <v-flex xs12>{{item._join.department.deptName + ` (${item.year})`}}</v-flex>
+                    <v-flex xs12>Enrolled: {{printEnrolled(item)}}</v-flex>
+                  </v-layout>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+          </template>
+        </v-layout>
+      </v-container>
+    </v-flex>
     <v-flex v-if="items.length > 3" xs12>
       <v-list dense three-line>
         <template v-for="(item, index) in items.slice(3)">

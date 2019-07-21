@@ -6,7 +6,7 @@
     </v-flex>
     <v-flex xs12>
       <v-layout row wrap>
-        <v-flex xs12 sm6>
+        <v-flex xs12>
           <v-select
             :items="departments"
             item-text="deptName"
@@ -17,7 +17,7 @@
             chips
           ></v-select>
         </v-flex>
-        <v-flex xs12 sm6>
+        <v-flex xs12>
           <v-text-field type="number" v-model="filter.year" label="Year" />
         </v-flex>
         <v-flex xs12>

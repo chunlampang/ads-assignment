@@ -10,13 +10,17 @@
     </v-toolbar>
 
     <v-navigation-drawer v-model="showNav" app width="250" temporary>
-      <v-list class="pa-0">
-        <v-list-tile>
+      <v-list class="pa-0" dark>
+        <v-list-tile class="primary">
           <v-list-tile-content>
-            <v-list-tile-title class="title">ADS</v-list-tile-title>
+            <v-list-tile-title class="title">Assignment 2 (Part B)</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-divider></v-divider>
+      </v-list>
+
+      <v-divider></v-divider>
+
+      <v-list class="py-0" dense>
         <v-list-tile :to="{ name: 'index' }" exact>
           <v-list-tile-action>
             <v-icon>home</v-icon>
@@ -29,7 +33,7 @@
 
       <v-divider></v-divider>
 
-      <v-list class="pt-0" dense>
+      <v-list class="py-0" dense>
         <template v-for="(item, index) in menu">
           <v-list-tile v-if="item.meta && item.meta.menu" :key="index" :to="{name:item.name}" exact>
             <v-list-tile-action>
