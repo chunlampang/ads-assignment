@@ -24,7 +24,7 @@ export default {
         }
     },
     getDepartments({ page, sort } = {}) {
-        if(!sort)
+        if (!sort)
             sort = '-_id';
         return this.sendRequest('get', '/departments', { page, sort });
     },
@@ -34,7 +34,7 @@ export default {
      * @param {Object} options { page, sort }
      */
     getStudents(filter, { page, sort } = {}) {
-        if(!sort)
+        if (!sort)
             sort = '-_id';
         return this.sendRequest('get', '/students', { filter, page, sort });
     },
@@ -45,7 +45,7 @@ export default {
      * @param {Object} options { page, sort }
      */
     async getCoursesTitle(filter, { page, sort } = {}) {
-        if(!sort)
+        if (!sort)
             sort = '-_id';
         return this.sendRequest('get', '/offers', {
             filter,
@@ -61,7 +61,7 @@ export default {
      * @param {Object} options { page, sort }
      */
     async getJoinedOffers(filter, { page, sort } = {}) {
-        if(!sort)
+        if (!sort)
             sort = '-_id';
         return this.sendRequest('get', '/offers', {
             filter,
@@ -75,7 +75,7 @@ export default {
      * @param {Object} options { page, sort }
      */
     async getOffers(filter, { page, sort } = {}) {
-        if(!sort)
+        if (!sort)
             sort = '-_id';
         return this.sendRequest('get', '/offers', {
             filter,
