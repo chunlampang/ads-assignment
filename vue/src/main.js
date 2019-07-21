@@ -6,6 +6,9 @@ import router from './router';
 import api from './api';
 Vue.use(api);
 
+import utils from './utils';
+Vue.use(utils);
+
 Vue.config.productionTip = false;
 
 new Vue({
