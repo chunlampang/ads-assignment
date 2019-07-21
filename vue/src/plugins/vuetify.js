@@ -1,10 +1,13 @@
-import Vue from 'vue'
-import Vuetify, { VLayout } from 'vuetify/lib'
-import 'vuetify/src/stylus/app.styl'
+import Vue from 'vue';
+import Vuetify, { VLayout } from 'vuetify/lib';
+import 'vuetify/src/stylus/app.styl';
 
 Vue.use(Vuetify, {
   components: {
     VLayout
   },
   iconfont: 'md',
+  theme: {
+    primary: "#b01861"
+  },
 })
