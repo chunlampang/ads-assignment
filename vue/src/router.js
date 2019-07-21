@@ -16,7 +16,7 @@ export default new Router({
       path: '/courses',
       name: 'courses',
       meta: {
-        menu: { title: "Courses", icon: "bookmark" }
+        menu: { title: "Courses", icon: "book" }
       },
       component: () => import('@/components/pages/Courses')
     },
@@ -24,7 +24,7 @@ export default new Router({
       path: '/courses-info',
       name: 'coursesInfo',
       meta: {
-        menu: { title: "Courses Info", icon: "bookmark" }
+        menu: { title: "Courses Info", icon: "book" }
       },
       component: () => import('@/components/pages/CoursesInfo')
     },
@@ -32,7 +32,7 @@ export default new Router({
       path: '/courses-popular',
       name: 'coursePopular',
       meta: {
-        menu: { title: "Popular Courses", icon: "bookmark" }
+        menu: { title: "Popular Courses", icon: "grade" }
       },
       component: () => import('@/components/pages/CoursePopular')
     },
@@ -40,7 +40,7 @@ export default new Router({
       path: '/enrolled-students',
       name: 'enrolledStudents',
       meta: {
-        menu: { title: "Enrolled Students", icon: "bookmark" }
+        menu: { title: "Enrolled Students", icon: "people" }
       },
       component: () => import('@/components/pages/EnrolledStudents')
     },
