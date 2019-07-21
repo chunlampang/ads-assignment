@@ -11,7 +11,6 @@ api.use((req, res, next) => {
   next();
 });
 
-require("fs").readdirSync(__dirname).forEach((file) => {
-  if (file !== 'index.js')
-  api.use(require("./" + file));
+require("fs").readdirSync(__dirname + '/controllers').forEach((file) => {
+  api.use(require("./controllers/" + file));
 });

@@ -5,6 +5,8 @@ const queryHelper = require.main.require('./utils/queryHelper');
 const router = express.Router();
 const route = router.route('/departments');
 
+const collectionName = 'departments';
+
 route.get(async function (req, res) {
     let out;
     try {
@@ -23,7 +25,7 @@ route.get(async function (req, res) {
         }
 
         const db = await mongoPool.getDb();
-        const departments = db.collection('departments');
+        const departments = db.collection(collectionName);
         out = await queryHelper.aggregateList(departments, options, req.query);
     } catch (err) {
         out = { error: err.message };
