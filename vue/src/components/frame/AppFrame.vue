@@ -2,7 +2,7 @@
   <v-app>
     <AppToolbar />
     <v-content>
-      <v-container class="pb-5" fluid grid-list-lg>
+      <v-container class="pb-5" fluid>
         <v-layout row wrap justify-center>
           <v-flex xs12 sm10 md8>
             <v-card>
