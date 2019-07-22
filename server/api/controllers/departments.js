@@ -37,6 +37,7 @@ route.get(async function (req, res) {
     res.send(out);
 });
 
+route.post(common.insert(collectionName));
 itemRouter.get(common.get(collectionName));
 itemRouter.put(common.update(collectionName));
 itemRouter.delete(common.delete(collectionName));

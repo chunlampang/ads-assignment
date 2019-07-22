@@ -92,6 +92,9 @@ export default {
     async insert(path, data) {
         return this.sendRequest('post', path, data);
     },
+    async update(path, id, data) {
+        return this.sendRequest('put', path + '/' + id, data);
+    },
     async delete(path, id) {
         return this.sendRequest('delete', path + '/' + id);
     },

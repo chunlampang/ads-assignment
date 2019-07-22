@@ -25,10 +25,10 @@ exports.insert = function (name) {
         try {
             const db = await mongoPool.getDb();
             const collection = db.collection(name);
-            let result = await collection.insertOne(data);
+            let { result } = await collection.insertOne(data);
             console.log(`${result.insertedId} is inserted`);
 
-            out = result;
+            out = { ok: !!result.n, data };
             res.status(201);
         } catch (err) {
             if (err.code == 11000)

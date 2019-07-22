@@ -8,6 +8,7 @@
           <v-icon>chevron_right</v-icon>
         </template>
       </v-breadcrumbs>
+      <v-alert :value="alert.show" :type="alert.type">{{alert.msg}}</v-alert>
     </v-flex>
     <v-flex xs12>
       <v-form ref="form" v-model="valid" @submit.prevent="submit">
@@ -34,7 +35,10 @@ export default {
       id,
       item: {},
       breadcrumbs: [],
-      valid: false
+      valid: false,
+      alert: {
+        show: false
+      }
     };
   },
   created() {
@@ -63,6 +67,15 @@ export default {
   methods: {
     async getItem() {
       let result = await this.$api.get(this.value.apiPath, this.id);
+      if (result.error) {
+        this.alert = {
+          show: true,
+          type: "error",
+          msg: result.error
+        };
+        return;
+      }
+
       this.item = result.data;
       if (!this.item) {
         //404
@@ -70,8 +83,9 @@ export default {
       }
     },
     async submit() {
+      this.alert.show = false;
       if (!this.$refs.form.validate()) return;
-      console.log(this.item);
+
       let result;
       if (this.id === "new")
         result = await this.$api.insert(this.value.apiPath, this.item);
@@ -79,14 +93,25 @@ export default {
         result = await this.$api.update(this.value.apiPath, this.id, this.item);
 
       if (result.ok) {
-        this.$router.push({
+        this.alert = {
+          show: true,
+          type: "success",
+          msg: "Saved."
+        };
+
+        this.$router.replace({
           params: { id: result.data._id }
         });
+      } else if (result.error) {
+        this.alert = {
+          show: true,
+          type: "error",
+          msg: result.error
+        };
       }
-
-      console.log(result);
     },
     reset() {
+      this.alert.show = false;
       if (this.id === "new") this.$refs.form.reset();
       else {
         this.$refs.form.resetValidation();
