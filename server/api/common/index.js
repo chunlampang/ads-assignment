@@ -21,7 +21,6 @@ exports.get = function (name) {
 exports.insert = function (name) {
     return async function (req, res) {
         let out;
-
         let data = req.query;
         try {
             const db = await mongoPool.getDb();
@@ -41,6 +40,28 @@ exports.insert = function (name) {
 
         res.send(out);
     };
+}
+
+exports.update = function (name) {
+    return async function (req, res) {
+        let out;
+        let data = req.query;
+        try {
+            const db = await mongoPool.getDb();
+            const collection = db.collection(name);
+            let { result } = await collection.updateOne({ _id: req.params.id }, { $set: data });
+            console.log(`${req.params.id} is updated`);
+
+            out = { ok: !!result.nModified, data };
+        } catch (err) {
+            if (err.code == 66)
+                out = { error: '_id must not be updated.' };
+            else
+                out = { error: err.message };
+            res.status(400);
+        }
+        res.send(out);
+    }
 }
 
 exports.delete = function (name) {
