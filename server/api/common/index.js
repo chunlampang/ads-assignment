@@ -70,9 +70,9 @@ exports.delete = function (name) {
         try {
             const db = await mongoPool.getDb();
             const collection = db.collection(name);
-            let result = await collection.deleteOne({ _id: req.params.id });
+            let { result } = await collection.deleteOne({ _id: req.params.id });
 
-            if (result.deletedCount > 0) {
+            if (result.n > 0) {
                 console.log(`${req.params.id} is deleted`);
                 out = { ok: true };
             } else

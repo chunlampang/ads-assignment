@@ -18,7 +18,13 @@ export default {
 
             out = response.data;
         } catch (err) {
-            out = { error: err.message };
+            let response = err.response;
+            if (!response)
+                out = { error: 'Network Error. Please try again later.' };
+            else if (response && response.status >= 400 && response.status < 500)
+                out = { error: response.data.error };
+            else
+                out = { error: err.message };
         } finally {
             return out;
         }

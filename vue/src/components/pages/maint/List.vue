@@ -3,6 +3,7 @@
     <v-flex xs12>
       <div class="headline">{{value.plural}}</div>
       <v-divider class="primary" />
+      <v-alert :value="alert.show" :type="alert.type">{{alert.msg}}</v-alert>
     </v-flex>
     <v-flex xs12>
       <v-btn
@@ -20,17 +21,33 @@
         disable-initial-sort
         class="elevation-1"
       >
-        <template v-slot:items="props">
+        <template v-slot:items="{ item }">
           <td
             v-for="field in headers.slice(0, headers.length-1)"
             :key="field.value"
-          >{{ props.item[field.value] }}</td>
+          >{{ item[field.value] }}</td>
           <td>
-            <v-icon class="mr-2" @click="editItem(props.item)">edit</v-icon>
-            <v-icon @click="deleteItem(props.item)">delete</v-icon>
+            <v-btn @click="editItem(item)" icon>
+              <v-icon>edit</v-icon>
+            </v-btn>
+            <v-btn @click="showDeleteDialog(item)" icon>
+              <v-icon>delete</v-icon>
+            </v-btn>
           </td>
         </template>
       </v-data-table>
+      <v-dialog v-model="deleteDialog.visible" width="500">
+        <v-card>
+          <v-card-title class="headline grey lighten-2" primary-title>Warning</v-card-title>
+          <v-card-text>Confirm Delete?</v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" flat @click="deleteDialog.visible = false">Cancel</v-btn>
+            <v-btn color="primary" flat @click="deleteItem(deleteDialog.item)">Delete</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-flex>
   </v-layout>
 </template>
@@ -70,6 +87,10 @@ export default {
       filter: {
         department: [],
         year: null
+      },
+      deleteDialog: { visible: false, item: null },
+      alert: {
+        show: false
       }
     };
   },
@@ -124,9 +145,20 @@ export default {
         params: { id: item._id }
       });
     },
+    showDeleteDialog(item) {
+      this.deleteDialog.visible = true;
+      this.deleteDialog.item = item;
+    },
     async deleteItem(item) {
+      this.deleteDialog.visible = false;
       let result = await this.$api.delete(this.value.apiPath, item._id);
       if (result.ok) {
+        this.alert = {
+          show: true,
+          type: "success",
+          msg: `${item._id} is deleted.`
+        };
+
         this.search();
       }
     }
