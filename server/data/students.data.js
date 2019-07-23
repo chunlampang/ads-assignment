@@ -34,7 +34,7 @@ const stuNames = [
 const students = [];
 
 for (let i = 1; i <= stuNames.length; i++) {
-    let stuName = stuNames[i];
+    let stuName = stuNames[i-1];
     let num = ("00" + i).slice(-3);
     let year = Math.floor(Math.random() * 10) + 1988;
     let month = Math.floor(Math.random() * 12) + 1;
