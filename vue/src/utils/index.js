@@ -1,3 +1,8 @@
+import moment from 'moment';
+
+export const datetimeFormat = 'YYYY/MM/DD HH:mm:ss';
+export const dateFormat = 'YYYY/MM/DD';
+
 export default {
     install(Vue, options) {
         Vue.prototype.$utils = this;
@@ -27,5 +32,11 @@ export default {
     },
     getVarByDotNotation(obj, str) {
         return str.split('.').reduce((o, i) => o[i], obj);
+    },
+    datetimeToString(date){
+        return moment(date).format(datetimeFormat);
+    },
+    dateToString(date){
+        return moment(date).format(dateFormat);
     }
 }
