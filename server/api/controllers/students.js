@@ -1,9 +1,13 @@
 const express = require('express');
 const mongoPool = require.main.require('./utils/mongoPool');
 const queryHelper = require.main.require('./utils/queryHelper');
+const common = require('../common');
+
+const collectionName = 'students';
 
 const router = express.Router();
-const route = router.route('/students');
+const route = router.route(`/${collectionName}`);
+const itemRouter = router.route(`/${collectionName}/:id`);
 
 route.get(async function (req, res) {
     let out;
@@ -36,7 +40,7 @@ route.get(async function (req, res) {
         }
 
         const db = await mongoPool.getDb();
-        const students = db.collection('students');
+        const students = db.collection(collectionName);
         out = await queryHelper.aggregateList(students, options, req.query);
     } catch (err) {
         out = { error: err.message };
@@ -45,5 +49,10 @@ route.get(async function (req, res) {
 
     res.send(out);
 });
+
+route.post(common.insert(collectionName));
+itemRouter.get(common.get(collectionName));
+itemRouter.put(common.update(collectionName));
+itemRouter.delete(common.delete(collectionName));
 
 module.exports = router;

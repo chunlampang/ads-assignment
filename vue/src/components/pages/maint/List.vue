@@ -5,13 +5,19 @@
       <v-divider class="primary" />
       <v-alert :value="alert.show" :type="alert.type">{{alert.msg}}</v-alert>
     </v-flex>
-    <v-flex xs12>
-      <v-btn
-        :to="{ name: 'department', params: { id: 'new' } }"
-        class="text-none"
-      >{{'New ' + value.singular}}</v-btn>
-    </v-flex>
-    <v-flex xs12>
+    <v-flex class="mt-4" xs12>
+      <v-toolbar color="primary" dark dense flat>
+        <v-btn
+          :to="{ name: value.singular, params: { id: 'new' } }"
+          class="text-none"
+          flat
+        >{{'New ' + value.singular}}</v-btn>
+        <v-spacer />
+        <v-divider class="mx-2" vertical inset></v-divider>
+        <v-btn @click="search" flat icon>
+          <v-icon>refresh</v-icon>
+        </v-btn>
+      </v-toolbar>
       <v-data-table
         :headers="headers"
         :items="items.data"
@@ -20,14 +26,15 @@
         :loading="loading"
         disable-initial-sort
         class="elevation-1"
+        flat
       >
         <template v-slot:items="{ item }">
-          <td
-            v-for="field in headers.slice(0, headers.length-1)"
-            :key="field.value"
-          >{{ item[field.value] }}</td>
-          <td>
-            <v-btn @click="editItem(item)" icon>
+          <td v-for="(field, fieldName) in value.fields" :key="fieldName">
+            <template v-if="field.type === Date">{{$utils.dateToString(item[fieldName])}}</template>
+            <template v-else>{{item[fieldName] }}</template>
+          </td>
+          <td width="152px">
+            <v-btn :to="{ name: value.singular, params: { id: item._id }}" icon>
               <v-icon>edit</v-icon>
             </v-btn>
             <v-btn @click="showDeleteDialog(item)" icon>

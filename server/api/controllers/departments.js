@@ -3,11 +3,11 @@ const mongoPool = require.main.require('./utils/mongoPool');
 const queryHelper = require.main.require('./utils/queryHelper');
 const common = require('../common');
 
-const router = express.Router();
-const route = router.route('/departments');
-const itemRouter = router.route('/departments/:id');
-
 const collectionName = 'departments';
+
+const router = express.Router();
+const route = router.route(`/${collectionName}`);
+const itemRouter = router.route(`/${collectionName}/:id`);
 
 route.get(async function (req, res) {
     let out;

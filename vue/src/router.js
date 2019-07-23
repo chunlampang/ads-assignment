@@ -4,6 +4,7 @@ import Router from 'vue-router';
 Vue.use(Router);
 
 import Department from '@/models/Department';
+import Student from '@/models/Student';
 
 export default new Router({
   mode: 'history',
@@ -16,18 +17,33 @@ export default new Router({
     },
     {
       path: '/departments',
-      name: 'departments',
+      name: Department.plural,
       meta: {
-        menu: { title: "Departments", icon: "build" }
+        menu: { title: Department.plural, icon: "build" }
       },
       component: () => import('@/components/pages/maint/List'),
       props: { value: Department }
     },
     {
       path: '/departments/:id',
-      name: 'department',
+      name: Department.singular,
       component: () => import('@/components/pages/maint/Edit'),
       props: { value: Department }
+    },
+    {
+      path: '/students',
+      name: Student.plural,
+      meta: {
+        menu: { title: Student.plural, icon: "build" }
+      },
+      component: () => import('@/components/pages/maint/List'),
+      props: { value: Student }
+    },
+    {
+      path: '/students/:id',
+      name: Student.singular,
+      component: () => import('@/components/pages/maint/Edit'),
+      props: { value: Student }
     },
     {
       path: '/courses',
