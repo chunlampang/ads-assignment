@@ -5,6 +5,7 @@ Vue.use(Router);
 
 import Department from '@/models/Department';
 import Student from '@/models/Student';
+import Course from '@/models/Course';
 
 export default new Router({
   mode: 'history',
@@ -47,9 +48,24 @@ export default new Router({
     },
     {
       path: '/courses',
-      name: 'courses',
+      name: Course.plural,
       meta: {
-        menu: { title: "Courses", icon: "book" }
+        menu: { title: Course.plural, icon: "build" }
+      },
+      component: () => import('@/components/maint/List'),
+      props: { value: Course }
+    },
+    {
+      path: '/courses/:id',
+      name: Course.singular,
+      component: () => import('@/components/maint/Edit'),
+      props: { value: Course }
+    },
+    {
+      path: '/offers',
+      name: 'offers',
+      meta: {
+        menu: { title: "Offers", icon: "book" }
       },
       component: () => import('@/components/pages/Courses')
     },
