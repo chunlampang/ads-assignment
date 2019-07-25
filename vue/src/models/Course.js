@@ -5,21 +5,21 @@ export default class Course {
     static singular = 'Course';
     static fields = {
         _id: {
-            type: String,
+            type: 'string',
             label: 'Course ID',
             rules: [
                 v => !!v || 'Course ID is required.'
             ]
         },
         title: {
-            type: String,
+            type: 'string',
             label: 'Title',
             rules: [
                 v => !!v || 'Title is required.'
             ]
         },
         level: {
-            type: Number,
+            type: 'number',
             label: 'Level',
             rules: [
                 v => !!v || 'Level is required.',

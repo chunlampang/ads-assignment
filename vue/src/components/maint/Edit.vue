@@ -14,7 +14,7 @@
       <v-form ref="form" v-model="valid" @submit.prevent="submit">
         <v-flex v-for="(field, fieldName) in this.value.fields" :key="fieldName" xs12>
           <v-menu
-            v-if="field.type === Date"
+            v-if="field.type === 'date'"
             v-model="dp[fieldName]"
             :close-on-content-click="false"
             :nudge-right="40"

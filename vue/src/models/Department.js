@@ -5,21 +5,21 @@ export default class Department {
     static singular = 'Department';
     static fields = {
         _id: {
-            type: String,
+            type: 'string',
             label: 'Dept ID',
             rules: [
                 v => !!v || 'Dept ID is required'
             ]
         },
         deptName: {
-            type: String,
+            type: 'string',
             label: 'Dept Name',
             rules: [
                 v => !!v || 'Dept Name is required'
             ]
         },
         location: {
-            type: String,
+            type: 'string',
             label: 'Location',
             rules: [
                 v => !!v || 'Location is required'

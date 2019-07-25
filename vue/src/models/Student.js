@@ -5,21 +5,21 @@ export default class Student {
     static singular = 'Student';
     static fields = {
         _id: {
-            type: String,
+            type: 'string',
             label: 'Stu ID',
             rules: [
                 v => !!v || 'Stu ID is required'
             ]
         },
         stuName: {
-            type: String,
+            type: 'string',
             label: 'Stu Name',
             rules: [
                 v => !!v || 'Stu Name is required'
             ]
         },
         dOB: {
-            type: Date,
+            type: 'date',
             label: 'Date of Birth',
             rules: [
                 v => !!v || 'Date of Birth is required'
