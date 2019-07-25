@@ -1,6 +1,7 @@
 import BaseModel from './BaseModel';
 import Department from './Department';
 import Course from './Course';
+import Student from './Student';
 
 export default class Offer extends BaseModel {
 
@@ -34,19 +35,31 @@ export default class Offer extends BaseModel {
         },
         classSize: {
             type: 'number',
-            label: 'Year',
+            label: 'Class Size',
             rules: [
-                v => !!v || 'Year is required.',
-                v => Number.isInteger(v) || 'Year should be an integer.',
+                v => !!v || 'Class Size is required.',
+                v => Number.isInteger(v) || 'Class Size should be an integer.',
             ]
         },
         enrolled: {
             type: 'objects',
-            label: 'Year',
-            rules: [
-                v => !!v || 'Year is required.',
-                v => Number.isInteger(v) || 'Year should be an integer.',
-            ]
+            label: 'Enrolled',
+            fields: {
+                student: {
+                    type: 'entity',
+                    entity: Student,
+                    label: 'Student',
+                    rules: [
+                        v => !!v || 'Student is required.'
+                    ]
+                },
+                enrolDate: {
+                    type: 'datetime',
+                    label: 'Enrol Date',
+                    readonly: 2,
+                    cal2: i => new Date
+                }
+            }
         },
         enrolledCount: {
             type: 'number',
@@ -56,7 +69,7 @@ export default class Offer extends BaseModel {
         },
         availablePlaces: {
             type: 'number',
-            label: 'Year',
+            label: 'Available Places',
             readonly: 2,
             cal: i => i.classSize - i.enrolled.length
         },
