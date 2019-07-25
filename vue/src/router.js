@@ -21,13 +21,13 @@ export default new Router({
       meta: {
         menu: { title: Department.plural, icon: "build" }
       },
-      component: () => import('@/components/pages/maint/List'),
+      component: () => import('@/components/maint/List'),
       props: { value: Department }
     },
     {
       path: '/departments/:id',
       name: Department.singular,
-      component: () => import('@/components/pages/maint/Edit'),
+      component: () => import('@/components/maint/Edit'),
       props: { value: Department }
     },
     {
@@ -36,13 +36,13 @@ export default new Router({
       meta: {
         menu: { title: Student.plural, icon: "build" }
       },
-      component: () => import('@/components/pages/maint/List'),
+      component: () => import('@/components/maint/List'),
       props: { value: Student }
     },
     {
       path: '/students/:id',
       name: Student.singular,
-      component: () => import('@/components/pages/maint/Edit'),
+      component: () => import('@/components/maint/Edit'),
       props: { value: Student }
     },
     {
