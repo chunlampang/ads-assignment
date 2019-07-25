@@ -4,7 +4,7 @@
   "description": "Assignment for ADS",
   "main": "index.js",
   "scripts": {
-    "initdb": "node ./initDb",
+    "initdb": "node ./initdb",
     "serve": "node ./index"
   },
   "dependencies": {
