@@ -34,13 +34,13 @@ const stuNames = [
 const students = [];
 
 for (let i = 1; i <= stuNames.length; i++) {
-    let stuName = stuNames[i-1];
-    let num = ("00" + i).slice(-3);
+    let stuName = stuNames[i - 1];
+    let num = (i + '').padStart(3, '0');
     let year = Math.floor(Math.random() * 10) + 1988;
     let month = Math.floor(Math.random() * 12) + 1;
-    month = ("0" + i).slice(-2);
+    month = (i + '').padStart(2, '0');
     let day = Math.floor(Math.random() * 28) + 1;
-    day = ("0" + i).slice(-2);
+    day = (i + '').padStart(2, '0');
     students.push({
         _id: `151${month}${num}`,
         stuName,
