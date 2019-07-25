@@ -33,10 +33,22 @@ export default {
     getVarByDotNotation(obj, str) {
         return str.split('.').reduce((o, i) => o[i], obj);
     },
-    datetimeToString(date){
+    datetimeToString(date) {
+        if (!date)
+            return "";
         return moment(date).format(datetimeFormat);
     },
-    dateToString(date){
+    stringToDatetime(dateString) {
+        if (!dateString)
+            return null;
+        return moment(dateString, datetimeFormat).toDate();
+    },
+    dateToString(date) {
         return moment(date).format(dateFormat);
-    }
+    },
+    stringToDate(dateString) {
+        if (!dateString)
+            return null;
+        return moment(dateString, dateFormat).toDate();
+    },
 }

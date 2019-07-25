@@ -13,32 +13,12 @@
     <v-flex xs12>
       <v-form ref="form" v-model="valid" @submit.prevent="submit">
         <v-flex v-for="(field, fieldName) in this.value.fields" :key="fieldName" xs12>
-          <v-menu
+          <DateField
             v-if="field.type === 'date'"
-            v-model="dp[fieldName]"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            lazy
-            transition="scale-transition"
-            offset-y
-            full-width
-            max-width="290px"
-            min-width="290px"
-          >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="item[fieldName]"
-                :label="field.label"
-                hint="YYYY/MM/DD format"
-                persistent-hint
-                prepend-icon="event"
-                readonly
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker v-model="item[fieldName]" no-title @input="dp[fieldName] = false"></v-date-picker>
-          </v-menu>
-
+            v-model="item[fieldName]"
+            :rules="field.rules"
+            :label="field.label"
+          />
           <v-text-field v-else v-model="item[fieldName]" :rules="field.rules" :label="field.label" />
         </v-flex>
         <v-flex xs12>
@@ -50,7 +30,10 @@
   </v-layout>
 </template>
 <script>
+import DateField from "@/components/blocks/DateField";
+
 export default {
+  components: { DateField },
   props: {
     value: Function
   },
@@ -64,8 +47,7 @@ export default {
       valid: false,
       alert: {
         show: false
-      },
-      dp:{}
+      }
     };
   },
   created() {
