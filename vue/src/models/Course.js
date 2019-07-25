@@ -1,4 +1,6 @@
-export default class Course {
+import BaseModel from './BaseModel';
+
+export default class Course extends BaseModel {
 
     static apiPath = '/courses';
     static plural = 'Courses';
@@ -7,6 +9,7 @@ export default class Course {
         _id: {
             type: 'string',
             label: 'Course ID',
+            readonly: 1,
             rules: [
                 v => !!v || 'Course ID is required.'
             ]
@@ -29,8 +32,6 @@ export default class Course {
     };
 
     constructor() {
-        this._id = '';
-        this.deptName = '';
-        this.location = '';
+        super();
     }
 }

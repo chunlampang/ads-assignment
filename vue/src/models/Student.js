@@ -1,4 +1,6 @@
-export default class Student {
+import BaseModel from './BaseModel';
+
+export default class Student extends BaseModel {
 
     static apiPath = '/students';
     static plural = 'Students';
@@ -7,6 +9,7 @@ export default class Student {
         _id: {
             type: 'string',
             label: 'Stu ID',
+            readonly: 1,
             rules: [
                 v => !!v || 'Stu ID is required'
             ]
@@ -28,8 +31,6 @@ export default class Student {
     };
 
     constructor() {
-        this._id = '';
-        this.stuName = '';
-        this.dOB = '';
+        super();
     }
 }

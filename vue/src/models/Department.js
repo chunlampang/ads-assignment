@@ -1,4 +1,6 @@
-export default class Department {
+import BaseModel from './BaseModel';
+
+export default class Department extends BaseModel {
 
     static apiPath = '/departments';
     static plural = 'Departments';
@@ -7,6 +9,7 @@ export default class Department {
         _id: {
             type: 'string',
             label: 'Dept ID',
+            readonly: 1,
             rules: [
                 v => !!v || 'Dept ID is required'
             ]
@@ -28,8 +31,6 @@ export default class Department {
     };
 
     constructor() {
-        this._id = '';
-        this.deptName = '';
-        this.location = '';
+        super();
     }
 }
