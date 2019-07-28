@@ -27,7 +27,7 @@ exports.insert = function (name) {
             const collection = db.collection(name);
             let { result } = await collection.insertOne(data);
             console.log(`${result.insertedId} is inserted`);
-
+            data._id = result.insertedId;
             out = { ok: !!result.n, data };
             res.status(201);
         } catch (err) {
