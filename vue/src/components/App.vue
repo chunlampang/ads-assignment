@@ -44,10 +44,8 @@ export default {
 
     for (let entityId in entities) {
       let entity = entities[entityId];
-      console.log(entity);
-
       let routeName = "maint-" + entity.plural;
-
+      //append vue router
       let appendRoutes = [];
       appendRoutes.push({
         path: entity.apiPath,
@@ -62,7 +60,7 @@ export default {
         props: route => ({ value: entity })
       });
       this.$router.addRoutes(appendRoutes);
-
+      //append menu
       this.menu.push({
         title: entity.plural,
         icon: "build",
