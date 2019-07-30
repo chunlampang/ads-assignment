@@ -62,6 +62,15 @@ export default {
         link: { name: routeName }
       });
     }
+
+    this.$router.addRoutes([
+      {
+        path: "/:path*",
+        component: () => import("@/components/pages/Error"),
+        props: { code: 404 }
+      }
+    ]);
+
     this.ready = true;
   }
 };
