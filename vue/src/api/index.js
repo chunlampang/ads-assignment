@@ -5,6 +5,9 @@ export default {
     install(Vue) {
         Vue.prototype.$api = this;
     },
+    async getEntities() {
+        return await this.sendRequest('get', '/entities');
+    },
     async sendRequest(method, path, params) {
         let out;
         try {

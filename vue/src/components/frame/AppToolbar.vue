@@ -35,12 +35,12 @@
 
       <v-list class="py-0" dense>
         <template v-for="(item, index) in menu">
-          <v-list-tile v-if="item.meta && item.meta.menu" :key="index" :to="{name:item.name}" exact>
+          <v-list-tile :key="index" :to="item.link" exact>
             <v-list-tile-action>
-              <v-icon>{{item.meta.menu.icon}}</v-icon>
+              <v-icon>{{item.icon}}</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
-              <v-list-tile-title>{{item.meta.menu.title}}</v-list-tile-title>
+              <v-list-tile-title>{{item.title}}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
         </template>
@@ -51,10 +51,12 @@
 
 <script>
 export default {
+  props: {
+    menu: Array
+  },
   data() {
     return {
-      showNav: false,
-      menu: this.$router.options.routes
+      showNav: false
     };
   },
   methods: {

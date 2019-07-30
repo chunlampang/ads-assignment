@@ -1,44 +1,39 @@
-import BaseModel from './BaseModel';
-import Department from './Department';
-import Course from './Course';
-import Student from './Student';
+module.exports = {
 
-export default class Offer extends BaseModel {
-
-    static apiPath = '/offers';
-    static plural = 'Offers';
-    static singular = 'Offer';
-    static fields = {
+    apiPath: '/offers',
+    plural: 'Offers',
+    singular: 'Offer',
+    fields: {
         department: {
             type: 'entity',
-            entity: Department,
+            entity: 'Department',
             label: 'Department',
             rules: [
-                v => !!v || 'Department is required.'
+                'required'
             ]
         },
         course: {
             type: 'entity',
-            entity: Course,
+            entity: 'Course',
             label: 'Course',
             rules: [
-                v => !!v || 'Course is required.'
+                'required'
             ]
         },
         year: {
             type: 'number',
             label: 'Year',
             rules: [
-                v => !!v || 'Year is required.',
-                v => Number.isInteger(v) || 'Year should be an integer.',
+                'required',
+                'integer'
             ]
         },
         classSize: {
             type: 'number',
             label: 'Class Size',
             rules: [
-                v => !!v || 'Class Size is required.',
-                v => Number.isInteger(v) || 'Class Size should be an integer.',
+                'required',
+                'integer'
             ]
         },
         enrolled: {
@@ -47,35 +42,31 @@ export default class Offer extends BaseModel {
             fields: {
                 student: {
                     type: 'entity',
-                    entity: Student,
+                    entity: 'Student',
                     label: 'Student',
                     rules: [
-                        v => !!v || 'Student is required.'
+                        'required'
                     ]
                 },
                 enrolDate: {
                     type: 'datetime',
                     label: 'Enrol Date',
-                    readonly: 2,
-                    cal2: i => new Date
+                    readonly: true,
+                    default: 'new Date'
                 }
             }
         },
         enrolledCount: {
             type: 'number',
             label: 'Enrolled Count',
-            readonly: 2,
-            cal: i => i.enrolled.length
+            readonly: true,
+            cal: { order: 1, fc: 'item.enrolled.length' }
         },
         availablePlaces: {
             type: 'number',
             label: 'Available Places',
-            readonly: 2,
-            cal: i => i.classSize - i.enrolled.length
+            readonly: true,
+            cal: { order: 2, fc: 'item.classSize - item.enrolledCount' }
         },
-    };
-
-    constructor() {
-        super();
-    }
+    },
 }

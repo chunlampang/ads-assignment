@@ -16,13 +16,18 @@
           <DateField
             v-if="field.type === 'date'"
             v-model="item[fieldName]"
-            :rules="field.rules"
+            :rules="getRules(field)"
             :label="field.label"
           />
-          <v-text-field v-else v-model="item[fieldName]" :rules="field.rules" :label="field.label" />
+          <v-text-field
+            v-else
+            v-model="item[fieldName]"
+            :rules="getRules(field)"
+            :label="field.label"
+          />
         </v-flex>
         <v-flex xs12>
-          <v-btn type="submit" class="text-none">Submit</v-btn>
+          <v-btn type="submit" :disabled="!valid" class="text-none">Submit</v-btn>
           <v-btn @click="reset" class="text-none">Reset</v-btn>
         </v-flex>
       </v-form>
@@ -35,7 +40,7 @@ import DateField from "@/components/blocks/DateField";
 export default {
   components: { DateField },
   props: {
-    value: Function
+    value: Object
   },
   data() {
     let id = this.$route.params.id;
@@ -47,14 +52,15 @@ export default {
       valid: false,
       alert: {
         show: false
-      }
+      },
+      rulesCache: {}
     };
   },
   created() {
     this.breadcrumbs = [
       {
         text: this.value.plural,
-        to: { name: this.value.plural },
+        to: { name: "maint-" + this.value.plural },
         exact: true
       },
       {
@@ -126,6 +132,25 @@ export default {
         this.$refs.form.resetValidation();
         this.getItem();
       }
+    },
+    getRules(field) {
+      if (this.rulesCache[field.label]) return this.rulesCache[field.label];
+
+      const rules = [];
+      for (let ruleName of field.rules) {
+        switch (ruleName) {
+          case "required":
+            rules.push(v => !!v || field.label + " is required.");
+            break;
+          case "integer":
+            rules.push(
+              v => Number.isInteger(Number(v)) || field.label + " should be an integer."
+            );
+            break;
+        }
+      }
+
+      return (this.rulesCache[field.label] = rules);
     }
   }
 };

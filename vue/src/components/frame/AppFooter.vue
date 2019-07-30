@@ -1,11 +1,11 @@
 <template>
   <v-footer dark height="auto">
-    <v-card class="flex grey darken-3" flat tile>
+    <v-card class="flex secondary" flat tile>
       <v-card-title class="py-4">
         <v-layout row wrap justify-center class="text-xs-center">
           <template v-for="(item, index) in menu">
-            <v-flex xs12 sm6 md4 v-if="item.meta && item.meta.menu" :key="index">
-              <v-btn :to="{name:item.name}" exact flat class="text-none">{{item.meta.menu.title}}</v-btn>
+            <v-flex xs12 sm6 md4 :key="index">
+              <v-btn :to="item.link" exact flat class="text-none">{{item.title}}</v-btn>
             </v-flex>
           </template>
           <v-flex xs12>
@@ -29,10 +29,8 @@
 
 <script>
 export default {
-  data() {
-    return {
-      menu: this.$router.options.routes
-    };
+  props: {
+    menu: Array
   }
 };
 </script>

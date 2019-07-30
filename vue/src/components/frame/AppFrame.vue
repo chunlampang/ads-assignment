@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <AppToolbar />
+    <AppToolbar :menu="menu" />
     <v-content>
       <v-container class="pb-5" fluid>
         <v-layout row wrap justify-center>
@@ -10,7 +10,7 @@
                 <v-layout row wrap>
                   <v-flex xs12>
                     <v-container>
-                      <router-view :key="$route.path"/>
+                      <router-view :key="$route.path" />
                     </v-container>
                   </v-flex>
                 </v-layout>
@@ -20,7 +20,7 @@
         </v-layout>
       </v-container>
     </v-content>
-    <AppFooter />
+    <AppFooter :menu="menu" />
   </v-app>
 </template>
 
@@ -29,10 +29,10 @@ import AppToolbar from "./AppToolbar";
 import AppFooter from "./AppFooter";
 
 export default {
-  name: "AppFrame",
   components: {
     AppToolbar,
     AppFooter
-  }
+  },
+  inject: ["menu"]
 };
 </script>

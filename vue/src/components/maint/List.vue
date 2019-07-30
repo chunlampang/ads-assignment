@@ -8,7 +8,7 @@
     <v-flex class="mt-4" xs12>
       <v-toolbar color="primary" dark dense flat>
         <v-btn
-          :to="{ name: value.singular, params: { id: 'new' } }"
+          :to="{ name: 'maint-' + value.singular, params: { id: 'new' } }"
           class="text-none"
           flat
         >{{'New ' + value.singular}}</v-btn>
@@ -30,11 +30,11 @@
       >
         <template v-slot:items="{ item }">
           <td v-for="(field, fieldName) in value.fields" :key="fieldName">
-            <template v-if="field.type === Date">{{$utils.dateToString(item[fieldName])}}</template>
+            <template v-if="field.type === 'date'">{{$utils.dateToString(item[fieldName])}}</template>
             <template v-else>{{item[fieldName] }}</template>
           </td>
           <td width="152px">
-            <v-btn :to="{ name: value.singular, params: { id: item._id }}" icon>
+            <v-btn :to="{ name: 'maint-' + value.singular, params: { id: item._id }}" icon>
               <v-icon>edit</v-icon>
             </v-btn>
             <v-btn @click="showDeleteDialog(item)" icon>
@@ -61,9 +61,10 @@
 <script>
 export default {
   props: {
-    value: Function
+    value: Object
   },
   data() {
+    console.log(this.$route);
     let headers = [];
 
     let fields = this.value.fields;
@@ -100,9 +101,6 @@ export default {
         show: false
       }
     };
-  },
-  created() {
-    console.log(new this.value());
   },
   computed: {
     apiOptions() {
