@@ -9,6 +9,7 @@
     full-width
     max-width="290px"
     min-width="290px"
+    :disabled="readonly"
   >
     <template v-slot:activator="{ on }">
       <v-text-field
@@ -19,6 +20,7 @@
         prepend-icon="event"
         :rules="rulesWithFormat"
         v-on="on"
+        readonly
       ></v-text-field>
     </template>
     <v-date-picker v-model="date" no-title @input="showPicker = false"></v-date-picker>
@@ -34,7 +36,8 @@ export default {
   props: {
     value: Date | String,
     label: String,
-    rules: Array
+    rules: Array,
+    readonly:Boolean
   },
   data() {
     return {

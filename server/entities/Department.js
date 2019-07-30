@@ -6,7 +6,6 @@ module.exports = {
         deptId: {
             type: 'string',
             label: 'Dept ID',
-            readonly: 1,
             rules: ['required']
         },
         deptName: {

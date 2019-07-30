@@ -18,12 +18,14 @@
             v-model="item[fieldName]"
             :rules="getRules(field)"
             :label="field.label"
+            :readonly="readonly(field)"
           />
           <v-text-field
             v-else
             v-model="item[fieldName]"
             :rules="getRules(field)"
             :label="field.label"
+            :readonly="readonly(field)"
           />
         </v-flex>
         <v-flex xs12>
@@ -144,13 +146,18 @@ export default {
             break;
           case "integer":
             rules.push(
-              v => Number.isInteger(Number(v)) || field.label + " should be an integer."
+              v =>
+                Number.isInteger(Number(v)) ||
+                field.label + " should be an integer."
             );
             break;
         }
       }
 
       return (this.rulesCache[field.label] = rules);
+    },
+    readonly(field) {
+      return field.readonly === 2 || (field.readonly === 1 && this.id !== "new");
     }
   }
 };
