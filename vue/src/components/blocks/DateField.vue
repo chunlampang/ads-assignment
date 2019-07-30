@@ -17,7 +17,7 @@
         :label="label"
         hint="Format: YYYY/MM/DD"
         persistent-hint
-        prepend-icon="event"
+        append-icon="event"
         :rules="rulesWithFormat"
         v-on="on"
         readonly
