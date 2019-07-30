@@ -20,9 +20,9 @@ export default new Router({
       component: () => import('@/components/pages/Index')
     },
     {
-      path: '/offers',
+      path: '/offer-courses',
       name: 'offers',
-      meta: { menu: { title: "Offers", icon: "book" } },
+      meta: { menu: { title: "Offer Courses", icon: "book" } },
       component: () => import('@/components/pages/Courses')
     },
     {
