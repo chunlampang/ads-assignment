@@ -6,17 +6,20 @@ module.exports = {
         deptId: {
             type: 'string',
             label: 'Dept ID',
-            rules: ['required']
+            rules: ['required'],
+            view: ['list', 'edit']
         },
         deptName: {
             type: 'string',
             label: 'Dept Name',
-            rules: ['required']
+            rules: ['required'],
+            view: ['list', 'edit']
         },
         location: {
             type: 'string',
             label: 'Location',
-            rules: ['required']
+            rules: ['required'],
+            view: ['list', 'edit']
         }
     }
 }

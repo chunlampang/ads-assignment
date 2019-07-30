@@ -7,17 +7,20 @@ module.exports = {
             type: 'string',
             label: 'Stu ID',
             readonly: 1,
-            rules: ['required']
+            rules: ['required'],
+            view: ['list', 'edit']
         },
         stuName: {
             type: 'string',
             label: 'Stu Name',
-            rules: ['required']
+            rules: ['required'],
+            view: ['list', 'edit']
         },
         dOB: {
             type: 'date',
             label: 'Date of Birth',
-            rules: ['required']
+            rules: ['required'],
+            view: ['list', 'edit']
         }
     }
 }

@@ -12,22 +12,26 @@
     </v-flex>
     <v-flex xs12>
       <v-form ref="form" v-model="valid" @submit.prevent="submit">
-        <v-flex v-for="(field, fieldName) in this.value.fields" :key="fieldName" xs12>
-          <DateField
-            v-if="field.type === 'date'"
-            v-model="item[fieldName]"
-            :rules="getRules(field)"
-            :label="field.label"
-            :readonly="readonly(field)"
-          />
-          <v-text-field
-            v-else
-            v-model="item[fieldName]"
-            :rules="getRules(field)"
-            :label="field.label"
-            :readonly="readonly(field)"
-          />
-        </v-flex>
+        <template v-for="(field, fieldName) in value.fields">
+          <template v-if="field.view.includes('edit')">
+            <v-flex :key="fieldName" xs12>
+              <DateField
+                v-if="field.type === 'date'"
+                v-model="item[fieldName]"
+                :rules="getRules(field)"
+                :label="field.label"
+                :readonly="readonly(field)"
+              />
+              <v-text-field
+                v-else
+                v-model="item[fieldName]"
+                :rules="getRules(field)"
+                :label="field.label"
+                :readonly="readonly(field)"
+              />
+            </v-flex>
+          </template>
+        </template>
         <v-flex xs12>
           <v-btn type="submit" :disabled="!valid" class="text-none">Submit</v-btn>
           <v-btn @click="reset" class="text-none">Reset</v-btn>
@@ -157,7 +161,9 @@ export default {
       return (this.rulesCache[field.label] = rules);
     },
     readonly(field) {
-      return field.readonly === 2 || (field.readonly === 1 && this.id !== "new");
+      return (
+        field.readonly === 2 || (field.readonly === 1 && this.id !== "new")
+      );
     }
   }
 };

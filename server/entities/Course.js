@@ -7,17 +7,20 @@ module.exports = {
             type: 'string',
             label: 'Course ID',
             readonly: 1,
-            rules: ['required']
+            rules: ['required'],
+            view: ['list', 'edit']
         },
         title: {
             type: 'string',
             label: 'Title',
-            rules: ['required']
+            rules: ['required'],
+            view: ['list', 'edit']
         },
         level: {
             type: 'number',
             label: 'Level',
-            rules: ['required', 'integer',]
+            rules: ['required', 'integer'],
+            view: ['list', 'edit']
         }
     }
 }

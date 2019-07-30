@@ -8,33 +8,27 @@ module.exports = {
             type: 'entity',
             entity: 'Department',
             label: 'Department',
-            rules: [
-                'required'
-            ]
+            rules: ['required'],
+            view: ['list', 'edit']
         },
         course: {
             type: 'entity',
             entity: 'Course',
             label: 'Course',
-            rules: [
-                'required'
-            ]
+            rules: ['required'],
+            view: ['list', 'edit']
         },
         year: {
             type: 'number',
             label: 'Year',
-            rules: [
-                'required',
-                'integer'
-            ]
+            rules: ['required', 'integer'],
+            view: ['list', 'edit']
         },
         classSize: {
             type: 'number',
             label: 'Class Size',
-            rules: [
-                'required',
-                'integer'
-            ]
+            rules: ['required', 'integer'],
+            view: ['list', 'edit']
         },
         enrolled: {
             type: 'objects',
@@ -54,19 +48,22 @@ module.exports = {
                     readonly: true,
                     default: 'new Date'
                 }
-            }
+            },
+            view: ['edit']
         },
         enrolledCount: {
             type: 'number',
             label: 'Enrolled Count',
             readonly: true,
-            cal: { order: 1, fc: 'item.enrolled.length' }
+            cal: { order: 1, fc: 'item.enrolled.length' },
+            view: ['edit']
         },
         availablePlaces: {
             type: 'number',
             label: 'Available Places',
             readonly: true,
-            cal: { order: 2, fc: 'item.classSize - item.enrolledCount' }
+            cal: { order: 2, fc: 'item.classSize - item.enrolledCount' },
+            view: ['list', 'edit']
         },
     },
 }

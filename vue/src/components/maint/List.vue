@@ -29,10 +29,12 @@
         flat
       >
         <template v-slot:items="{ item }">
-          <td v-for="(field, fieldName) in value.fields" :key="fieldName">
-            <template v-if="field.type === 'date'">{{$utils.dateToString(item[fieldName])}}</template>
-            <template v-else>{{item[fieldName] }}</template>
-          </td>
+          <template v-for="(field, fieldName) in value.fields">
+            <td v-if="field.view.includes('list')" :key="fieldName">
+              <template v-if="field.type === 'date'">{{$utils.dateToString(item[fieldName])}}</template>
+              <template v-else>{{item[fieldName] }}</template>
+            </td>
+          </template>
           <td width="152px">
             <v-btn :to="{ name: 'maint-' + value.singular, params: { id: item._id }}" icon>
               <v-icon>edit</v-icon>
@@ -69,10 +71,11 @@ export default {
 
     let fields = this.value.fields;
     for (let fieldName in fields) {
-      headers.push({
-        text: fields[fieldName].label,
-        value: fieldName
-      });
+      if (fields[fieldName].view.includes("list"))
+        headers.push({
+          text: fields[fieldName].label,
+          value: fieldName
+        });
     }
 
     headers.push({ text: "Actions", value: "", sortable: false });
