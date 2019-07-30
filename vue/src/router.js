@@ -22,22 +22,20 @@ export default new Router({
     {
       path: '/offers',
       name: 'offers',
+      meta: { menu: { title: "Offers", icon: "book" } },
       component: () => import('@/components/pages/Courses')
     },
     {
       path: '/courses-info',
       name: 'coursesInfo',
+      meta: { menu: { title: "Courses Info", icon: "book" } },
       component: () => import('@/components/pages/CoursesInfo')
     },
     {
       path: '/courses-popular',
       name: 'coursePopular',
+      meta: { menu: { title: "Popular Courses", icon: "grade" } },
       component: () => import('@/components/pages/CoursePopular')
-    },
-    {
-      path: '/enrolled-students',
-      name: 'enrolledStudents',
-      component: () => import('@/components/pages/EnrolledStudents')
     },
   ]
 });

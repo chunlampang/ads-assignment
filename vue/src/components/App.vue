@@ -9,22 +9,17 @@ export default {
   name: "App",
   components: { AppFrame },
   data() {
+    let menu = [];
+    for (let route of this.$router.options.routes) {
+      if (route.meta && route.meta.menu) {
+        let m = route.meta.menu;
+        menu.push({ icon: m.icon, title: m.title, link: { name: route.name } });
+      }
+    }
+
     return {
       ready: false,
-      menu: [
-        { title: "Offers", icon: "book", link: { name: "offers" } },
-        { title: "Courses Info", icon: "book", link: { name: "coursesInfo" } },
-        {
-          title: "Popular Courses",
-          icon: "grade",
-          link: { name: "coursePopular" }
-        },
-        {
-          title: "Enrolled Students",
-          icon: "people",
-          link: { name: "enrolledStudents" }
-        }
-      ],
+      menu,
       entities: []
     };
   },

@@ -56,7 +56,7 @@ module.exports = {
             label: 'Enrolled Count',
             readonly: true,
             cal: { order: 1, fc: 'item.enrolled.length' },
-            view: ['edit']
+            view: ['list', 'edit']
         },
         availablePlaces: {
             type: 'number',
