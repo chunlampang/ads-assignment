@@ -10,7 +10,9 @@
                 <v-layout row wrap>
                   <v-flex xs12>
                     <v-container>
-                      <router-view :key="$route.path" />
+                      <transition name="scroll-x-transition">
+                        <router-view :key="$route.path" />
+                      </transition>
                     </v-container>
                   </v-flex>
                 </v-layout>
