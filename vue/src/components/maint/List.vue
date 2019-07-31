@@ -5,8 +5,6 @@
       <v-divider class="primary" />
       <v-alert :value="alert.show" :type="alert.type">{{alert.msg}}</v-alert>
     </v-flex>
-
-    <v-flex xs12></v-flex>
     <v-flex class="mt-4" xs12>
       <v-data-table
         :headers="headers"
@@ -29,9 +27,14 @@
               <v-icon>mdi-refresh</v-icon>
             </v-btn>
           </v-toolbar>
-          <v-expansion-panels>
+          <v-expansion-panels popout>
             <v-expansion-panel>
-              <v-expansion-panel-header expand-icon="mdi-magnify" disable-icon-rotate>Search</v-expansion-panel-header>
+              <v-expansion-panel-header ripple>
+                <div>
+                  <v-icon color="primary">mdi-filter</v-icon>
+                  <span class="ml-3 subtitle-1 font-weight-medium">Filter</span>
+                </div>
+              </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <v-form ref="searchForm" v-model="filter.valid" @submit.prevent="search">
                   <v-layout row wrap>

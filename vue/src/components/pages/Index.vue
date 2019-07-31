@@ -1,7 +1,7 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12>
-      <v-card>
+      <v-card flat>
         <v-card-title>
           <div class="headline">Group 5A</div>
         </v-card-title>
