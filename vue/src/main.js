@@ -1,7 +1,7 @@
 import Vue from 'vue';
-import './plugins';
+import vuetify from './plugins/vuetify';
+import router from './plugins/router';
 import App from './components/App.vue';
-import router from './router';
 
 import api from './api';
 Vue.use(api);
@@ -12,6 +12,7 @@ Vue.use(utils);
 Vue.config.productionTip = false;
 
 new Vue({
+  vuetify,
   router,
   render: h => h(App)
 }).$mount('#app')

@@ -7,19 +7,19 @@ module.exports = {
             type: 'string',
             label: 'Dept ID',
             rules: ['required'],
-            view: ['list', 'edit']
+            view: ['filter', 'list', 'edit']
         },
         deptName: {
             type: 'string',
             label: 'Dept Name',
             rules: ['required'],
-            view: ['list', 'edit']
+            view: ['filter', 'list', 'edit']
         },
         location: {
             type: 'string',
             label: 'Location',
             rules: ['required'],
-            view: ['list', 'edit']
+            view: ['filter', 'list', 'edit']
         }
     }
 }

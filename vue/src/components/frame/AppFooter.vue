@@ -1,11 +1,11 @@
 <template>
-  <v-footer dark height="auto">
+  <v-footer dark padless>
     <v-card class="flex secondary" flat tile>
-      <v-card-title class="py-4">
-        <v-layout row wrap justify-center class="text-xs-center">
+      <v-card-title class="py-4 body-2">
+        <v-layout justify-center text-center row>
           <template v-for="(item, index) in menu">
             <v-flex xs12 sm6 md4 :key="index">
-              <v-btn :to="item.link" exact flat class="text-none">{{item.title}}</v-btn>
+              <v-btn :to="item.link" exact text class="text-none">{{item.title}}</v-btn>
             </v-flex>
           </template>
           <v-flex xs12>
@@ -21,7 +21,7 @@
       </v-card-title>
 
       <v-card-actions
-        class="primary justify-center"
+        class="primary justify-center overline"
       >Advanced Database Systems - Assignment 2 (Part B) - Group 5A</v-card-actions>
     </v-card>
   </v-footer>

@@ -5,7 +5,7 @@
       <v-divider class="primary" />
       <v-breadcrumbs :items="breadcrumbs" class="pt-0">
         <template v-slot:divider>
-          <v-icon>chevron_right</v-icon>
+          <v-icon>mdi-chevron-right</v-icon>
         </template>
       </v-breadcrumbs>
       <v-alert :value="alert.show" :type="alert.type">{{alert.msg}}</v-alert>

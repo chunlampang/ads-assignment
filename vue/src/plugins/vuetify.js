@@ -1,15 +1,19 @@
 import Vue from 'vue';
-import Vuetify, { VLayout } from 'vuetify/lib';
-import 'vuetify/src/stylus/app.styl';
-import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import Vuetify from 'vuetify/lib';
+import '@mdi/font/css/materialdesignicons.css';
 import 'typeface-roboto/index.css';
 
-Vue.use(Vuetify, {
-  components: {
-    VLayout
+Vue.use(Vuetify);
+
+export default new Vuetify({
+  icons: {
+    iconfont: 'mdi',
   },
-  iconfont: 'md',
   theme: {
-    primary: "#b01861"
+    themes: {
+      light: {
+        primary: "#b01861"
+      }
+    }
   },
-})
+});

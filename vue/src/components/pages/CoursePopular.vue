@@ -48,14 +48,14 @@
       <v-list dense three-line>
         <template v-for="(item, index) in items.slice(3)">
           <v-divider v-if="index > 0" :key="'d-'+index" />
-          <v-list-tile :key="'t-'+index">
-            <v-list-tile-avatar>{{index+4}}</v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title>{{item.course + ' - ' + item._join.course.title}}</v-list-tile-title>
-              <v-list-tile-sub-title>{{item._join.department.deptName + ` (${item.year})`}}</v-list-tile-sub-title>
-              <v-list-tile-sub-title>Enrolled: {{printEnrolled(item)}}</v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
+          <v-list-item :key="'t-'+index">
+            <v-list-item-avatar>{{index+4}}</v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>{{item.course + ' - ' + item._join.course.title}}</v-list-item-title>
+              <v-list-item-sub-title>{{item._join.department.deptName + ` (${item.year})`}}</v-list-item-sub-title>
+              <v-list-item-sub-title>Enrolled: {{printEnrolled(item)}}</v-list-item-sub-title>
+            </v-list-item-content>
+          </v-list-item>
         </template>
       </v-list>
     </v-flex>

@@ -8,19 +8,19 @@ module.exports = {
             label: 'Course ID',
             readonly: 1,
             rules: ['required'],
-            view: ['list', 'edit']
+            view: ['filter', 'list', 'edit']
         },
         title: {
             type: 'string',
             label: 'Title',
             rules: ['required'],
-            view: ['list', 'edit']
+            view: ['filter', 'list', 'edit']
         },
         level: {
             type: 'number',
             label: 'Level',
             rules: ['required', 'integer'],
-            view: ['list', 'edit']
+            view: ['filter', 'list', 'edit']
         }
     }
 }

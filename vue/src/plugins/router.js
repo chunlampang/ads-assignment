@@ -22,19 +22,19 @@ export default new Router({
     {
       path: '/offer-courses',
       name: 'offers',
-      meta: { menu: { title: "Offer Courses", icon: "book" } },
+      meta: { menu: { title: "Offer Courses", icon: "mdi-book" } },
       component: () => import('@/components/pages/Courses')
     },
     {
       path: '/courses-info',
       name: 'coursesInfo',
-      meta: { menu: { title: "Courses Info", icon: "book" } },
+      meta: { menu: { title: "Courses Info", icon: "mdi-book" } },
       component: () => import('@/components/pages/CoursesInfo')
     },
     {
       path: '/courses-popular',
       name: 'coursePopular',
-      meta: { menu: { title: "Popular Courses", icon: "grade" } },
+      meta: { menu: { title: "Popular Courses", icon: "mdi-trophy" } },
       component: () => import('@/components/pages/CoursePopular')
     },
   ]

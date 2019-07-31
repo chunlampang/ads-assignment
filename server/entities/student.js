@@ -8,19 +8,19 @@ module.exports = {
             label: 'Stu ID',
             readonly: 1,
             rules: ['required'],
-            view: ['list', 'edit']
+            view: ['filter', 'list', 'edit']
         },
         stuName: {
             type: 'string',
             label: 'Stu Name',
             rules: ['required'],
-            view: ['list', 'edit']
+            view: ['filter', 'list', 'edit']
         },
         dOB: {
             type: 'date',
             label: 'Date of Birth',
             rules: ['required'],
-            view: ['list', 'edit']
+            view: ['filter', 'list', 'edit']
         }
     }
 }

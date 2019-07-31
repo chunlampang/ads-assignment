@@ -33,10 +33,10 @@
             label="Student ID"
           >
             <template v-slot:item="data">
-              <v-list-tile-content>
-                <v-list-tile-title v-html="data.item.stuName"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="data.item._id"></v-list-tile-sub-title>
-              </v-list-tile-content>
+              <v-list-item-content>
+                <v-list-item-title v-html="data.item.stuName"></v-list-item-title>
+                <v-list-item-sub-title v-html="data.item._id"></v-list-item-sub-title>
+              </v-list-item-content>
             </template>
           </v-autocomplete>
         </v-flex>
