@@ -1,12 +1,24 @@
 const mongoPool = require.main.require('./utils/mongoPool');
+const { ObjectId } = require('mongodb');
 
-exports.get = function (name) {
-    return async function (req, res) {
+module.exports = class Controller {
+    constructor(entity) {
+        this.entity = entity;
+    }
+
+    getId(req) {
+        if (!this.entity.fields._id)
+            return ObjectId(req.params.id);
+        return req.params.id;
+    }
+
+    async get(req, res) {
         let out;
         try {
             const db = await mongoPool.getDb();
-            const collection = db.collection(name);
-            let result = await collection.findOne({ _id: req.params.id });
+            const collection = db.collection(this.entity.collection);
+            
+            let result = await collection.findOne({ _id: this.getId(req) });
 
             out = { data: result };
         } catch (err) {
@@ -15,16 +27,14 @@ exports.get = function (name) {
         }
 
         res.send(out);
-    };
-}
+    }
 
-exports.insert = function (name) {
-    return async function (req, res) {
+    async insert(req, res) {
         let out;
         let data = req.query;
         try {
             const db = await mongoPool.getDb();
-            const collection = db.collection(name);
+            const collection = db.collection(this.entity.collection);
             let { result } = await collection.insertOne(data);
             console.log(`${result.insertedId} is inserted`);
             data._id = result.insertedId;
@@ -39,18 +49,18 @@ exports.insert = function (name) {
         }
 
         res.send(out);
-    };
-}
+    }
 
-exports.update = function (name) {
-    return async function (req, res) {
+    async update(req, res) {
         let out;
         let data = req.query;
         try {
             const db = await mongoPool.getDb();
-            const collection = db.collection(name);
-            let { result } = await collection.updateOne({ _id: req.params.id }, { $set: data });
-            console.log(`${req.params.id} is updated`);
+            const collection = db.collection(this.entity.collection);
+            let _id = this.getId(req);
+
+            let { result } = await collection.updateOne({ _id }, { $set: data });
+            console.log(`${_id} is updated`);
 
             out = { ok: !!result.nModified, data };
         } catch (err) {
@@ -62,18 +72,18 @@ exports.update = function (name) {
         }
         res.send(out);
     }
-}
 
-exports.delete = function (name) {
-    return async function (req, res) {
+    async delete(req, res) {
         let out;
         try {
             const db = await mongoPool.getDb();
-            const collection = db.collection(name);
-            let { result } = await collection.deleteOne({ _id: req.params.id });
+            const collection = db.collection(this.entity.collection);
+            let _id = this.getId(req);
+
+            let { result } = await collection.deleteOne({ _id });
 
             if (result.n > 0) {
-                console.log(`${req.params.id} is deleted`);
+                console.log(`${_id} is deleted`);
                 out = { ok: true };
             } else
                 res.status(404);
@@ -84,3 +94,4 @@ exports.delete = function (name) {
         res.send(out);
     }
 }
+

@@ -1,9 +1,14 @@
 const express = require('express');
 const mongoPool = require.main.require('./utils/mongoPool');
 const queryHelper = require.main.require('./utils/queryHelper');
+const Controller = require('../Controller');
+
+const entity = require.main.require('./entities/offer');
+const controller = new Controller(entity);
 
 const router = express.Router();
-const route = router.route('/offers');
+const route = router.route(`/${entity.collection}`);
+const itemRouter = router.route(`/${entity.collection}/:id`);
 
 //a) Find the titles of courses offered by the CS department in 2016.
 //b) List the information of courses offered by the CS or IS departments in 2016.
@@ -96,7 +101,7 @@ route.get(async function (req, res) {
         }
 
         const db = await mongoPool.getDb();
-        const offers = db.collection('offers');
+        const offers = db.collection(entity.collection);
         out = await queryHelper.aggregateList(offers, options, req.query);
     } catch (err) {
         out = { error: err.message };
@@ -105,5 +110,10 @@ route.get(async function (req, res) {
 
     res.send(out);
 });
+
+route.post((req, res) => controller.insert(req, res));
+itemRouter.get((req, res) => controller.get(req, res));
+itemRouter.put((req, res) => controller.update(req, res));
+itemRouter.delete((req, res) => controller.delete(req, res));
 
 module.exports = router;

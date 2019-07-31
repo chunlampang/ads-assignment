@@ -1,13 +1,14 @@
 const express = require('express');
 const mongoPool = require.main.require('./utils/mongoPool');
 const queryHelper = require.main.require('./utils/queryHelper');
-const common = require('../common');
+const Controller = require('../Controller');
 
-const collectionName = 'departments';
+const entity = require.main.require('./entities/department');
+const controller = new Controller(entity);
 
 const router = express.Router();
-const route = router.route(`/${collectionName}`);
-const itemRouter = router.route(`/${collectionName}/:id`);
+const route = router.route(`/${entity.collection}`);
+const itemRouter = router.route(`/${entity.collection}/:id`);
 
 route.get(async function (req, res) {
     let out;
@@ -27,7 +28,7 @@ route.get(async function (req, res) {
         }
 
         const db = await mongoPool.getDb();
-        const departments = db.collection(collectionName);
+        const departments = db.collection(entity.collection);
         out = await queryHelper.aggregateList(departments, options, req.query);
     } catch (err) {
         out = { error: err.message };
@@ -37,9 +38,9 @@ route.get(async function (req, res) {
     res.send(out);
 });
 
-route.post(common.insert(collectionName));
-itemRouter.get(common.get(collectionName));
-itemRouter.put(common.update(collectionName));
-itemRouter.delete(common.delete(collectionName));
+route.post((req, res) => controller.insert(req, res));
+itemRouter.get((req, res) => controller.get(req, res));
+itemRouter.put((req, res) => controller.update(req, res));
+itemRouter.delete((req, res) => controller.delete(req, res));
 
 module.exports = router;

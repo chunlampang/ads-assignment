@@ -110,12 +110,14 @@ export default {
       let result;
       if (this.id === "new")
         result = await this.$api.insert("/" + this.value.collection, this.item);
-      else
+      else {
+        delete this.item._id;
         result = await this.$api.update(
           "/" + this.value.collection,
           this.id,
           this.item
         );
+      }
 
       if (result.ok) {
         this.alert = {
@@ -124,9 +126,10 @@ export default {
           msg: "Saved."
         };
 
-        this.$router.replace({
-          params: { id: result.data._id }
-        });
+        if (this.id === "new")
+          this.$router.replace({
+            params: { id: result.data._id }
+          });
       } else if (result.error) {
         this.alert = {
           show: true,
