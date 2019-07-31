@@ -25,6 +25,7 @@
               <v-text-field
                 v-else
                 v-model="item[fieldName]"
+                :type="field.type === 'number'? 'number' : 'text'"
                 :rules="getRules(field)"
                 :label="field.label"
                 :readonly="readonly(field)"
