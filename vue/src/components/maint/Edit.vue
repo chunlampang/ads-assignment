@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     async getItem() {
-      let result = await this.$api.get(this.value.apiPath, this.id);
+      let result = await this.$api.get("/" + this.value.collection, this.id);
       if (result.error) {
         this.alert = {
           show: true,
@@ -109,9 +109,13 @@ export default {
 
       let result;
       if (this.id === "new")
-        result = await this.$api.insert(this.value.apiPath, this.item);
+        result = await this.$api.insert("/" + this.value.collection, this.item);
       else
-        result = await this.$api.update(this.value.apiPath, this.id, this.item);
+        result = await this.$api.update(
+          "/" + this.value.collection,
+          this.id,
+          this.item
+        );
 
       if (result.ok) {
         this.alert = {

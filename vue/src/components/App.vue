@@ -43,13 +43,13 @@ export default {
       //append vue router
       let appendRoutes = [];
       appendRoutes.push({
-        path: entity.apiPath,
+        path: "/" + entity.collection,
         name: routeName,
         component: () => import("@/components/maint/List"),
         props: route => ({ value: entity })
       });
       appendRoutes.push({
-        path: entity.apiPath + "/:id",
+        path: `/${entity.collection}/:id`,
         name: "maint-" + entity.singular,
         component: () => import("@/components/maint/Edit"),
         props: route => ({ value: entity })

@@ -1,5 +1,5 @@
 module.exports = {
-    apiPath: '/courses',
+    collection: 'courses',
     plural: 'Courses',
     singular: 'Course',
     fields: {

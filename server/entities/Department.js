@@ -1,5 +1,5 @@
 module.exports = {
-    apiPath: '/departments',
+    collection: 'departments',
     plural: 'Departments',
     singular: 'Department',
     fields: {

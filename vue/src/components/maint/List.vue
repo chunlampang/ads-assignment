@@ -136,7 +136,7 @@ export default {
   methods: {
     async search() {
       this.loading = true;
-      let result = await this.$api.query(this.value.apiPath, {
+      let result = await this.$api.query("/" + this.value.collection, {
         filter: this.filter,
         ...this.apiOptions
       });
@@ -159,7 +159,10 @@ export default {
     },
     async deleteItem(item) {
       this.deleteDialog.visible = false;
-      let result = await this.$api.delete(this.value.apiPath, item._id);
+      let result = await this.$api.delete(
+        "/" + this.value.collection,
+        item._id
+      );
       if (result.ok) {
         this.alert = {
           show: true,

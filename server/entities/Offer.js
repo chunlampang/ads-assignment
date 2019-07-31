@@ -1,6 +1,5 @@
 module.exports = {
-
-    apiPath: '/offers',
+    collection: 'offers',
     plural: 'Offers',
     singular: 'Offer',
     fields: {
