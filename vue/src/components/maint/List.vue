@@ -100,12 +100,12 @@
         <template v-slot:item="{ item }">
           <tr>
             <template v-for="(field, fieldName) in value.fields">
-              <td v-if="field.view.includes('list')" :key="fieldName">
+              <td v-if="field.view.includes('list')" :key="fieldName" style="min-width:150px">
                 <template v-if="field.type === 'date'">{{$utils.dateToString(item[fieldName])}}</template>
                 <template v-else>{{item[fieldName] }}</template>
               </td>
             </template>
-            <td width="152px">
+            <td style="min-width:150px">
               <v-btn :to="{ name: 'maint-' + value.singular, params: { id: item._id }}" icon>
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
@@ -205,6 +205,7 @@ export default {
   },
   watch: {
     apiOptions() {
+      this.alert.show = false;
       this.search();
     },
     filter: {

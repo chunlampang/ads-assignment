@@ -4,7 +4,7 @@
     <v-content>
       <v-container class="pb-5" fluid>
         <v-layout row wrap justify-center>
-          <v-flex xs12 sm10 md8>
+          <v-flex xs11 sm10 md9 lg8 xl7>
             <v-container>
               <transition name="scroll-y-transition">
                 <router-view :key="$route.path" />

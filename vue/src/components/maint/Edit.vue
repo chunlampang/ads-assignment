@@ -35,9 +35,9 @@
                 </v-flex>
               </template>
             </template>
-            <v-flex xs12>
-              <v-btn type="submit" :disabled="!valid" class="text-none">Submit</v-btn>
-              <v-btn @click="reset" class="text-none">Reset</v-btn>
+            <v-flex xs12 text-right>
+              <v-btn type="submit" :disabled="!valid" color="primary" text class="text-none">Submit</v-btn>
+              <v-btn @click="reset" color="warning" text class="text-none">Reset</v-btn>
             </v-flex>
           </v-form>
         </v-card-text>
