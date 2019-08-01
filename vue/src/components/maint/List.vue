@@ -12,22 +12,12 @@
         :tserver-items-length="items.meta.total"
         :options.sync="pagination"
         :loading="loading"
+        multi-sort
         class="elevation-1"
       >
         <template v-slot:top>
-          <v-toolbar color="primary" dark dense flat>
-            <v-btn
-              :to="{ name: 'maint-' + value.singular, params: { id: 'new' } }"
-              class="text-none"
-              text
-            >{{'New ' + value.singular}}</v-btn>
-            <v-spacer />
-            <v-divider class="mx-2" vertical inset></v-divider>
-            <v-btn @click="search" icon>
-              <v-icon>mdi-refresh</v-icon>
-            </v-btn>
-          </v-toolbar>
-          <v-expansion-panels popout>
+          <!-- Filter -->
+          <v-expansion-panels >
             <v-expansion-panel>
               <v-expansion-panel-header ripple>
                 <div>
@@ -92,7 +82,20 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
+          <v-toolbar color="primary" dark dense flat>
+            <v-btn
+              :to="{ name: 'maint-' + value.singular, params: { id: 'new' } }"
+              class="text-none"
+              text
+            >{{'New ' + value.singular}}</v-btn>
+            <v-spacer />
+            <v-divider class="mx-2" vertical inset></v-divider>
+            <v-btn @click="search" icon>
+              <v-icon>mdi-refresh</v-icon>
+            </v-btn>
+          </v-toolbar>
         </template>
+        <!-- List -->
         <template v-slot:items="{ item }">
           <template v-for="(field, fieldName) in value.fields">
             <td v-if="field.view.includes('list')" :key="fieldName">
@@ -165,8 +168,8 @@ export default {
       },
       loading: false,
       pagination: {
-        sortBy: "",
-        descending: false,
+        sortBy: [],
+        sortDesc: [],
         page: 1,
         rowsPerPage: 10
       },
@@ -179,19 +182,21 @@ export default {
   },
   computed: {
     apiOptions() {
-      let sort = this.pagination.sortBy;
-      if (this.pagination.descending) sort = "-" + sort;
-
-      let size = this.pagination.rowsPerPage;
-      if (size === -1) size = "";
-
-      return {
-        page: {
-          size,
+      const { sortBy, sortDesc, itemsPerPage } = this.pagination;
+      //sort
+      let sort = [];
+      for (let i = 0; i < sortBy.length; i++) {
+        sort.push(sortDesc[i] ? "-" + sortBy[i] : sortBy[i]);
+      }
+      //page
+      let page;
+      if (itemsPerPage !== -1) {
+        page = {
+          size: itemsPerPage,
           number: this.pagination.page
-        },
-        sort
-      };
+        };
+      }
+      return { page, sort };
     }
   },
   watch: {
@@ -209,7 +214,7 @@ export default {
     async search() {
       this.loading = true;
       let result = await this.$api.query("/" + this.value.collection, {
-        filter: this.filter,
+        filter: this.filter.params,
         ...this.apiOptions
       });
       if (result.error) {
