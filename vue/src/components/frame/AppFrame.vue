@@ -5,19 +5,11 @@
       <v-container class="pb-5" fluid>
         <v-layout row wrap justify-center>
           <v-flex xs12 sm10 md8>
-            <v-card>
-              <v-card-text>
-                <v-layout row wrap>
-                  <v-flex xs12>
-                    <v-container>
-                      <transition name="scroll-x-transition">
-                        <router-view :key="$route.path" />
-                      </transition>
-                    </v-container>
-                  </v-flex>
-                </v-layout>
-              </v-card-text>
-            </v-card>
+            <v-container>
+              <transition name="scroll-y-transition">
+                <router-view :key="$route.path" />
+              </transition>
+            </v-container>
           </v-flex>
         </v-layout>
       </v-container>

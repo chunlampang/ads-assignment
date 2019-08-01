@@ -11,33 +11,37 @@
       <v-alert :value="alert.show" :type="alert.type">{{alert.msg}}</v-alert>
     </v-flex>
     <v-flex xs12>
-      <v-form ref="form" v-model="valid" @submit.prevent="submit">
-        <template v-for="(field, fieldName) in value.fields">
-          <template v-if="field.view.includes('edit')">
-            <v-flex :key="fieldName" xs12>
-              <DateField
-                v-if="field.type === 'date'"
-                v-model="item[fieldName]"
-                :rules="getRules(field)"
-                :label="field.label"
-                :readonly="readonly(field)"
-              />
-              <v-text-field
-                v-else
-                v-model="item[fieldName]"
-                :type="field.type === 'number'? 'number' : 'text'"
-                :rules="getRules(field)"
-                :label="field.label"
-                :readonly="readonly(field)"
-              />
+      <v-card>
+        <v-card-text>
+          <v-form ref="form" v-model="valid" @submit.prevent="submit">
+            <template v-for="(field, fieldName) in value.fields">
+              <template v-if="field.view.includes('edit')">
+                <v-flex :key="fieldName" xs12>
+                  <DateField
+                    v-if="field.type === 'date'"
+                    v-model="item[fieldName]"
+                    :rules="getRules(field)"
+                    :label="field.label"
+                    :readonly="readonly(field)"
+                  />
+                  <v-text-field
+                    v-else
+                    v-model="item[fieldName]"
+                    :type="field.type === 'number'? 'number' : 'text'"
+                    :rules="getRules(field)"
+                    :label="field.label"
+                    :readonly="readonly(field)"
+                  />
+                </v-flex>
+              </template>
+            </template>
+            <v-flex xs12>
+              <v-btn type="submit" :disabled="!valid" class="text-none">Submit</v-btn>
+              <v-btn @click="reset" class="text-none">Reset</v-btn>
             </v-flex>
-          </template>
-        </template>
-        <v-flex xs12>
-          <v-btn type="submit" :disabled="!valid" class="text-none">Submit</v-btn>
-          <v-btn @click="reset" class="text-none">Reset</v-btn>
-        </v-flex>
-      </v-form>
+          </v-form>
+        </v-card-text>
+      </v-card>
     </v-flex>
   </v-layout>
 </template>
