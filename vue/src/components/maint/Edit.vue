@@ -8,7 +8,7 @@
           <v-icon>mdi-chevron-right</v-icon>
         </template>
       </v-breadcrumbs>
-      <v-alert :value="alert.show" :type="alert.type">{{alert.msg}}</v-alert>
+      <BaseAlert :value="alert.show" :type="alert.type" :msg="alert.msg" />
     </v-flex>
     <v-flex xs12>
       <v-card>
@@ -46,10 +46,11 @@
   </v-layout>
 </template>
 <script>
+import BaseAlert from "@/components/blocks/BaseAlert";
 import DateField from "@/components/blocks/DateField";
 
 export default {
-  components: { DateField },
+  components: { BaseAlert, DateField },
   props: {
     value: Object
   },

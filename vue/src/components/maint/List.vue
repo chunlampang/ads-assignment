@@ -3,7 +3,7 @@
     <v-flex xs12>
       <div class="headline">{{value.plural}}</div>
       <v-divider class="primary" />
-      <v-alert :value="alert.show" :type="alert.type">{{alert.msg}}</v-alert>
+      <BaseAlert :value="alert.show" :type="alert.type" :msg="alert.msg" />
     </v-flex>
     <v-flex class="mt-4" xs12>
       <v-data-table
@@ -17,7 +17,7 @@
       >
         <template v-slot:top>
           <!-- Filter -->
-          <v-expansion-panels >
+          <v-expansion-panels>
             <v-expansion-panel>
               <v-expansion-panel-header ripple>
                 <div>
@@ -99,28 +99,26 @@
         <!-- List -->
         <template v-slot:item="{ item }">
           <tr>
-          <template v-for="(field, fieldName) in value.fields">
-            <td v-if="field.view.includes('list')" :key="fieldName">
-              <template v-if="field.type === 'date'">{{$utils.dateToString(item[fieldName])}}</template>
-              <template v-else>{{item[fieldName] }}</template>
+            <template v-for="(field, fieldName) in value.fields">
+              <td v-if="field.view.includes('list')" :key="fieldName">
+                <template v-if="field.type === 'date'">{{$utils.dateToString(item[fieldName])}}</template>
+                <template v-else>{{item[fieldName] }}</template>
+              </td>
+            </template>
+            <td width="152px">
+              <v-btn :to="{ name: 'maint-' + value.singular, params: { id: item._id }}" icon>
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn @click="showDeleteDialog(item)" icon>
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
             </td>
-          </template>
-          <td width="152px">
-            <v-btn :to="{ name: 'maint-' + value.singular, params: { id: item._id }}" icon>
-              <v-icon>mdi-pencil</v-icon>
-            </v-btn>
-            <v-btn @click="showDeleteDialog(item)" icon>
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </td>
           </tr>
         </template>
       </v-data-table>
-      <v-dialog v-model="deleteDialog.visible" width="500">
+      <v-dialog v-model="deleteDialog.visible" width="400">
         <v-card>
-          <v-card-title class="headline grey lighten-2" primary-title>Warning</v-card-title>
-          <v-card-text>Confirm Delete?</v-card-text>
-          <v-divider></v-divider>
+          <v-card-title class="headline" primary-title>Are you confirm to delete?</v-card-title>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="primary" text @click="deleteDialog.visible = false">Cancel</v-btn>
@@ -132,7 +130,10 @@
   </v-layout>
 </template>
 <script>
+import BaseAlert from "@/components/blocks/BaseAlert";
+
 export default {
+  components: { BaseAlert },
   props: {
     value: Object
   },
@@ -174,7 +175,7 @@ export default {
         sortBy: [],
         sortDesc: [],
         page: 1,
-        rowsPerPage: 10
+        itemsPerPage: 10
       },
       deleteDialog: { visible: false, item: null },
       alert: {
