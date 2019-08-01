@@ -35,7 +35,7 @@
             <template v-slot:item="data">
               <v-list-item-content>
                 <v-list-item-title v-html="data.item.stuName"></v-list-item-title>
-                <v-list-item-sub-title v-html="data.item._id"></v-list-item-sub-title>
+                <v-list-item-subtitle v-html="data.item._id"></v-list-item-subtitle>
               </v-list-item-content>
             </template>
           </v-autocomplete>

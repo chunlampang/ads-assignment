@@ -52,8 +52,8 @@
             <v-list-item-avatar>{{index+4}}</v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>{{item.course + ' - ' + item._join.course.title}}</v-list-item-title>
-              <v-list-item-sub-title>{{item._join.department.deptName + ` (${item.year})`}}</v-list-item-sub-title>
-              <v-list-item-sub-title>Enrolled: {{printEnrolled(item)}}</v-list-item-sub-title>
+              <v-list-item-subtitle>{{item._join.department.deptName + ` (${item.year})`}}</v-list-item-subtitle>
+              <v-list-item-subtitle>Enrolled: {{printEnrolled(item)}}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </template>

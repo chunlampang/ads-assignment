@@ -82,6 +82,7 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
+          <!-- tool -->
           <v-toolbar color="primary" dark dense flat>
             <v-btn
               :to="{ name: 'maint-' + value.singular, params: { id: 'new' } }"
@@ -96,7 +97,8 @@
           </v-toolbar>
         </template>
         <!-- List -->
-        <template v-slot:items="{ item }">
+        <template v-slot:item="{ item }">
+          <tr>
           <template v-for="(field, fieldName) in value.fields">
             <td v-if="field.view.includes('list')" :key="fieldName">
               <template v-if="field.type === 'date'">{{$utils.dateToString(item[fieldName])}}</template>
@@ -111,6 +113,7 @@
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </td>
+          </tr>
         </template>
       </v-data-table>
       <v-dialog v-model="deleteDialog.visible" width="500">
