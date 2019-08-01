@@ -9,7 +9,7 @@
       <v-data-table
         :headers="headers"
         :items="items.data"
-        :tserver-items-length="items.meta.total"
+        :server-items-length="items.meta.total"
         :options.sync="pagination"
         :loading="loading"
         multi-sort
