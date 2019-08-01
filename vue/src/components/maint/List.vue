@@ -76,14 +76,15 @@ export default {
   data() {
     let headers = [];
 
-    let fields = this.entity.fields;
+    const fields = this.entity.fields;
     for (let fieldName in fields) {
-      if (fields[fieldName].view.includes("list")) {
-        headers.push({
-          text: fields[fieldName].label,
-          value: fieldName
-        });
-      }
+      const field = fields[fieldName];
+      if (!field.view.includes("list")) continue;
+
+      headers.push({
+        text: field.label,
+        value: fieldName
+      });
     }
 
     headers.push({ text: "Actions", value: "", sortable: false });
@@ -136,7 +137,7 @@ export default {
     },
     filter: {
       handler(val) {
-        console.log(val)
+        console.log(val);
         this.search();
       },
       deep: true

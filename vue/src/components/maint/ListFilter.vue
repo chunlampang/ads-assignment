@@ -36,14 +36,14 @@
                   <v-autocomplete
                     v-else-if="field.type === 'string'"
                     v-model="value[fieldName]"
-                    :loading="loading[fieldName]"
-                    :items="options[fieldName]"
-                    item-value="_id"
-                    item-text="_id"
-                    :search-input="autoCompleteSearch(fieldName)"
-                    @update:search-input="state = $event"
-                    flat
+                    :loading="autoInput[fieldName].loading"
+                    :items="autoInput[fieldName].items"
+                    :item-value="fieldName"
+                    :item-text="fieldName"
+                    :search-input="autoInput[fieldName].input"
+                    @update:search-input="autoInput[fieldName].input = $event"
                     no-filter
+                    hide-no-data
                     :label="field.label"
                   >
                     <template v-slot:item="data">
@@ -72,39 +72,72 @@ export default {
     value: Object
   },
   data() {
-    return {
-      valid: true,
-      loading: {},
-      options: {}
-    };
-  },
-  created() {
-    let fields = this.entity.fields;
+    const fields = this.entity.fields;
+    const autoInput = {};
+
     for (let fieldName in fields) {
-      if (fields[fieldName].view.includes("filter")) {
-        this.value[fieldName] = {};
+      const field = fields[fieldName];
+      if (!field.view.includes("filter")) continue;
+      switch (field.type) {
+        case "number":
+          this.value[fieldName] = {
+            from: "",
+            to: ""
+          };
+          break;
+        case "string":
+          this.value[fieldName] = "";
+          autoInput[fieldName] = {
+            loading: false,
+            items: [],
+            input: null
+          };
+          break;
       }
     }
+
+    return {
+      valid: true,
+      autoInput
+    };
+  },
+  mounted() {
+    let fields = this.entity.fields;
+    for (let fieldName in fields) {
+      const field = fields[fieldName];
+      if (!field.view.includes("filter")) continue;
+
+      if (field.type === "string") {
+        this.$watch(`autoInput.${fieldName}.input`, val => {
+          this.autoCompleteSearch(fieldName, val);
+        });
+      }
+    }
+    console.log(this.value);
   },
   methods: {
     resetFilter() {
       this.$refs.form.reset();
     },
-    autoCompleteSearch(field) {
-      console.log(field);
-      /*
-      this.students.loading = true;
-      let result = await this.$api.getStudents(
-        { search: ".*" + search + ".*" },
-        { page: { size: 10 } }
-      );
+    async autoCompleteSearch(fieldName, val) {
+      const autoInput = this.autoInput[fieldName];
+      autoInput.loading = true;
+
+      let filter = {};
+      filter[fieldName] = { $like: ".*" + val + ".*" };
+
+      let result = await this.$api.query("/" + this.entity.collection, {
+        filter,
+        page: { size: 10 },
+        fields: fieldName
+      });
       if (result.error) {
         console.error(result.error);
       } else {
-        this.students.items = result.data;
+        autoInput.items = result.data;
       }
-      this.students.loading = false;
-      */
+
+      autoInput.loading = false;
     }
   }
 };
