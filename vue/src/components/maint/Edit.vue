@@ -1,7 +1,7 @@
 <template>
   <v-layout row wrap>
     <v-flex class="mb-4" xs12>
-      <div class="headline">{{value.plural}}</div>
+      <div class="headline">{{entity.plural}}</div>
       <v-divider class="primary" />
       <v-breadcrumbs :items="breadcrumbs" class="pt-0">
         <template v-slot:divider>
@@ -14,7 +14,7 @@
       <v-card>
         <v-card-text>
           <v-form ref="form" v-model="valid" @submit.prevent="submit">
-            <template v-for="(field, fieldName) in value.fields">
+            <template v-for="(field, fieldName) in entity.fields">
               <template v-if="field.view.includes('edit')">
                 <v-flex :key="fieldName" xs12>
                   <DateField
@@ -52,7 +52,7 @@ import DateField from "@/components/blocks/DateField";
 export default {
   components: { BaseAlert, DateField },
   props: {
-    value: Object
+    entity: Object
   },
   data() {
     let id = this.$route.params.id;
@@ -71,8 +71,8 @@ export default {
   created() {
     this.breadcrumbs = [
       {
-        text: this.value.plural,
-        to: { name: "maint-" + this.value.plural },
+        text: this.entity.plural,
+        to: { name: "maint-" + this.entity.plural },
         exact: true
       },
       {
@@ -87,13 +87,13 @@ export default {
   },
   computed: {
     itemTitle() {
-      if (this.id === "new") return "New " + this.value.singular;
+      if (this.id === "new") return "New " + this.entity.singular;
       return this.id;
     }
   },
   methods: {
     async getItem() {
-      let result = await this.$api.get("/" + this.value.collection, this.id);
+      let result = await this.$api.get("/" + this.entity.collection, this.id);
       if (result.error) {
         this.alert = {
           show: true,
@@ -115,11 +115,11 @@ export default {
 
       let result;
       if (this.id === "new")
-        result = await this.$api.insert("/" + this.value.collection, this.item);
+        result = await this.$api.insert("/" + this.entity.collection, this.item);
       else {
         delete this.item._id;
         result = await this.$api.update(
-          "/" + this.value.collection,
+          "/" + this.entity.collection,
           this.id,
           this.item
         );

@@ -46,13 +46,13 @@ export default {
         path: "/" + entity.collection,
         name: routeName,
         component: () => import("@/components/maint/List"),
-        props: route => ({ value: entity })
+        props: route => ({ entity })
       });
       appendRoutes.push({
         path: `/${entity.collection}/:id`,
         name: "maint-" + entity.singular,
         component: () => import("@/components/maint/Edit"),
-        props: route => ({ value: entity })
+        props: route => ({ entity })
       });
       this.$router.addRoutes(appendRoutes);
       //append menu

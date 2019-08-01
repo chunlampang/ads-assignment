@@ -17,7 +17,7 @@ export default {
                 url: path,
                 method, params
             });
-            console.log(path, response);
+            console.log(method, path, response);
 
             out = response.data;
         } catch (err) {
