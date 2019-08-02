@@ -44,7 +44,7 @@
         </v-card>
       </v-form>
     </v-flex>
-    <v-flex v-else xs12>
+    <v-flex v-else-if="!loading" xs12>
       <v-card>
         <v-card-title>
           <h3 class="primary--text">{{entity.singular}} Not Found</h3>
@@ -74,6 +74,7 @@ export default {
       id,
       item: null,
       breadcrumbs: [],
+      loading: true,
       valid: false,
       alert: {
         show: false
@@ -104,25 +105,27 @@ export default {
   },
   methods: {
     async getItem() {
-      if (this.id === "new") {
-        this.item = {};
-        return;
-      }
+      this.loading = true;
+      try {
+        if (this.id === "new") {
+          this.item = {};
+          return;
+        }
 
-      let result = await this.$api.get("/" + this.entity.collection, this.id);
-      if (result.error) {
-        this.alert = {
-          show: true,
-          type: "error",
-          msg: result.error
-        };
-        return;
-      }
+        let result = await this.$api.get("/" + this.entity.collection, this.id);
+        if (result.error) {
+          this.item = null;
+          this.alert = {
+            show: true,
+            type: "error",
+            msg: result.error
+          };
+          return;
+        }
 
-      this.item = result.data;
-      if (!this.item) {
-        //404
-        return;
+        this.item = result.data;
+      } finally {
+        this.loading = false;
       }
     },
     async submit() {
