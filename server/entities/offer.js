@@ -53,14 +53,14 @@ module.exports = {
         enrolledCount: {
             type: 'number',
             label: 'Enrolled Count',
-            readonly: true,
+            readonly: 2,
             cal: { order: 1, fc: 'item.enrolled.length' },
             view: ['list', 'edit']
         },
         availablePlaces: {
             type: 'number',
             label: 'Available Places',
-            readonly: true,
+            readonly: 2,
             cal: { order: 2, fc: 'item.classSize - item.enrolledCount' },
             view: ['list', 'edit']
         },
