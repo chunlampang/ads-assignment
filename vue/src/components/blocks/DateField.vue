@@ -3,7 +3,6 @@
     v-model="showPicker"
     :close-on-content-click="false"
     :nudge-right="40"
-    lazy
     transition="scale-transition"
     offset-y
     full-width
@@ -17,7 +16,7 @@
         :label="label"
         hint="Format: YYYY/MM/DD"
         persistent-hint
-        append-icon="event"
+        append-icon="mdi-calendar"
         :rules="rulesWithFormat"
         v-on="on"
         readonly
