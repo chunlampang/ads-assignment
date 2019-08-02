@@ -117,11 +117,12 @@ export default {
       if (this.id === "new")
         result = await this.$api.insert("/" + this.entity.collection, this.item);
       else {
-        delete this.item._id;
+        let data = Object.assign({}, this.item);
+        delete data._id;
         result = await this.$api.update(
           "/" + this.entity.collection,
           this.id,
-          this.item
+          data
         );
       }
 
