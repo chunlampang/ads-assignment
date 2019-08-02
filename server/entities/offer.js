@@ -5,14 +5,14 @@ module.exports = {
     fields: {
         department: {
             type: 'entity',
-            entity: 'Department',
+            entity: 'department',
             label: 'Department',
             rules: ['required'],
             view: ['list', 'edit']
         },
         course: {
             type: 'entity',
-            entity: 'Course',
+            entity: 'course',
             label: 'Course',
             rules: ['required'],
             view: ['list', 'edit']
@@ -35,7 +35,7 @@ module.exports = {
             fields: {
                 student: {
                     type: 'entity',
-                    entity: 'Student',
+                    entity: 'student',
                     label: 'Student',
                     rules: [
                         'required'
