@@ -21,7 +21,7 @@
                     v-if="field.type === 'date'"
                     v-model="item[fieldName]"
                     :rules="getRules(field)"
-                    :label="field.label"
+                    :label="field.label + (required(field)?' *':'')"
                     :readonly="readonly(field)"
                   />
                   <v-text-field
@@ -29,7 +29,7 @@
                     v-model="item[fieldName]"
                     :type="field.type === 'number'? 'number' : 'text'"
                     :rules="getRules(field)"
-                    :label="field.label"
+                    :label="field.label +(required(field)?' *':'')"
                     :readonly="readonly(field)"
                   />
                 </v-flex>
@@ -197,6 +197,9 @@ export default {
       return (
         field.readonly === 2 || (field.readonly === 1 && this.id !== "new")
       );
+    },
+    required(field) {
+      return field.rules.includes("required");
     }
   }
 };
