@@ -9,57 +9,60 @@
       </v-expansion-panel-header>
       <v-expansion-panel-content>
         <v-form ref="form" v-model="valid" @submit.prevent="search">
-          <v-layout row wrap>
-            <template v-for="(field, fieldName) in entity.fields">
-              <template v-if="field.view.includes('filter')">
-                <v-flex :key="fieldName" xs12>
-                  <template v-if="field.type === 'number'">
-                    <v-container pa-0 grid-list-xl>
-                      <v-layout>
-                        <v-flex xs6>
-                          <v-text-field
-                            type="number"
-                            v-model="value[fieldName].from"
-                            :label="field.label + ' (From)'"
-                          />
-                        </v-flex>
-                        <v-flex xs6>
-                          <v-text-field
-                            type="number"
-                            v-model="value[fieldName].to"
-                            :label="field.label+ ' (To)'"
-                          />
-                        </v-flex>
-                      </v-layout>
-                    </v-container>
-                  </template>
-                  <v-autocomplete
-                    v-else-if="field.type === 'string'"
-                    v-model="value[fieldName]"
-                    :loading="autoInput[fieldName].loading"
-                    :items="autoInput[fieldName].items"
-                    :item-value="fieldName"
-                    :item-text="fieldName"
-                    :search-input="autoInput[fieldName].input"
-                    @update:search-input="autoInput[fieldName].input = $event"
-                    no-filter
-                    hide-no-data
-                    :label="field.label"
-                  >
-                    <template v-slot:item="data">
-                      <v-list-item-content>
-                        <v-list-item-title v-html="data.item[fieldName]"></v-list-item-title>
-                      </v-list-item-content>
+          <v-card flat>
+            <v-card-text>
+              <template v-for="(field, fieldName) in entity.fields">
+                <template v-if="field.view.includes('filter')">
+                  <v-flex :key="fieldName" xs12>
+                    <template v-if="field.type === 'number'">
+                      <v-container pa-0 grid-list-xl>
+                        <v-layout>
+                          <v-flex xs6>
+                            <v-text-field
+                              type="number"
+                              v-model="value[fieldName].from"
+                              :label="field.label + ' (From)'"
+                            />
+                          </v-flex>
+                          <v-flex xs6>
+                            <v-text-field
+                              type="number"
+                              v-model="value[fieldName].to"
+                              :label="field.label+ ' (To)'"
+                            />
+                          </v-flex>
+                        </v-layout>
+                      </v-container>
                     </template>
-                  </v-autocomplete>
-                </v-flex>
+                    <v-autocomplete
+                      v-else-if="field.type === 'string'"
+                      v-model="value[fieldName]"
+                      :loading="autoInput[fieldName].loading"
+                      :items="autoInput[fieldName].items"
+                      :item-value="fieldName"
+                      :item-text="fieldName"
+                      :search-input="autoInput[fieldName].input"
+                      @update:search-input="autoInput[fieldName].input = $event"
+                      no-filter
+                      hide-no-data
+                      :label="field.label"
+                    >
+                      <template v-slot:item="data">
+                        <v-list-item-content>
+                          <v-list-item-title v-html="data.item[fieldName]"></v-list-item-title>
+                        </v-list-item-content>
+                      </template>
+                    </v-autocomplete>
+                  </v-flex>
+                </template>
               </template>
-            </template>
-            <v-flex xs12>
-              <v-btn type="submit" :disabled="!valid" class="text-none">Search</v-btn>
-              <v-btn @click="resetFilter" class="text-none">Reset</v-btn>
-            </v-flex>
-          </v-layout>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn @click="resetFilter" color="warning" text class="text-none">Reset</v-btn>
+              <v-btn type="submit" :disabled="!valid" color="primary" text class="text-none">Search</v-btn>
+            </v-card-actions>
+          </v-card>
         </v-form>
       </v-expansion-panel-content>
     </v-expansion-panel>

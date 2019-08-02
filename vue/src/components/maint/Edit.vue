@@ -38,8 +38,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn type="submit" :disabled="!valid" color="primary" text class="text-none">Submit</v-btn>
             <v-btn @click="reset" color="warning" text class="text-none">Reset</v-btn>
+            <v-btn type="submit" :disabled="!valid" color="primary" text class="text-none">Submit</v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
