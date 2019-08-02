@@ -35,7 +35,7 @@ export default {
     },
     datetimeToString(date) {
         if (!date)
-            return "";
+            return null;
         return moment(date).format(datetimeFormat);
     },
     stringToDatetime(dateString) {
@@ -44,6 +44,8 @@ export default {
         return moment(dateString, datetimeFormat).toDate();
     },
     dateToString(date) {
+        if (!date)
+            return null;
         return moment(date).format(dateFormat);
     },
     stringToDate(dateString) {

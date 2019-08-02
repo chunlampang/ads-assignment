@@ -15,14 +15,14 @@
         v-model="valueStr"
         :label="label"
         hint="Format: YYYY/MM/DD"
-        persistent-hint
         append-icon="mdi-calendar"
         :rules="rulesWithFormat"
         v-on="on"
         readonly
+        clearable
       ></v-text-field>
     </template>
-    <v-date-picker v-model="date" no-title @input="showPicker = false"></v-date-picker>
+    <v-date-picker v-model="date" show-current no-title color="primary" @input="showPicker = false"></v-date-picker>
   </v-menu>
 </template>
 
@@ -36,13 +36,14 @@ export default {
     value: Date | String,
     label: String,
     rules: Array,
-    readonly:Boolean
+    readonly: Boolean
   },
   data() {
     return {
       showPicker: false,
       rulesWithFormat: [
-        v => !isNaN(this.$utils.stringToDate(v)) || "Invalid Format"
+        ...this.rules,
+        v => !v || !isNaN(this.$utils.stringToDate(v)) || "Invalid Format"
       ]
     };
   },
@@ -52,12 +53,13 @@ export default {
         return this.$utils.dateToString(this.value);
       },
       set(v) {
-        this.$emit("valChange", this.$utils.stringToDate(v));
+        this.$emit("valChange", !v ? v : this.$utils.stringToDate(v));
       }
     },
     date: {
       get() {
         const d = this.$utils.stringToDate(this.valueStr);
+        if (!d) return d;
         const month = (d.getMonth() + 1 + "").padStart(2, "0"),
           day = (d.getDate() + "").padStart(2, "0");
         return `${d.getFullYear()}-${month}-${day}`;
