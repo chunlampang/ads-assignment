@@ -44,7 +44,14 @@
         </v-card>
       </v-form>
     </v-flex>
-    <v-flex v-else-if="!loading" xs12>
+    <v-flex v-else-if="loading" xs12>
+      <v-card>
+        <v-card-title>
+          <h3 class="primary--text font-weight-light">Loading... Please wait</h3>
+        </v-card-title>
+      </v-card>
+    </v-flex>
+    <v-flex v-else xs12>
       <v-card>
         <v-card-title>
           <h3 class="primary--text">{{entity.singular}} Not Found</h3>
