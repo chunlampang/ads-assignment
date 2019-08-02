@@ -15,11 +15,11 @@
         v-model="valueStr"
         :label="label"
         hint="Format: YYYY/MM/DD"
-        append-icon="mdi-calendar"
+        :append-icon="readonly?'mdi-pencil-off':'mdi-calendar'"
         :rules="rulesWithFormat"
         v-on="on"
         readonly
-        clearable
+        :clearable="!readonly"
       ></v-text-field>
     </template>
     <v-date-picker v-model="date" show-current no-title color="primary" @input="showPicker = false"></v-date-picker>
