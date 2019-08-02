@@ -26,28 +26,49 @@
             >{{'New ' + entity.singular}}</v-btn>
             <v-spacer />
             <v-divider class="mx-2" vertical inset></v-divider>
-            <v-btn @click="search" icon>
-              <v-icon>mdi-refresh</v-icon>
-            </v-btn>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn @click="search" v-on="on" icon>
+                  <v-icon>mdi-refresh</v-icon>
+                </v-btn>
+              </template>
+              <span>Refresh</span>
+            </v-tooltip>
           </v-toolbar>
         </template>
         <!-- List -->
         <template v-slot:item="{ item }">
           <tr>
+            <td style="min-width:120px">
+              <!-- Actions -->
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    :to="{ name: 'maint-' + entity.singular, params: { id: item._id }}"
+                    v-on="on"
+                    small
+                    icon
+                  >
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                </template>
+                <span>Edit</span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                  <v-btn @click="showDeleteDialog(item)" v-on="on" small icon>
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </template>
+                <span>Delete</span>
+              </v-tooltip>
+            </td>
             <template v-for="(field, fieldName) in entity.fields">
               <td v-if="field.view.includes('list')" :key="fieldName" style="min-width:150px">
                 <template v-if="field.type === 'date'">{{$utils.dateToString(item[fieldName])}}</template>
                 <template v-else>{{item[fieldName] }}</template>
               </td>
             </template>
-            <td style="min-width:150px">
-              <v-btn :to="{ name: 'maint-' + entity.singular, params: { id: item._id }}" icon>
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-btn @click="showDeleteDialog(item)" icon>
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </td>
           </tr>
         </template>
       </v-data-table>
@@ -56,7 +77,7 @@
           <v-card-title class="headline" primary-title>Are you confirm to delete?</v-card-title>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" text @click="deleteDialog.visible = false">Cancel</v-btn>
+            <v-btn text @click="deleteDialog.visible = false">Cancel</v-btn>
             <v-btn color="primary" text @click="deleteItem(deleteDialog.item)">Delete</v-btn>
           </v-card-actions>
         </v-card>
@@ -74,7 +95,7 @@ export default {
     entity: Object
   },
   data() {
-    let headers = [];
+    let headers = [{ text: "Actions", value: "", sortable: false }];
 
     const fields = this.entity.fields;
     for (let fieldName in fields) {
@@ -86,8 +107,6 @@ export default {
         value: fieldName
       });
     }
-
-    headers.push({ text: "Actions", value: "", sortable: false });
 
     return {
       headers,
