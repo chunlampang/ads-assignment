@@ -179,18 +179,20 @@ export default {
       if (this.rulesCache[field.label]) return this.rulesCache[field.label];
 
       const rules = [];
-      for (let ruleName of field.rules) {
-        switch (ruleName) {
-          case "required":
-            rules.push(v => !!v || field.label + " is required.");
-            break;
-          case "integer":
-            rules.push(
-              v =>
-                Number.isInteger(Number(v)) ||
-                field.label + " should be an integer."
-            );
-            break;
+      if (field.rules) {
+        for (let ruleName of field.rules) {
+          switch (ruleName) {
+            case "required":
+              rules.push(v => !!v || field.label + " is required.");
+              break;
+            case "integer":
+              rules.push(
+                v =>
+                  Number.isInteger(Number(v)) ||
+                  field.label + " should be an integer."
+              );
+              break;
+          }
         }
       }
 
@@ -202,7 +204,7 @@ export default {
       );
     },
     required(field) {
-      return field.rules.includes("required");
+      return field.rules && field.rules.includes("required");
     }
   }
 };
