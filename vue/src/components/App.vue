@@ -24,10 +24,18 @@ export default {
     };
   },
   provide() {
-    return {
-      menu: this.menu,
-      entities: this.entities
-    };
+    const provide = {};
+
+    Object.defineProperty(provide, "menu", {
+      enumerable: true,
+      get: () => this.menu
+    });
+    Object.defineProperty(provide, "entities", {
+      enumerable: true,
+      get: () => this.entities
+    });
+
+    return provide;
   },
   watch: {
     $route(v) {
