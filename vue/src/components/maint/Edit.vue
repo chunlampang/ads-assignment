@@ -10,10 +10,10 @@
       </v-breadcrumbs>
       <BaseAlert :value="alert.show" :type="alert.type" :msg="alert.msg" />
     </v-flex>
-    <v-flex xs12>
-      <v-card>
-        <v-card-text>
-          <v-form ref="form" v-model="valid" @submit.prevent="submit">
+    <v-flex v-if="item" xs12>
+      <v-form ref="form" v-model="valid" @submit.prevent="submit">
+        <v-card>
+          <v-card-text>
             <template v-for="(field, fieldName) in entity.fields">
               <template v-if="field.view.includes('edit')">
                 <v-flex :key="fieldName" xs12>
@@ -35,12 +35,25 @@
                 </v-flex>
               </template>
             </template>
-            <v-flex xs12 text-right>
-              <v-btn type="submit" :disabled="!valid" color="primary" text class="text-none">Submit</v-btn>
-              <v-btn @click="reset" color="warning" text class="text-none">Reset</v-btn>
-            </v-flex>
-          </v-form>
-        </v-card-text>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn type="submit" :disabled="!valid" color="primary" text class="text-none">Submit</v-btn>
+            <v-btn @click="reset" color="warning" text class="text-none">Reset</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+    </v-flex>
+    <v-flex v-else xs12>
+      <v-card>
+        <v-card-title>
+          <h3 class="primary--text">{{entity.singular}} Not Found</h3>
+        </v-card-title>
+        <v-divider class="primary" />
+        <v-card-text>{{id}} is not exist.</v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" text :to="{ params: { id: 'new'} }">New {{entity.singular}}</v-btn>
+        </v-card-actions>
       </v-card>
     </v-flex>
   </v-layout>
@@ -59,7 +72,7 @@ export default {
 
     return {
       id,
-      item: {},
+      item: null,
       breadcrumbs: [],
       valid: false,
       alert: {
@@ -81,8 +94,6 @@ export default {
       }
     ];
 
-    if (this.id === "new") return;
-
     this.getItem();
   },
   computed: {
@@ -93,6 +104,11 @@ export default {
   },
   methods: {
     async getItem() {
+      if (this.id === "new") {
+        this.item = {};
+        return;
+      }
+
       let result = await this.$api.get("/" + this.entity.collection, this.id);
       if (result.error) {
         this.alert = {
@@ -115,7 +131,10 @@ export default {
 
       let result;
       if (this.id === "new")
-        result = await this.$api.insert("/" + this.entity.collection, this.item);
+        result = await this.$api.insert(
+          "/" + this.entity.collection,
+          this.item
+        );
       else {
         let data = Object.assign({}, this.item);
         delete data._id;
