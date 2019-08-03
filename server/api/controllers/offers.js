@@ -2,6 +2,7 @@ const express = require('express');
 const mongoPool = require.main.require('./utils/mongoPool');
 const queryHelper = require.main.require('./utils/queryHelper');
 const Controller = require('../Controller');
+const { ObjectId } = require('mongodb');
 
 const entity = require.main.require('./entities/offer');
 const controller = new Controller(entity);
@@ -31,10 +32,15 @@ route.get(async function (req, res) {
             });
         }
         if (filter.department) {
+            let departments = queryHelper.parseArray('department', filter.department);
+            let deptIds = [];
+            for (let dept of departments) {
+                deptIds.push(ObjectId(dept));
+            }
             options.push({
                 $match: {
                     department: {
-                        $in: queryHelper.parseArray('department', filter.department)
+                        $in: deptIds
                     }
                 }
             });

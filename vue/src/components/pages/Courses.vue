@@ -14,6 +14,7 @@
             label="Department(s)"
             v-model="filter.department"
             clearable
+            multiple
             chips
           ></v-select>
         </v-flex>
@@ -46,10 +47,9 @@
       <v-data-table
         :headers="headers"
         :items="items.data"
-        :total-items="items.meta.total"
-        :pagination.sync="pagination"
+        :server-items-length="items.meta.total"
+        :options.sync="pagination"
         :loading="loading"
-        disable-initial-sort
         class="elevation-1"
       >
         <template v-slot:items="props">
@@ -87,8 +87,8 @@ export default {
       },
       loading: false,
       pagination: {
-        sortBy: "",
-        descending: false,
+        sortBy: [],
+        sortDesc: [],
         page: 1,
         rowsPerPage: 10
       },
@@ -104,19 +104,21 @@ export default {
   },
   computed: {
     apiOptions() {
-      let sort = this.pagination.sortBy;
-      if (this.pagination.descending) sort = "-" + sort;
-
-      let size = this.pagination.rowsPerPage;
-      if (size === -1) size = "";
-
-      return {
-        page: {
-          size,
+      const { sortBy, sortDesc, itemsPerPage } = this.pagination;
+      //sort
+      let sort = [];
+      for (let i = 0; i < sortBy.length; i++) {
+        sort.push(sortDesc[i] ? "-" + sortBy[i] : sortBy[i]);
+      }
+      //page
+      let page;
+      if (itemsPerPage !== -1) {
+        page = {
+          size: itemsPerPage,
           number: this.pagination.page
-        },
-        sort
-      };
+        };
+      }
+      return { page, sort };
     }
   },
   watch: {

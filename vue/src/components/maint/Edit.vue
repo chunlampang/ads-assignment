@@ -29,7 +29,12 @@
                     :append-icon="readonly(field)?'mdi-pencil-off':null"
                     :clearable="!readonly(field)"
                   />
-                  <template v-else-if="field.type === 'objects'"></template>
+                  <template v-else-if="field.type === 'objects'">
+                    <v-card>
+                      <v-card-title>{{field.label}}</v-card-title>
+                      <v-card-text></v-card-text>
+                    </v-card>
+                  </template>
                   <DateField
                     v-else-if="field.type === 'date'"
                     v-model="item[fieldName]"
