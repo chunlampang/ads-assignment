@@ -35,7 +35,7 @@ export default {
   props: {
     value: Date | String,
     label: String,
-    rules: Array,
+    rules: { type: Array, default: () => [] },
     readonly: Boolean
   },
   data() {

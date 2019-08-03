@@ -82,7 +82,21 @@ exports.parseArray = function (title, val) {
         return val;
     if (typeof val === 'string')
         return val.split(',');
-    throw new Error(title + ' mush be an Array or String.');
+    throw new Error(title + ' mush be an Array or Comma-Separated String.');
+}
+
+exports.parseDate = function (title, val) {
+    let date = new Date(val);
+    if (!isNaN(date))
+        return date;
+    throw new Error(title + ' mush be a Date.');
+}
+
+exports.parseNumber = function (title, val) {
+    let num = Number(val);
+    if (!isNaN(num))
+        return num;
+    throw new Error(title + ' mush be a Number.');
 }
 
 exports.parseInteger = function (title, val) {

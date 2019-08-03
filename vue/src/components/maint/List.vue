@@ -16,7 +16,7 @@
         class="elevation-1"
       >
         <template v-slot:top>
-          <ListFilter v-model="filter" :entity="entity" />
+          <ListFilter v-model="filter" :entity="entity" @search="search" />
           <!-- tool -->
           <v-toolbar color="primary" dark dense flat>
             <v-btn
@@ -151,19 +151,15 @@ export default {
   },
   watch: {
     apiOptions() {
-      this.alert.show = false;
       this.search();
-    },
-    filter: {
-      handler(val) {
-        console.log(val);
-        this.search();
-      },
-      deep: true
     }
   },
   methods: {
-    async search() {
+    search() {
+      this.alert.show = false;
+      this.query();
+    },
+    async query() {
       this.loading = true;
       let result = await this.$api.query("/" + this.entity.collection, {
         filter: this.filter,
@@ -199,7 +195,7 @@ export default {
           msg: `${item._id} is deleted.`
         };
 
-        this.search();
+        this.query();
       } else if (result.error) {
         this.showError(result.error);
       }
