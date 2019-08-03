@@ -22,5 +22,6 @@ module.exports = {
             rules: ['required', 'integer'],
             view: ['filter', 'list', 'edit']
         }
-    }
+    },
+    desc: 'item._id + " - " + item.title'
 }

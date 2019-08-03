@@ -17,8 +17,21 @@
             <template v-for="(field, fieldName) in entity.fields">
               <template v-if="field.view.includes('edit')">
                 <v-flex :key="fieldName" xs12>
+                  <v-select
+                    v-if="field.type === 'entity'"
+                    v-model="item[fieldName]"
+                    :rules="getRules(field)"
+                    item-value="_id"
+                    :item-text="getOptionItemText(field.entity)"
+                    :items="options[field.entity]"
+                    :label="field.label + (required(field)?' *':'')"
+                    :readonly="readonly(field)"
+                    :append-icon="readonly(field)?'mdi-pencil-off':null"
+                    :clearable="!readonly(field)"
+                  />
+                  <template v-else-if="field.type === 'objects'"></template>
                   <DateField
-                    v-if="field.type === 'date'"
+                    v-else-if="field.type === 'date'"
                     v-model="item[fieldName]"
                     :rules="getRules(field)"
                     :label="field.label + (required(field)?' *':'')"
@@ -31,6 +44,8 @@
                     :rules="getRules(field)"
                     :label="field.label +(required(field)?' *':'')"
                     :readonly="readonly(field)"
+                    :append-icon="readonly(field)?'mdi-pencil-off':null"
+                    :clearable="!readonly(field)"
                   />
                 </v-flex>
               </template>
@@ -74,6 +89,7 @@ export default {
   props: {
     entity: Object
   },
+  inject: ["entities"],
   data() {
     let id = this.$route.params.id;
 
@@ -86,10 +102,11 @@ export default {
       alert: {
         show: false
       },
-      rulesCache: {}
+      rulesCache: {},
+      options: {}
     };
   },
-  created() {
+  async created() {
     this.breadcrumbs = [
       {
         text: this.entity.plural,
@@ -102,7 +119,8 @@ export default {
       }
     ];
 
-    this.getItem();
+    await this.initOptions();
+    await this.getItem();
   },
   computed: {
     itemTitle() {
@@ -204,6 +222,31 @@ export default {
       }
 
       return (this.rulesCache[field.label] = rules);
+    },
+    async initOptions() {
+      const requests = [];
+      for (let fieldName in this.entity.fields) {
+        const field = this.entity.fields[fieldName];
+        if (!field.view.includes("edit")) continue;
+        if (field.type === "entity" || field.type === "entities") {
+          if (!this.options[field.entity]) {
+            this.options[field.entity] = [];
+            requests.push(this.loadOptions(field.entity));
+          }
+        }
+      }
+      await Promise.all(requests);
+    },
+    async loadOptions(entityName) {
+      const result = await this.$api.query(
+        "/" + this.entities[entityName].collection
+      );
+      this.options[entityName] = result.data;
+    },
+    getOptionItemText(entityName) {
+      const entity = this.entities[entityName];
+      if (!entity.desc) return "_id";
+      return item => eval(entity.desc);
     },
     readonly(field) {
       return (
