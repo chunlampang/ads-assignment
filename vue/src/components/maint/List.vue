@@ -170,7 +170,7 @@ export default {
         ...this.apiOptions
       });
       if (result.error) {
-        console.error(result.error);
+        this.showError(result.error);
       } else {
         this.items = result;
       }
@@ -200,7 +200,16 @@ export default {
         };
 
         this.search();
+      } else if (result.error) {
+        this.showError(result.error);
       }
+    },
+    showError(msg) {
+      this.alert = {
+        show: true,
+        type: "error",
+        msg
+      };
     }
   }
 };
