@@ -39,13 +39,15 @@ module.exports = {
                     label: 'Student',
                     rules: [
                         'required'
-                    ]
+                    ],
+                    view: ['edit']
                 },
                 enrolDate: {
                     type: 'datetime',
                     label: 'Enrol Date',
-                    readonly: true,
-                    default: 'new Date'
+                    readonly: 2,
+                    default: 'new Date',
+                    view: ['edit']
                 }
             },
             view: ['edit']

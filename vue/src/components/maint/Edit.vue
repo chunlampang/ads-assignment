@@ -14,47 +14,7 @@
       <v-form ref="form" v-model="valid" @submit.prevent="submit">
         <v-card>
           <v-card-text>
-            <template v-for="(field, fieldName) in entity.fields">
-              <template v-if="field.view.includes('edit')">
-                <v-flex :key="fieldName" xs12>
-                  <v-select
-                    v-if="field.type === 'entity'"
-                    v-model="item[fieldName]"
-                    :rules="getRules(field)"
-                    item-value="_id"
-                    :item-text="getOptionItemText(field.entity)"
-                    :items="options[field.entity]"
-                    :label="field.label + (required(field)?' *':'')"
-                    :readonly="readonly(field)"
-                    :append-icon="readonly(field)?'mdi-pencil-off':null"
-                    :clearable="!readonly(field)"
-                  />
-                  <template v-else-if="field.type === 'objects'">
-                    <v-card>
-                      <v-card-title>{{field.label}}</v-card-title>
-                      <v-card-text></v-card-text>
-                    </v-card>
-                  </template>
-                  <DateField
-                    v-else-if="field.type === 'date'"
-                    v-model="item[fieldName]"
-                    :rules="getRules(field)"
-                    :label="field.label + (required(field)?' *':'')"
-                    :readonly="readonly(field)"
-                  />
-                  <v-text-field
-                    v-else
-                    v-model="item[fieldName]"
-                    :type="field.type === 'number'? 'number' : 'text'"
-                    :rules="getRules(field)"
-                    :label="field.label +(required(field)?' *':'')"
-                    :readonly="readonly(field)"
-                    :append-icon="readonly(field)?'mdi-pencil-off':null"
-                    :clearable="!readonly(field)"
-                  />
-                </v-flex>
-              </template>
-            </template>
+            <EditFields v-model="item" :fields="entity.fields" />
           </v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -66,9 +26,9 @@
     </v-flex>
     <v-flex v-else-if="loading" xs12>
       <v-card>
-        <v-card-title>
-          <h3 class="primary--text font-weight-light">Loading... Please wait</h3>
-        </v-card-title>
+        <v-card-text>
+          <h3 class="primary--text font-weight-light">Loading {{entity.singular}}... Please wait</h3>
+        </v-card-text>
       </v-card>
     </v-flex>
     <v-flex v-else xs12>
@@ -87,10 +47,10 @@
 </template>
 <script>
 import BaseAlert from "@/components/blocks/BaseAlert";
-import DateField from "@/components/blocks/DateField";
+import EditFields from "./EditFields";
 
 export default {
-  components: { BaseAlert, DateField },
+  components: { BaseAlert, EditFields },
   props: {
     entity: Object
   },
@@ -106,9 +66,7 @@ export default {
       valid: false,
       alert: {
         show: false
-      },
-      rulesCache: {},
-      options: {}
+      }
     };
   },
   async created() {
@@ -124,7 +82,6 @@ export default {
       }
     ];
 
-    await this.initOptions();
     await this.getItem();
   },
   computed: {
@@ -204,62 +161,6 @@ export default {
         this.$refs.form.resetValidation();
         this.getItem();
       }
-    },
-    getRules(field) {
-      if (this.rulesCache[field.label]) return this.rulesCache[field.label];
-
-      const rules = [];
-      if (field.rules) {
-        for (let ruleName of field.rules) {
-          switch (ruleName) {
-            case "required":
-              rules.push(v => !!v || field.label + " is required.");
-              break;
-            case "integer":
-              rules.push(
-                v =>
-                  Number.isInteger(Number(v)) ||
-                  field.label + " should be an integer."
-              );
-              break;
-          }
-        }
-      }
-
-      return (this.rulesCache[field.label] = rules);
-    },
-    async initOptions() {
-      const requests = [];
-      for (let fieldName in this.entity.fields) {
-        const field = this.entity.fields[fieldName];
-        if (!field.view.includes("edit")) continue;
-        if (field.type === "entity" || field.type === "entities") {
-          if (!this.options[field.entity]) {
-            this.options[field.entity] = [];
-            requests.push(this.loadOptions(field.entity));
-          }
-        }
-      }
-      await Promise.all(requests);
-    },
-    async loadOptions(entityName) {
-      const result = await this.$api.query(
-        "/" + this.entities[entityName].collection
-      );
-      this.options[entityName] = result.data;
-    },
-    getOptionItemText(entityName) {
-      const entity = this.entities[entityName];
-      if (!entity.desc) return "_id";
-      return item => eval(entity.desc);
-    },
-    readonly(field) {
-      return (
-        field.readonly === 2 || (field.readonly === 1 && this.id !== "new")
-      );
-    },
-    required(field) {
-      return field.rules && field.rules.includes("required");
     }
   }
 };
