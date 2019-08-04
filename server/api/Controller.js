@@ -1,6 +1,7 @@
 const mongoPool = require.main.require('./utils/mongoPool');
 const queryHelper = require.main.require('./utils/queryHelper');
 const { ObjectId } = require('mongodb');
+const entities = require.main.require('./entities');
 
 module.exports = class Controller {
     constructor(entity) {
@@ -31,14 +32,15 @@ module.exports = class Controller {
                     switch (field.type) {
                         case "entity":
                             let ids = queryHelper.parseArray(fieldName, filter[fieldName]);
-                            if(!ids.length) continue;
-                            /*
-                            let _ids = [];
-                            if(fieldName)
-                            for (let id of ids) {
-                                _ids.push(ObjectId(id));
+                            if (!ids.length) continue;
+
+                            if (!entities[field.entity].fields._id) {
+                                let _ids = [];
+                                for (let id of ids)
+                                    _ids.push(ObjectId(id));
+                                ids = _ids;
                             }
-                            */
+
                             $match[fieldName] = { $in: ids };
                             break;
                         case "number":
@@ -46,16 +48,16 @@ module.exports = class Controller {
                         case "datetime":
                             let { from, to } = filter[fieldName];
                             let parseFunc;
-                            if(field.type === 'number'){
+                            if (field.type === 'number') {
                                 if (field.rules.includes("integer")) {
                                     parseFunc = 'parseInteger';
                                 } else {
                                     parseFunc = 'parseNumber';
                                 }
-                            }else{
+                            } else {
                                 parseFunc = 'parseDate';
                             }
-                            if (from || to){
+                            if (from || to) {
                                 $match[fieldName] = {};
                                 if (from)
                                     $match[fieldName].$gte = queryHelper[parseFunc](fieldName + '.from', from);
