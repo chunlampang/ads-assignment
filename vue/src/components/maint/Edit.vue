@@ -1,5 +1,5 @@
 <template>
-  <v-layout row wrap>
+  <v-layout row wrap :key="id">
     <v-flex class="mb-4" xs12>
       <div class="headline">{{entity.plural}}</div>
       <v-divider class="primary" />
@@ -27,36 +27,36 @@ export default {
   data() {
     return {
       id: this.$route.params.id,
-      breadcrumbs: [],
       alert: {
         show: false
       }
     };
   },
-  async created() {
-    this.breadcrumbs = [
-      {
-        text: this.entity.plural,
-        to: { name: "maint-" + this.entity.plural },
-        exact: true
-      },
-      {
-        text: this.itemTitle,
-        disabled: true
-      }
-    ];
-  },
   computed: {
     itemTitle() {
       if (this.id === "new") return "New " + this.entity.singular;
       return this.id;
+    },
+    breadcrumbs() {
+      return [
+        {
+          text: this.entity.plural,
+          to: { name: "maint-" + this.entity.plural },
+          exact: true
+        },
+        {
+          text: this.itemTitle,
+          disabled: true
+        }
+      ];
     }
   },
   methods: {
     updated(data) {
       if (this.id === "new") {
+        this.id = data._id;
         this.$router.replace({
-          params: { id: data._id }
+          params: { id: this.id }
         });
       }
     }

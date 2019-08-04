@@ -7,7 +7,7 @@
           <v-flex xs11 sm10 md9 lg8 xl7>
             <v-container>
               <transition name="scroll-y-transition">
-                <router-view :key="$route.path" />
+                <router-view :key="$route.name" />
               </transition>
             </v-container>
           </v-flex>

@@ -67,8 +67,8 @@
           </tr>
         </template>
       </v-data-table>
-      <v-dialog v-model="editDialog.visible" width="600">
-        <v-card :key="editDialog.id">
+      <v-dialog v-model="editDialog.visible" width="800">
+        <v-card v-if="editDialog.visible">
           <v-card-title class="primary white--text">
             {{(editDialog.id==='new'?'New ':'Edit ') + entity.singular}}
             <v-spacer />
