@@ -2,11 +2,9 @@
   <div>
     <v-app-bar color="primary" dark>
       <v-app-bar-nav-icon @click="showNav = !showNav" />
-      <v-toolbar-title
-        class="headline font-weight-light"
-        @click="gotoHome"
-        style="cursor:pointer"
-      >Advanced Database Systems - Assignment 2 (Part B)</v-toolbar-title>
+      <v-toolbar-title class="headline font-weight-light" @click="gotoHome" style="cursor:pointer">
+        <v-icon>mdi-school</v-icon> Advanced Database Systems - Assignment 2 (Part B)
+      </v-toolbar-title>
     </v-app-bar>
 
     <v-navigation-drawer v-model="showNav" app width="250" temporary>

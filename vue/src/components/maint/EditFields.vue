@@ -28,7 +28,7 @@
               <v-card>
                 <v-card-title>{{field.label}}</v-card-title>
                 <v-card-text>
-                  <v-card v-for="(item, index) in value[fieldName]" :key="index">
+                  <v-card v-for="(item, index) in value[fieldName]" :key="index" class="my-1">
                     <v-card-title>{{index+1}}</v-card-title>
                     <v-card-text>
                       <EditFields v-model="value[fieldName][index]" :fields="field.fields" />

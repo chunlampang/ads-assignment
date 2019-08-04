@@ -14,11 +14,16 @@
           <v-divider v-if="index > 0" :key="'d-'+index" />
           <v-list-item :key="'t-'+index" :to="{ name: 'maint-Offer', params:{ id: item._id } }">
             <v-list-item-avatar>
-              <span class="primary--text display-1 font-weight-light">{{index+1}}</span>
+              <div>
+                <div class="primary--text display-1 font-weight-light">{{index+1}}</div>
+                <v-icon v-if="index < 3" color="primary">mdi-trophy</v-icon>
+              </div>
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>
-                <h4 class="primary--text title font-weight-regular">{{item.course + ' - ' + item._join.course.title}}</h4>
+                <h4
+                  class="primary--text title font-weight-regular"
+                >{{item.course + ' - ' + item._join.course.title}}</h4>
               </v-list-item-title>
               <v-list-item-subtitle>{{item._join.department.deptName + ` (${item.year})`}}</v-list-item-subtitle>
               <v-list-item-subtitle>Enrolled: {{item.enrolledCount}}/{{item.classSize}}</v-list-item-subtitle>
