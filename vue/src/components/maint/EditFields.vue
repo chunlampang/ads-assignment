@@ -127,6 +127,9 @@ export default {
                   field.label + " should be an integer."
               );
               break;
+            case "positive":
+              rules.push(v => v >= 0 || field.label + " should be positive.");
+              break;
           }
         }
       }

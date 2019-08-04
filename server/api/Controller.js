@@ -50,7 +50,10 @@ module.exports = class Controller {
                             let parseFunc;
                             if (field.type === 'number') {
                                 if (field.rules.includes("integer")) {
-                                    parseFunc = 'parseInteger';
+                                    if (field.rules.includes("positive"))
+                                        parseFunc = 'parsePositiveInteger';
+                                    else
+                                        parseFunc = 'parseInteger';
                                 } else {
                                     parseFunc = 'parseNumber';
                                 }

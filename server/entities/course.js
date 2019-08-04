@@ -19,7 +19,7 @@ module.exports = {
         level: {
             type: 'number',
             label: 'Level',
-            rules: ['required', 'integer'],
+            rules: ['required', 'integer', 'positive'],
             view: ['filter', 'list', 'edit']
         }
     },

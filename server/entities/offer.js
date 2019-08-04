@@ -20,13 +20,13 @@ module.exports = {
         year: {
             type: 'number',
             label: 'Year',
-            rules: ['required', 'integer'],
+            rules: ['required', 'integer', 'positive'],
             view: ['filter', 'list', 'edit']
         },
         classSize: {
             type: 'number',
             label: 'Class Size',
-            rules: ['required', 'integer'],
+            rules: ['required', 'integer', 'positive'],
             view: ['filter', 'list', 'edit']
         },
         enrolledCount: {
