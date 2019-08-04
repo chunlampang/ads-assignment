@@ -122,8 +122,9 @@ module.exports = class Controller {
             const db = await mongoPool.getDb();
             const collection = db.collection(this.entity.collection);
             let { result } = await collection.insertOne(data);
-            console.log(`${result.insertedId} is inserted`);
-            data._id = result.insertedId;
+            if (!data._id)
+                data._id = result.insertedId;
+            console.log(`${data._id} is inserted`);
             out = { ok: !!result.n, data };
             res.status(201);
         } catch (err) {
