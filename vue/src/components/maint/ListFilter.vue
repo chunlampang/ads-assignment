@@ -28,7 +28,7 @@
                             <v-text-field
                               type="number"
                               v-model="value[fieldName].to"
-                              :label="field.label+ ' (To)'"
+                              :label="field.label + ' (To)'"
                             />
                           </v-flex>
                         </v-layout>
@@ -60,7 +60,14 @@
             <v-card-actions>
               <v-spacer />
               <v-btn @click="resetFilter" color="warning" text class="text-none">Reset</v-btn>
-              <v-btn type="submit" :disabled="!valid" color="primary" text class="text-none">Search</v-btn>
+              <v-btn
+                @click="search"
+                type="submit"
+                :disabled="!valid"
+                color="primary"
+                text
+                class="text-none"
+              >Search</v-btn>
             </v-card-actions>
           </v-card>
         </v-form>
@@ -84,8 +91,8 @@ export default {
       switch (field.type) {
         case "number":
           this.value[fieldName] = {
-            from: "",
-            to: ""
+            from: null,
+            to: null
           };
           break;
         case "string":
@@ -121,6 +128,9 @@ export default {
   methods: {
     resetFilter() {
       this.$refs.form.reset();
+    },
+    search() {
+      this.$emit("search", this.value);
     },
     async autoCompleteSearch(fieldName, val) {
       const autoInput = this.autoInput[fieldName];
