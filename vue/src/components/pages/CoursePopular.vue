@@ -3,58 +3,35 @@
     <v-flex xs12>
       <div class="headline">Popular Courses</div>
       <v-divider class="primary" />
+      <BaseAlert :value="alert.show" :type="alert.type" :msg="alert.msg" />
     </v-flex>
     <v-flex xs12>
-      <v-layout row wrap>
-        <v-flex xs12>
-          <v-select
-            :items="departments"
-            item-text="deptName"
-            item-value="_id"
-            label="Department(s)"
-            v-model="filter.department"
-            clearable
-            chips
-          ></v-select>
-        </v-flex>
-        <v-flex xs12>
-          <v-text-field type="number" v-model="filter.year" label="Year" />
-        </v-flex>
-      </v-layout>
+      <ListFilter v-model="filter" :entity="entities.offer" @search="search()" />
     </v-flex>
     <v-flex xs12>
-      <v-container grid-list-xl>
-        <v-layout row wrap justify-center justify-space-between>
-          <template v-for="(item, index) in items.slice(0,3)">
-            <v-flex :key="index" sm12 md4>
-              <v-card>
-                <v-card-title>
-                  <div class="headline">{{index+1}}</div>
-                  <div>{{item.course + ' - ' + item._join.course.title}}</div>
-                </v-card-title>
-                <v-card-text>
-                  <v-layout row wrap>
-                    <v-flex xs12>{{item._join.department.deptName + ` (${item.year})`}}</v-flex>
-                    <v-flex xs12>Enrolled: {{printEnrolled(item)}}</v-flex>
-                  </v-layout>
-                </v-card-text>
-              </v-card>
-            </v-flex>
-          </template>
-        </v-layout>
-      </v-container>
-    </v-flex>
-    <v-flex v-if="items.length > 3" xs12>
-      <v-list dense three-line>
-        <template v-for="(item, index) in items.slice(3)">
+      <v-list dense three-line class="py-0">
+        <template v-for="(item, index) in items">
           <v-divider v-if="index > 0" :key="'d-'+index" />
-          <v-list-item :key="'t-'+index">
-            <v-list-item-avatar>{{index+4}}</v-list-item-avatar>
+          <v-list-item :key="'t-'+index" :to="{ name: 'maint-Offer', params:{ id: item._id } }">
+            <v-list-item-avatar>
+              <span class="primary--text display-1 font-weight-light">{{index+1}}</span>
+            </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title>{{item.course + ' - ' + item._join.course.title}}</v-list-item-title>
+              <v-list-item-title>
+                <h4 class="primary--text title font-weight-regular">{{item.course + ' - ' + item._join.course.title}}</h4>
+              </v-list-item-title>
               <v-list-item-subtitle>{{item._join.department.deptName + ` (${item.year})`}}</v-list-item-subtitle>
-              <v-list-item-subtitle>Enrolled: {{printEnrolled(item)}}</v-list-item-subtitle>
+              <v-list-item-subtitle>Enrolled: {{item.enrolledCount}}/{{item.classSize}}</v-list-item-subtitle>
             </v-list-item-content>
+            <v-list-item-action>
+              <v-progress-circular
+                :rotate="270"
+                :size="75"
+                :width="10"
+                :value="enrolledPercent(item)"
+                color="primary"
+              >{{ enrolledPercent(item) }}%</v-progress-circular>
+            </v-list-item-action>
           </v-list-item>
         </template>
       </v-list>
@@ -63,7 +40,12 @@
 </template>
 
 <script>
+import BaseAlert from "@/components/blocks/BaseAlert";
+import ListFilter from "../maint/ListFilter";
+
 export default {
+  components: { BaseAlert, ListFilter },
+  inject: ["entities"],
   data() {
     return {
       departments: [],
@@ -72,30 +54,16 @@ export default {
       filter: {
         department: [],
         year: null
+      },
+      alert: {
+        show: false
       }
     };
   },
   created() {
-    this.loadOptions();
     this.search();
   },
-  watch: {
-    filter: {
-      handler(val) {
-        this.search();
-      },
-      deep: true
-    }
-  },
   methods: {
-    async loadOptions() {
-      let result = await this.$api.getDepartments();
-      if (result.error) {
-        console.error(result.error);
-      } else {
-        this.departments = result.data;
-      }
-    },
     async search() {
       this.loading = true;
       let result = await this.$api.getJoinedOffers(this.filter, {
@@ -103,16 +71,18 @@ export default {
         sort: "-enrolledCount"
       });
       if (result.error) {
-        console.error(result.error);
+        this.alert = {
+          show: true,
+          type: "error",
+          msg
+        };
       } else {
         this.items = result.data;
       }
       this.loading = false;
     },
-    printEnrolled(item) {
-      return `${item.enrolledCount}/${item.classSize} (${(item.enrolledCount /
-        item.classSize) *
-        100}%)`;
+    enrolledPercent(item) {
+      return ((item.enrolledCount / item.classSize) * 100).toFixed(1);
     }
   }
 };

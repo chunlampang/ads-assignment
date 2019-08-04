@@ -8,9 +8,9 @@
         </div>
       </v-expansion-panel-header>
       <v-expansion-panel-content>
-        <v-form ref="form" v-model="valid" @submit.prevent="search">
+        <v-form ref="form" v-model="valid" @submit.prevent="search" autocomplete="off">
           <v-card flat>
-            <v-card-text>
+            <v-card-text v-if="!loading">
               <template v-for="(field, fieldName) in entity.fields">
                 <template v-if="field.view.includes('filter')">
                   <v-flex :key="fieldName" xs12>
@@ -34,7 +34,19 @@
                         </v-layout>
                       </v-container>
                     </template>
-                    <v-autocomplete
+                    <v-select
+                      v-if="field.type === 'entity'"
+                      v-model="value[fieldName]"
+                      item-value="_id"
+                      :item-text="getOptionItemText(field.entity)"
+                      :items="options[field.entity]"
+                      :label="field.label"
+                      multiple
+                      clearable
+                      chips
+                      counter
+                    />
+                    <v-combobox
                       v-else-if="field.type === 'string'"
                       v-model="value[fieldName]"
                       :loading="autoInput[fieldName].loading"
@@ -43,7 +55,9 @@
                       :item-text="fieldName"
                       :search-input="autoInput[fieldName].input"
                       @update:search-input="autoInput[fieldName].input = $event"
+                      @keyup.13="search"
                       no-filter
+                      dense
                       hide-no-data
                       :label="field.label"
                     >
@@ -52,7 +66,7 @@
                           <v-list-item-title v-html="data.item[fieldName]"></v-list-item-title>
                         </v-list-item-content>
                       </template>
-                    </v-autocomplete>
+                    </v-combobox>
                   </v-flex>
                 </template>
               </template>
@@ -81,6 +95,7 @@ export default {
     entity: Object,
     value: Object
   },
+  inject: ["entities"],
   data() {
     const fields = this.entity.fields;
     const autoInput = {};
@@ -91,8 +106,8 @@ export default {
       switch (field.type) {
         case "number":
           this.value[fieldName] = {
-            from: null,
-            to: null
+            from: "",
+            to: ""
           };
           break;
         case "string":
@@ -107,9 +122,15 @@ export default {
     }
 
     return {
+      loading: true,
       valid: true,
-      autoInput
+      autoInput,
+      options: {}
     };
+  },
+  async created() {
+    await this.initOptions();
+    this.loading = false;
   },
   mounted() {
     let fields = this.entity.fields;
@@ -137,11 +158,11 @@ export default {
       autoInput.loading = true;
 
       let filter = {};
-      filter[fieldName] = { $like: ".*" + val + ".*" };
+      filter[fieldName] = ".*" + val + ".*";
 
       let result = await this.$api.query("/" + this.entity.collection, {
         filter,
-        page: { size: 10 },
+        page: { size: 5 },
         fields: fieldName
       });
       if (result.error) {
@@ -151,6 +172,31 @@ export default {
       }
 
       autoInput.loading = false;
+    },
+    async initOptions() {
+      const requests = [];
+      for (let fieldName in this.entity.fields) {
+        const field = this.entity.fields[fieldName];
+        if (!field.view.includes("filter")) continue;
+        if (field.type === "entity" || field.type === "entities") {
+          if (!this.options[field.entity]) {
+            this.options[field.entity] = [];
+            requests.push(this.loadOptions(field.entity));
+          }
+        }
+      }
+      await Promise.all(requests);
+    },
+    async loadOptions(entityName) {
+      const result = await this.$api.query(
+        "/" + this.entities[entityName].collection
+      );
+      this.options[entityName] = result.data;
+    },
+    getOptionItemText(entityName) {
+      const entity = this.entities[entityName];
+      if (!entity.desc) return "_id";
+      return item => eval(entity.desc);
     }
   }
 };

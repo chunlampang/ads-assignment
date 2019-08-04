@@ -34,14 +34,14 @@ module.exports = {
             label: 'Enrolled Count',
             readonly: 2,
             cal: { order: 1, fc: 'item.enrolled.length' },
-            view: ['list', 'edit']
+            view: ['filter', 'list', 'edit']
         },
         availablePlaces: {
             type: 'number',
             label: 'Available Places',
             readonly: 2,
             cal: { order: 2, fc: 'item.classSize - item.enrolledCount' },
-            view: ['list', 'edit']
+            view: ['filter', 'list', 'edit']
         },
         enrolled: {
             type: 'objects',
