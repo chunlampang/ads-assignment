@@ -20,7 +20,7 @@
           <!-- tool -->
           <v-toolbar color="primary" dark dense flat>
             <v-btn
-              :to="{ name: 'maint-' + entity.singular, params: { id: 'new' } }"
+              @click="showEditDialog('new')"
               class="text-none"
               text
             >{{'New ' + entity.singular}}</v-btn>
@@ -43,12 +43,7 @@
               <!-- Actions -->
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
-                  <v-btn
-                    :to="{ name: 'maint-' + entity.singular, params: { id: item._id }}"
-                    v-on="on"
-                    small
-                    icon
-                  >
+                  <v-btn @click="showEditDialog(item._id)" v-on="on" small icon>
                     <v-icon>mdi-pencil</v-icon>
                   </v-btn>
                 </template>
@@ -72,6 +67,38 @@
           </tr>
         </template>
       </v-data-table>
+      <v-dialog v-model="editDialog.visible" width="600">
+        <v-card :key="editDialog.id">
+          <v-card-title class="primary white--text">
+            {{(editDialog.id==='new'?'New ':'Edit ') + entity.singular}}
+            <v-spacer />
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  :to="{ name: 'maint-' + entity.singular, params: { id: editDialog.id }}"
+                  target="_blank"
+                  v-on="on"
+                  dark
+                  small
+                  icon
+                >
+                  <v-icon>mdi-open-in-new</v-icon>
+                </v-btn>
+              </template>
+              <span>Open in new tab</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn @click="editDialog.visible = false" v-on="on" dark small icon>
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </template>
+              <span>Close</span>
+            </v-tooltip>
+          </v-card-title>
+          <EditForm :id="editDialog.id" :entity="entity" @updated="itemUpdated" />
+        </v-card>
+      </v-dialog>
       <v-dialog v-model="deleteDialog.visible" width="400">
         <v-card>
           <v-card-title class="headline" primary-title>Are you confirm to delete?</v-card-title>
@@ -88,9 +115,10 @@
 <script>
 import BaseAlert from "@/components/blocks/BaseAlert";
 import ListFilter from "./ListFilter";
+import EditForm from "./EditForm";
 
 export default {
-  components: { BaseAlert, ListFilter },
+  components: { BaseAlert, ListFilter, EditForm },
   props: {
     entity: Object
   },
@@ -123,6 +151,7 @@ export default {
         page: 1,
         itemsPerPage: 10
       },
+      editDialog: { visible: false, id: null },
       deleteDialog: { visible: false, item: null },
       alert: {
         show: false
@@ -177,6 +206,15 @@ export default {
         name: "department",
         params: { id: item._id }
       });
+    },
+    showEditDialog(id) {
+      this.editDialog.visible = true;
+      this.editDialog.id = id;
+    },
+    itemUpdated(data) {
+      if (this.editDialog.id === "new") {
+        this.editDialog.id = data._id;
+      }
     },
     showDeleteDialog(item) {
       this.deleteDialog.visible = true;

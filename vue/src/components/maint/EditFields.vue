@@ -82,7 +82,8 @@ export default {
   components: { DateField, DatetimeField, EditFields },
   props: {
     fields: Object,
-    value: Object
+    value: Object,
+    id: String | Number
   },
   inject: {
     entities: {},
