@@ -49,7 +49,7 @@ module.exports = class Controller {
                             let { from, to } = filter[fieldName];
                             let parseFunc;
                             if (field.type === 'number') {
-                                if (field.rules.includes("integer")) {
+                                if (field.rules && field.rules.includes("integer")) {
                                     if (field.rules.includes("positive"))
                                         parseFunc = 'parsePositiveInteger';
                                     else
@@ -75,6 +75,7 @@ module.exports = class Controller {
                             $match[fieldName] = filter[fieldName];
                     }
                 }
+                console.log('$match:',$match);
                 options.push({ $match });
             }
             //join
