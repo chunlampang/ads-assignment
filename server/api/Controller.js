@@ -14,7 +14,7 @@ module.exports = class Controller {
         return req.params.id;
     }
 
-    async query(req, res) {
+    async query(req, res, appendJoinOptions) {
         let out;
         try {
             let options = [];
@@ -78,16 +78,8 @@ module.exports = class Controller {
                 options.push({ $match });
             }
             //join
-            let join = queryHelper.parseArray('join', req.query.join || []);
-            if (join.includes('offers')) {
-                options.push({
-                    $lookup: {
-                        from: 'offers',
-                        localField: '_id',
-                        foreignField: 'enrolled.student',
-                        as: '_join.offers'
-                    }
-                });
+            if (req.query.join) {
+                appendJoinOptions(req.query, options);
             }
 
             const db = await mongoPool.getDb();
