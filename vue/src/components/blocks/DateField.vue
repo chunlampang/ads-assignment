@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   model: {
     prop: "value",
@@ -57,17 +59,11 @@ export default {
     },
     date: {
       get() {
-        const d = this.$utils.stringToDate(this.valueStr);
-        if (!d) return d;
-        const month = (d.getMonth() + 1 + "").padStart(2, "0"),
-          day = (d.getDate() + "").padStart(2, "0");
-        return `${d.getFullYear()}-${month}-${day}`;
+        if (!this.value) return "";
+        return moment(this.value).format("YYYY-MM-DD");
       },
       set(v) {
-        const [year, month, day] = v.split("-");
-        this.valueStr = this.$utils.dateToString(
-          new Date(year, month - 1, day)
-        );
+        this.valueStr = moment(v, "YYYY-MM-DD").toDate();
       }
     }
   }
