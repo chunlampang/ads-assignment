@@ -14,6 +14,7 @@
         :loading="loading"
         multi-sort
         class="elevation-1"
+        id="maint-data-list"
       >
         <template v-slot:top>
           <ListFilter v-model="filter" :entity="entity" @search="search(true)" />
@@ -39,7 +40,7 @@
         <!-- List -->
         <template v-slot:item="{ item }">
           <tr>
-            <td style="min-width:120px">
+            <td>
               <!-- Actions -->
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
@@ -58,14 +59,18 @@
                 <span>Delete</span>
               </v-tooltip>
             </td>
-            <template v-for="(field, fieldName) in entity.fields">
-              <td v-if="field.view.includes('list')" :key="fieldName" style="min-width:150px">
-                <template v-if="field.type === 'date'">{{$utils.dateToString(item[fieldName])}}</template>
-                <template
-                  v-else-if="field.type === 'datetime'"
-                >{{$utils.datetimeToString(item[fieldName])}}</template>
-                <template v-else>{{item[fieldName]}}</template>
-              </td>
+            <template v-for="(header, index) in headers">
+              <template v-if="index > 0">
+                <td
+                  v-if="header.type === 'date'"
+                  :key="header.value"
+                >{{$utils.dateToString(item[header.value])}}</td>
+                <td
+                  v-else-if="header.type === 'datetime'"
+                  :key="header.value"
+                >{{$utils.datetimeToString(item[header.value])}}</td>
+                <td v-else :key="header.value">{{$utils.getVarByDotNotation(item,header.value)}}</td>
+              </template>
             </template>
           </tr>
         </template>
@@ -130,17 +135,51 @@ export default {
   props: {
     entity: Object
   },
+  inject: ["entities"],
   data() {
-    let headers = [{ text: "Actions", value: "", sortable: false }];
+    const headers = [{ text: "Actions", value: "", sortable: false }];
     const listFields = [];
+    const joinEntity = [];
 
     const fields = this.entity.fields;
     for (let fieldName in fields) {
       const field = fields[fieldName];
       if (!field.view.includes("list")) continue;
 
+      if (field.type === "entity") {
+        let entity = this.entities[field.entity];
+
+        if (entity.desc) {
+          joinEntity.push(field.entity);
+
+          if (entity.desc.key) {
+            let key = entity.fields[entity.desc.key];
+            let dotKey = `_join.${field.entity}.${entity.desc.key}`;
+            headers.push({
+              text: key.label,
+              type: field.type + "-key",
+              value: dotKey
+            });
+            listFields.push(dotKey);
+          }
+
+          if (entity.desc.label) {
+            let label = entity.fields[entity.desc.label];
+            let dotLabel = `_join.${field.entity}.${entity.desc.label}`;
+            headers.push({
+              text: label.label,
+              type: field.type + "-label",
+              value: dotLabel
+            });
+            listFields.push(dotLabel);
+          }
+          continue;
+        } //else default
+      }
+      //default
       headers.push({
         text: field.label,
+        type: field.type,
         value: fieldName
       });
       listFields.push(fieldName);
@@ -167,7 +206,8 @@ export default {
         show: false
       },
       filter: {},
-      listFields
+      listFields,
+      joinEntity
     };
   },
   computed: {
@@ -211,6 +251,7 @@ export default {
       let result = await this.$api.query("/" + this.entity.collection, {
         filter: this.filter,
         fields: this.listFields,
+        join: this.joinEntity,
         ...this.apiOptions
       });
       if (result.error) {
@@ -267,3 +308,12 @@ export default {
   }
 };
 </script>
+<style scoped>
+#maint-data-list >>> thead th {
+  white-space: nowrap;
+  min-width: 100px;
+}
+#maint-data-list >>> thead th:first-child {
+  min-width: 120px;
+}
+</style>
