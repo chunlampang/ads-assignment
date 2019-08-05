@@ -22,5 +22,9 @@ module.exports = {
             rules: ['required'],
             view: ['filter', 'list', 'edit']
         }
+    },
+    desc: {
+        key: '_id',
+        label: 'stuName'
     }
 }

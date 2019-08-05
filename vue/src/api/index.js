@@ -5,6 +5,16 @@ export default {
     install(Vue) {
         Vue.prototype.$api = this;
     },
+    //for v-select, v-combobox, v-autoComplete item-text
+    getOptionItemText(entity) {
+        if (!entity.desc) return "_id";
+        if (entity.desc.key && entity.desc.label)
+            return item => item[entity.desc.key] + ' - ' + item[entity.desc.label];
+        if (entity.desc.key)
+            return item => item[entity.desc.key];
+        if (entity.desc.label)
+            return item => item[entity.desc.label];
+    },
     async getEntities() {
         return await this.sendRequest('get', '/entities');
     },

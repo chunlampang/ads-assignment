@@ -9,7 +9,7 @@
               v-model="value[fieldName]"
               :rules="getRules(field)"
               item-value="_id"
-              :item-text="getOptionItemText(field.entity)"
+              :item-text="$api.getOptionItemText(entities[field.entity])"
               :items="options[field.entity]"
               :label="field.label + (required(field)?' *':'')"
               :readonly="readonly(field)"
@@ -170,11 +170,6 @@ export default {
         "/" + this.entities[entityName].collection
       );
       this.options[entityName] = result.data;
-    },
-    getOptionItemText(entityName) {
-      const entity = this.entities[entityName];
-      if (!entity.desc) return "_id";
-      return item => eval(entity.desc);
     },
     readonly(field) {
       return (

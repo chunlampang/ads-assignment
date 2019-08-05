@@ -22,5 +22,8 @@ module.exports = {
             view: ['filter', 'list', 'edit']
         }
     },
-    desc: 'item.deptId + " - " + item.deptName'
+    desc: {
+        key: 'deptId',
+        label: 'deptName'
+    }
 }
