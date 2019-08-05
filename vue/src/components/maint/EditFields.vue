@@ -24,7 +24,7 @@
                 </v-card-text>
               </v-card>
             </template>
-            <template v-else-if="field.type === 'objects'">
+            <template v-else-if="field.type === 'list'">
               <v-card>
                 <v-card-title>
                   <h4 class="title font-weight-regular">{{field.label}}</h4>
@@ -87,7 +87,7 @@
 import DateField from "@/components/blocks/DateField";
 import DatetimeField from "@/components/blocks/DatetimeField";
 import EditFields from "./EditFields";
-import loadOptionsMixin from './loadOptionsMixin';
+import loadOptionsMixin from "./loadOptionsMixin";
 
 export default {
   name: "EditFields",
@@ -105,7 +105,8 @@ export default {
     };
   },
   async created() {
-    await this.initOptions(this.fields,"edit");
+    await this.initOptions(this.fields, "edit");
+
     this.loading = false;
   },
   methods: {

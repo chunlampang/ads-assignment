@@ -44,7 +44,7 @@ module.exports = {
             view: ['filter', 'list', 'edit']
         },
         enrolled: {
-            type: 'objects',
+            type: 'list',
             label: 'Enrolled',
             fields: {
                 student: {

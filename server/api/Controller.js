@@ -32,7 +32,7 @@ module.exports = class Controller {
                 case 'object':
                     this.parseData(field.fields, data[fieldName]);
                     break;
-                case 'objects':
+                case 'list':
                     for (let item in data[fieldName]) {
                         this.parseData(field.fields, item);
                     }
