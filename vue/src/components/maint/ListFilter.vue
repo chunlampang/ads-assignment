@@ -130,14 +130,15 @@
 <script>
 import DateField from "@/components/blocks/DateField";
 import DatetimeField from "@/components/blocks/DatetimeField";
+import loadOptionsMixin from "./loadOptionsMixin";
 
 export default {
+  mixins: [loadOptionsMixin],
   components: { DateField, DatetimeField },
   props: {
     entity: Object,
     value: Object
   },
-  inject: ["entities"],
   data() {
     const fields = this.entity.fields;
     const autoInput = {};
@@ -168,12 +169,11 @@ export default {
     return {
       loading: true,
       valid: true,
-      autoInput,
-      options: {}
+      autoInput
     };
   },
   async created() {
-    await this.initOptions();
+    await this.initOptions(this.entity.fields, "filter");
     this.loading = false;
   },
   mounted() {
@@ -216,26 +216,6 @@ export default {
       }
 
       autoInput.loading = false;
-    },
-    async initOptions() {
-      const requests = [];
-      for (let fieldName in this.entity.fields) {
-        const field = this.entity.fields[fieldName];
-        if (!field.view.includes("filter")) continue;
-        if (field.type === "entity" || field.type === "entities") {
-          if (!this.options[field.entity]) {
-            this.options[field.entity] = [];
-            requests.push(this.loadOptions(field.entity));
-          }
-        }
-      }
-      await Promise.all(requests);
-    },
-    async loadOptions(entityName) {
-      const result = await this.$api.query(
-        "/" + this.entities[entityName].collection
-      );
-      this.options[entityName] = result.data;
     }
   }
 };

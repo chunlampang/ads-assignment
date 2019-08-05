@@ -87,19 +87,16 @@
 import DateField from "@/components/blocks/DateField";
 import DatetimeField from "@/components/blocks/DatetimeField";
 import EditFields from "./EditFields";
+import loadOptionsMixin from './loadOptionsMixin';
 
 export default {
   name: "EditFields",
+  mixins: [loadOptionsMixin],
   components: { DateField, DatetimeField, EditFields },
   props: {
     fields: Object,
     value: Object,
     id: String | Number
-  },
-  inject: {
-    entities: {},
-    options: { default: {} },
-    optionsRequests: { default: [] }
   },
   data() {
     return {
@@ -107,22 +104,8 @@ export default {
       rulesCache: {}
     };
   },
-  provide() {
-    const provide = {};
-
-    Object.defineProperty(provide, "options", {
-      enumerable: true,
-      get: () => this.options
-    });
-    Object.defineProperty(provide, "optionsRequests", {
-      enumerable: true,
-      get: () => this.optionsRequests
-    });
-
-    return provide;
-  },
   async created() {
-    await this.initOptions();
+    await this.initOptions(this.fields,"edit");
     this.loading = false;
   },
   methods: {
@@ -151,25 +134,6 @@ export default {
       }
 
       return (this.rulesCache[field.label] = rules);
-    },
-    async initOptions() {
-      for (let fieldName in this.fields) {
-        const field = this.fields[fieldName];
-        if (!field.view.includes("edit")) continue;
-        if (field.type === "entity" || field.type === "entities") {
-          if (!this.options[field.entity]) {
-            this.options[field.entity] = [];
-            this.optionsRequests.push(this.loadOptions(field.entity));
-          }
-        }
-      }
-      await Promise.all(this.optionsRequests);
-    },
-    async loadOptions(entityName) {
-      const result = await this.$api.query(
-        "/" + this.entities[entityName].collection
-      );
-      this.options[entityName] = result.data;
     },
     readonly(field) {
       return (
