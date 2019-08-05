@@ -24,13 +24,13 @@ const mongoPool = require('./utils/mongoPool');
         }
 
         let data = await Promise.all([
-            insert('departments', require('./data/departments.data')),
-            insert('courses', require('./data/courses.data')),
-            insert('students', require('./data/students.data'), collection => {
-                collection.createIndex({ stuName: 1 });
+            insert('departments', require('./data/departments.data'), collection => {
+                collection.createIndex({ deptId: 1 }, { unique: true });
             }),
+            insert('courses', require('./data/courses.data')),
+            insert('students', require('./data/students.data')),
         ]);
-        
+
         await insert('offers', require('./data/offers.data')(data[0], data[1], data[2]), collection => {
             collection.createIndex({ department: 1, course: 1, year: 1 }, { unique: true });
             collection.createIndex({ enrolledCount: 1 });

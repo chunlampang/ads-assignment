@@ -75,7 +75,7 @@ module.exports = class Controller {
                             $match[fieldName] = filter[fieldName];
                     }
                 }
-                console.log('$match:',$match);
+                console.log('$match:', $match);
                 options.push({ $match });
             }
             //join
@@ -124,9 +124,14 @@ module.exports = class Controller {
             out = { ok: !!result.n, data };
             res.status(201);
         } catch (err) {
-            if (err.code == 11000)
-                out = { error: data._id + ' is used by other.' };
-            else
+            if (err.code == 11000) {
+                let field;
+                if (this.entity.desc && this.entity.desc.key) {
+                    field = this.entity.desc.key;
+                } else
+                    field = '_id';
+                out = { error: data[field] + ' is used by other.' };
+            } else
                 out = { error: err.message };
             res.status(400);
         }

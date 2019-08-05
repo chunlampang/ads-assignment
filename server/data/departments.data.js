@@ -16,7 +16,7 @@ module.exports = [
     { deptId: 'MM', deptName: 'Management', location: 'Green Zone' },
     { deptId: 'MS', deptName: 'Management Sciences', location: 'Green Zone' },
     { deptId: 'MK', deptName: 'Marketing', location: 'Green Zone' },
-    { deptId: 'MS', deptName: 'Materials Science and Engineering', location: 'Green Zone' },
+    { deptId: 'MA', deptName: 'Materials Science and Engineering', location: 'Green Zone' },
     { deptId: 'MT', deptName: 'Mathematics', location: 'Green Zone' },
     { deptId: 'ME', deptName: 'Mechanical Engineering', location: 'Green Zone' },
     { deptId: 'MC', deptName: 'Media and Communication', location: 'Green Zone' },
