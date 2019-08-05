@@ -15,8 +15,8 @@ export default {
         if (entity.desc.label)
             return item => item[entity.desc.label];
     },
-    async getEntities() {
-        return await this.sendRequest('get', '/entities');
+    async getConfigs() {
+        return await this.sendRequest('get', '/configs');
     },
     async sendRequest(method, path, params) {
         let out;

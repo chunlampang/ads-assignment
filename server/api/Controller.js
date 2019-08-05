@@ -1,7 +1,7 @@
 const mongoPool = require.main.require('./utils/mongoPool');
 const queryHelper = require.main.require('./utils/queryHelper');
 const { ObjectId } = require('mongodb');
-const entities = require.main.require('./entities');
+const { entities } = require.main.require('./configs');
 
 module.exports = class Controller {
     constructor(entity) {

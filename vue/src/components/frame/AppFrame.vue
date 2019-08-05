@@ -39,7 +39,7 @@ export default {
     return {
       ready: false,
       menu,
-      entities: [],
+      configs: null,
 
       // options, optionsRequests used by maint/loadOptionsMixin.js
       options: {},
@@ -53,9 +53,13 @@ export default {
       enumerable: true,
       get: () => this.menu
     });
+    Object.defineProperty(provide, "configs", {
+      enumerable: true,
+      get: () => this.configs
+    });
     Object.defineProperty(provide, "entities", {
       enumerable: true,
-      get: () => this.entities
+      get: () => this.configs.entities
     });
     Object.defineProperty(provide, "options", {
       enumerable: true,
@@ -78,7 +82,8 @@ export default {
     }
   },
   async created() {
-    let entities = (this.entities = await this.$api.getEntities());
+    let configs = (this.configs = await this.$api.getConfigs());
+    let entities = configs.entities;
 
     for (let entityId in entities) {
       let entity = entities[entityId];

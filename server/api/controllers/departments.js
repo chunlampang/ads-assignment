@@ -3,7 +3,7 @@ const mongoPool = require.main.require('./utils/mongoPool');
 const queryHelper = require.main.require('./utils/queryHelper');
 const Controller = require('../Controller');
 
-const entity = require.main.require('./entities/department');
+const entity = require.main.require('./configs/department');
 const controller = new Controller(entity);
 
 const router = express.Router();

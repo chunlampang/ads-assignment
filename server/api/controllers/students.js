@@ -1,7 +1,7 @@
 const express = require('express');
 const Controller = require('../Controller');
 
-const entity = require.main.require('./entities/student');
+const entity = require.main.require('./configs/student');
 const controller = new Controller(entity);
 
 const router = express.Router();

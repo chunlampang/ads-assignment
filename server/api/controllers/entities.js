@@ -1,12 +1,12 @@
 const express = require('express');
 
 const router = express.Router();
-const route = router.route(`/entities`);
+const route = router.route(`/configs`);
 
-const entities = require.main.require('./entities');
+const configs = require.main.require('./configs');
 
 route.get(async function (req, res) {
-    res.send(entities);
+    res.send(configs);
 });
 
 module.exports = router;
