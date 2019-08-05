@@ -24,7 +24,11 @@
                 <div class="headline">Model 1</div>
               </v-card-title>
               <v-card-text>
-                <v-treeview :items="model1" dense open-on-click open-all></v-treeview>
+                <v-treeview :items="model1" dense open-on-click open-all>
+                  <template v-slot:prepend="{ item, open }">
+                    <v-icon v-if="item.collection">mdi-database</v-icon>
+                  </template>
+                </v-treeview>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -34,7 +38,11 @@
                 <div class="headline">Model 2</div>
               </v-card-title>
               <v-card-text>
-                <v-treeview :items="model2" dense open-on-click open-all></v-treeview>
+                <v-treeview :items="model2" dense open-on-click open-all>
+                  <template v-slot:prepend="{ item, open }">
+                    <v-icon v-if="item.collection">mdi-database</v-icon>
+                  </template>
+                </v-treeview>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -52,6 +60,7 @@ export default {
         {
           id: 1,
           name: "departments",
+          collection: true,
           children: [
             { name: '_id: "ObjectId"' },
             { name: 'deptId: "CS"' },
@@ -62,6 +71,7 @@ export default {
         {
           id: 2,
           name: "courses",
+          collection: true,
           children: [
             { name: '_id: "ObjectId"' },
             { name: 'courseId: "CS101"' },
@@ -73,6 +83,7 @@ export default {
         {
           id: 3,
           name: "offer",
+          collection: true,
           children: [
             { name: 'course: "course._id"' },
             { name: "year: 2016" },
@@ -84,6 +95,7 @@ export default {
         {
           id: 4,
           name: "students",
+          collection: true,
           children: [
             { name: '_id: "15101010"' },
             { name: 'stuName: "Chan Tai Man"' },
@@ -103,6 +115,7 @@ export default {
         {
           id: 1,
           name: "departments",
+          collection: true,
           children: [
             { name: '_id: "ObjectId"' },
             { name: 'deptId: "CS"' },
@@ -118,6 +131,7 @@ export default {
         {
           id: 2,
           name: "courses",
+          collection: true,
           children: [
             { name: '_id: "ObjectId"' },
             { name: 'courseId: "CS101"' },
@@ -128,6 +142,7 @@ export default {
         {
           id: 3,
           name: "offer",
+          collection: true,
           children: [
             { name: 'department: "department._id"' },
             { name: 'course: "course._id"' },
@@ -148,6 +163,7 @@ export default {
         {
           id: 4,
           name: "students",
+          collection: true,
           children: [
             { name: '_id: "15101010"' },
             { name: 'stuName: "Chan Tai Man"' },
