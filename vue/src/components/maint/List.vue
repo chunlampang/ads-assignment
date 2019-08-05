@@ -232,6 +232,11 @@ export default {
   watch: {
     apiOptions() {
       this.search();
+    },
+    "editDialog.visible"(v) {
+      if (!v) {
+        this.query();
+      }
     }
   },
   methods: {
