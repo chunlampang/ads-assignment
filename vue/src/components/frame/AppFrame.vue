@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app v-if="ready">
     <AppToolbar :menu="menu" />
     <v-content>
       <v-container class="pb-5" fluid>
@@ -27,9 +27,21 @@ export default {
     AppToolbar,
     AppFooter
   },
-  inject: ["menu"],
   data() {
+    let menu = [];
+    for (let route of this.$router.options.routes) {
+      if (route.meta && route.meta.menu) {
+        let m = route.meta.menu;
+        menu.push({ icon: m.icon, title: m.title, link: { name: route.name } });
+      }
+    }
+
     return {
+      ready: false,
+      menu,
+      entities: [],
+
+      // options, optionsRequests used by maint/loadOptionsMixin.js
       options: {},
       optionsRequests: []
     };
@@ -37,7 +49,14 @@ export default {
   provide() {
     const provide = {};
 
-    // options, optionsRequests used by maint/loadOptionsMixin.js
+    Object.defineProperty(provide, "menu", {
+      enumerable: true,
+      get: () => this.menu
+    });
+    Object.defineProperty(provide, "entities", {
+      enumerable: true,
+      get: () => this.entities
+    });
     Object.defineProperty(provide, "options", {
       enumerable: true,
       get: () => this.options
@@ -53,7 +72,49 @@ export default {
     "$route.name"() {
       this.options = {};
       this.optionsRequests = [];
+    },
+    $route(v) {
+      console.log("route", v);
     }
+  },
+  async created() {
+    let entities = (this.entities = await this.$api.getEntities());
+
+    for (let entityId in entities) {
+      let entity = entities[entityId];
+      let routeName = "maint-" + entity.plural;
+      //append vue router
+      let appendRoutes = [];
+      appendRoutes.push({
+        path: "/" + entity.collection,
+        name: routeName,
+        component: () => import("@/components/maint/List"),
+        props: route => ({ entity })
+      });
+      appendRoutes.push({
+        path: `/${entity.collection}/:id`,
+        name: "maint-" + entity.singular,
+        component: () => import("@/components/maint/Edit"),
+        props: route => ({ entity })
+      });
+      this.$router.addRoutes(appendRoutes);
+      //append menu
+      this.menu.push({
+        title: entity.plural,
+        icon: "mdi-wrench",
+        link: { name: routeName }
+      });
+    }
+
+    this.$router.addRoutes([
+      {
+        path: "/:path*",
+        component: () => import("@/components/pages/Error"),
+        props: { code: 404 }
+      }
+    ]);
+
+    this.ready = true;
   }
 };
 </script>
