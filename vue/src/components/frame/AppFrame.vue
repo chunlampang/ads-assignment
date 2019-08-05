@@ -27,6 +27,33 @@ export default {
     AppToolbar,
     AppFooter
   },
-  inject: ["menu"]
+  inject: ["menu"],
+  data() {
+    return {
+      options: {},
+      optionsRequests: []
+    };
+  },
+  provide() {
+    const provide = {};
+
+    // options, optionsRequests used by maint/loadOptionsMixin.js
+    Object.defineProperty(provide, "options", {
+      enumerable: true,
+      get: () => this.options
+    });
+    Object.defineProperty(provide, "optionsRequests", {
+      enumerable: true,
+      get: () => this.optionsRequests
+    });
+
+    return provide;
+  },
+  watch: {
+    "$route.name"() {
+      this.options = {};
+      this.optionsRequests = [];
+    }
+  }
 };
 </script>

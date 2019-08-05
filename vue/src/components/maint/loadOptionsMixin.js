@@ -4,20 +4,6 @@ export default {
         options: { default: {} },
         optionsRequests: { default: [] }
     },
-    provide() {
-        const provide = {};
-
-        Object.defineProperty(provide, "options", {
-            enumerable: true,
-            get: () => this.options
-        });
-        Object.defineProperty(provide, "optionsRequests", {
-            enumerable: true,
-            get: () => this.optionsRequests
-        });
-
-        return provide;
-    },
     methods: {
         async initOptions(fields, type) {
             for (let fieldName in fields) {
