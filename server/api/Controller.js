@@ -14,6 +14,34 @@ module.exports = class Controller {
         return req.params.id;
     }
 
+    parseData(fields, data, checkRequired) {
+        for (let fieldName in fields) {
+            const field = fields[fieldName];
+
+            if (!data[fieldName]) {
+                if (checkRequired && field.rules && field.rules.includes('required'))
+                    throw new Error(field.label + ' is required.');
+                continue;
+            }
+
+            switch (field.type) {
+                case 'date':
+                case 'datetime':
+                    data[fieldName] = queryHelper.parseDate(field.label, data[fieldName]);
+                    break;
+                case 'object':
+                    this.parseData(field.fields, data[fieldName]);
+                    break;
+                case 'objects':
+                    for (let item in data[fieldName]) {
+                        this.parseData(field.fields, item);
+                    }
+                    break;
+            }
+        }
+
+    }
+
     async query(req, res, appendJoinOptions) {
         let out;
         try {
@@ -115,6 +143,8 @@ module.exports = class Controller {
         let out;
         let data = req.query;
         try {
+            this.parseData(this.entity.fields, data, true);
+
             const db = await mongoPool.getDb();
             const collection = db.collection(this.entity.collection);
             let { result } = await collection.insertOne(data);
@@ -143,6 +173,8 @@ module.exports = class Controller {
         let out;
         let data = req.query;
         try {
+            this.parseData(this.entity.fields, data, false);
+
             const db = await mongoPool.getDb();
             const collection = db.collection(this.entity.collection);
             let _id = this.getId(req);
