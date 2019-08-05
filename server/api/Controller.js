@@ -60,8 +60,6 @@ module.exports = class Controller {
                     switch (field.type) {
                         case "entity":
                             let ids = queryHelper.parseArray(fieldName, filter[fieldName]);
-                            if (!ids.length) continue;
-
                             if (!entities[field.entity].fields._id) {
                                 let _ids = [];
                                 for (let id of ids)

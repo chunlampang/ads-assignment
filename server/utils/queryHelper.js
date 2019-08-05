@@ -59,7 +59,7 @@ exports.aggregateList = async function (collection, options = [], query = {}) {
     }
 
     let result = await collection.aggregate(options).toArray();
-    if (result.length === 0){
+    if (result.length === 0) {
         return {
             meta: { total: 0 },
             data: []
@@ -81,7 +81,7 @@ exports.parseArray = function (title, val) {
     if (Array.isArray(val))
         return val;
     if (typeof val === 'string')
-        return val.split(',');
+        return val.split(',').map(item => item.trim());
     throw new Error(title + ' mush be an Array or Comma-Separated String.');
 }
 
