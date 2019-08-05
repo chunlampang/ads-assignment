@@ -1,32 +1,52 @@
 <template>
-  <v-menu
-    v-model="showPicker"
-    :close-on-content-click="false"
-    :nudge-right="40"
-    transition="scale-transition"
-    offset-y
-    full-width
-    max-width="290px"
-    min-width="290px"
-    :disabled="readonly"
-  >
+  <v-dialog v-model="showPicker" :disabled="readonly" max-width="330">
     <template v-slot:activator="{ on }">
       <v-text-field
         v-model="valueStr"
         :label="label"
-        hint="Format: YYYY/MM/DD"
-        :append-icon="readonly?'mdi-pencil-off':'mdi-calendar'"
+        :append-icon="readonly?'mdi-pencil-off':'mdi-calendar-clock'"
         :rules="rulesWithFormat"
         v-on="on"
         readonly
         :clearable="!readonly"
       ></v-text-field>
     </template>
-    <v-date-picker v-model="date" show-current no-title color="primary" @input="showPicker = false"></v-date-picker>
-  </v-menu>
+    <v-card v-if="showPicker">
+      <v-card-title class="text-center">
+        <div style="width:100%">
+          <v-btn text :color="active==0?'primary':'grey'" width="50%" @click="active=0">Date</v-btn>
+          <v-btn text :color="active==1?'primary':'grey'" width="50%" @click="active=1">Time</v-btn>
+        </div>
+      </v-card-title>
+      <v-card-text class="text-center" style="height:390px">
+        <v-window v-model="active" vertical>
+          <v-window-item :value="0">
+            <v-date-picker v-model="date" style="box-shadow: none" color="primary" show-current />
+          </v-window-item>
+          <v-window-item :value="1">
+            <v-time-picker
+              ref="timePicker"
+              v-model="time"
+              style="box-shadow: none"
+              color="primary"
+              use-seconds
+              scrollable
+            ></v-time-picker>
+          </v-window-item>
+        </v-window>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn text color="grey" @click="showPicker = false">Cancel</v-btn>
+        <v-btn text color="primary" @click="clickOk">OK</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   model: {
     prop: "value",
@@ -43,33 +63,36 @@ export default {
       showPicker: false,
       rulesWithFormat: [
         ...this.rules,
-        v => !v || !isNaN(this.$utils.stringToDate(v)) || "Invalid Format"
-      ]
+        v => !v || !isNaN(this.$utils.stringToDatetime(v)) || "Invalid Format"
+      ],
+      active: 0,
+      date: "2019-08-06",
+      time: "11:15:59"
     };
   },
   computed: {
     valueStr: {
       get() {
-        return this.$utils.dateToString(this.value);
+        return this.$utils.datetimeToString(this.value);
       },
       set(v) {
-        this.$emit("valChange", !v ? v : this.$utils.stringToDate(v));
+        this.$emit("valChange", !v ? v : this.$utils.stringToDatetime(v));
       }
-    },
-    date: {
-      get() {
-        const d = this.$utils.stringToDate(this.valueStr);
-        if (!d) return d;
-        const month = (d.getMonth() + 1 + "").padStart(2, "0"),
-          day = (d.getDate() + "").padStart(2, "0");
-        return `${d.getFullYear()}-${month}-${day}`;
-      },
-      set(v) {
-        const [year, month, day] = v.split("-");
-        this.valueStr = this.$utils.dateToString(
-          new Date(year, month - 1, day)
-        );
+    }
+  },
+  watch: {
+    showPicker(v) {
+      if (v) {
+        this.date = moment(this.value).format("YYYY-MM-DD");
+        this.time = moment(this.value).format("HH:mm:ss");
       }
+    }
+  },
+  methods: {
+    clickOk() {
+      let v = moment(this.date + this.time, "YYYY-MM-DDHH:mm:ss").toDate();
+      this.valueStr = this.$utils.datetimeToString(v);
+      this.showPicker = false;
     }
   }
 };

@@ -61,7 +61,10 @@
             <template v-for="(field, fieldName) in entity.fields">
               <td v-if="field.view.includes('list')" :key="fieldName" style="min-width:150px">
                 <template v-if="field.type === 'date'">{{$utils.dateToString(item[fieldName])}}</template>
-                <template v-else>{{item[fieldName] }}</template>
+                <template
+                  v-else-if="field.type === 'datetime'"
+                >{{$utils.datetimeToString(item[fieldName])}}</template>
+                <template v-else>{{item[fieldName]}}</template>
               </td>
             </template>
           </tr>

@@ -14,7 +14,6 @@
       <v-text-field
         v-model="valueStr"
         :label="label"
-        hint="Format: YYYY/MM/DD"
         :append-icon="readonly?'mdi-pencil-off':'mdi-calendar'"
         :rules="rulesWithFormat"
         v-on="on"
