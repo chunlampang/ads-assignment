@@ -127,6 +127,7 @@ export default {
   },
   data() {
     let headers = [{ text: "Actions", value: "", sortable: false }];
+    const listFields = [];
 
     const fields = this.entity.fields;
     for (let fieldName in fields) {
@@ -137,6 +138,7 @@ export default {
         text: field.label,
         value: fieldName
       });
+      listFields.push(fieldName);
     }
 
     return {
@@ -159,7 +161,8 @@ export default {
       alert: {
         show: false
       },
-      filter: {}
+      filter: {},
+      listFields
     };
   },
   computed: {
@@ -195,6 +198,7 @@ export default {
       this.loading = true;
       let result = await this.$api.query("/" + this.entity.collection, {
         filter: this.filter,
+        fields: this.listFields,
         ...this.apiOptions
       });
       if (result.error) {
