@@ -33,6 +33,14 @@ export default {
     getVarByDotNotation(obj, str) {
         return str.split('.').reduce((o, i) => o[i], obj);
     },
+    removeItemsFromArray(list, items) {
+        for (let item of items)
+            this.removeItemFromArray(list, item);
+    },
+    removeItemFromArray(list, item) {
+        const index = list.indexOf(item);
+        if (index !== -1) list.splice(index, 1);
+    },
     datetimeToString(date) {
         if (!date)
             return null;
