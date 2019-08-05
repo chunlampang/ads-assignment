@@ -34,11 +34,47 @@
                         </v-layout>
                       </v-container>
                     </template>
+                    <template v-else-if="field.type === 'date'">
+                      <v-container pa-0 grid-list-xl>
+                        <v-layout>
+                          <v-flex xs6>
+                            <DateField
+                              v-model="value[fieldName].from"
+                              :label="field.label + ' (From)'"
+                            />
+                          </v-flex>
+                          <v-flex xs6>
+                            <DateField
+                              v-model="value[fieldName].to"
+                              :label="field.label + ' (To)'"
+                            />
+                          </v-flex>
+                        </v-layout>
+                      </v-container>
+                    </template>
+                    <template v-else-if="field.type === 'datetime'">
+                      <v-container pa-0 grid-list-xl>
+                        <v-layout>
+                          <v-flex xs6>
+                            <DateField
+                              v-model="value[fieldName].from"
+                              :label="field.label + ' (From)'"
+                            />
+                          </v-flex>
+                          <v-flex xs6>
+                            <DateField
+                              v-model="value[fieldName].to"
+                              :label="field.label + ' (To)'"
+                            />
+                          </v-flex>
+                        </v-layout>
+                      </v-container>
+                    </template>
                     <v-select
                       v-if="field.type === 'entity'"
                       v-model="value[fieldName]"
                       item-value="_id"
-                      :item-text="getOptionItemText(field.entity)"
+                      :item-text="$api.getOptionItemText(entities[field.entity])"
                       :items="options[field.entity]"
                       :label="field.label"
                       multiple
@@ -92,7 +128,11 @@
   </v-expansion-panels>
 </template>
 <script>
+import DateField from "@/components/blocks/DateField";
+import DatetimeField from "@/components/blocks/DatetimeField";
+
 export default {
+  components: { DateField, DatetimeField },
   props: {
     entity: Object,
     value: Object
@@ -107,9 +147,11 @@ export default {
       if (!field.view.includes("filter")) continue;
       switch (field.type) {
         case "number":
+        case "date":
+        case "datetime":
           this.value[fieldName] = {
-            from: "",
-            to: ""
+            from: null,
+            to: null
           };
           break;
         case "string":
@@ -194,11 +236,6 @@ export default {
         "/" + this.entities[entityName].collection
       );
       this.options[entityName] = result.data;
-    },
-    getOptionItemText(entityName) {
-      const entity = this.entities[entityName];
-      if (!entity.desc) return "_id";
-      return item => eval(entity.desc);
     }
   }
 };
