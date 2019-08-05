@@ -66,8 +66,8 @@ export default {
         v => !v || !isNaN(this.$utils.stringToDatetime(v)) || "Invalid Format"
       ],
       active: 0,
-      date: "2019-08-06",
-      time: "11:15:59"
+      date: "",
+      time: ""
     };
   },
   computed: {
@@ -83,8 +83,13 @@ export default {
   watch: {
     showPicker(v) {
       if (v) {
-        this.date = moment(this.value).format("YYYY-MM-DD");
-        this.time = moment(this.value).format("HH:mm:ss");
+        if (this.value) {
+          this.date = moment(this.value).format("YYYY-MM-DD");
+          this.time = moment(this.value).format("HH:mm:ss");
+        } else {
+          this.date = "";
+          this.time = "";
+        }
       }
     }
   },
