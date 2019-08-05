@@ -16,7 +16,7 @@
         class="elevation-1"
       >
         <template v-slot:top>
-          <ListFilter v-model="filter" :entity="entity" @search="search" />
+          <ListFilter v-model="filter" :entity="entity" @search="search(true)" />
           <!-- tool -->
           <v-toolbar color="primary" dark dense flat>
             <v-btn
@@ -195,7 +195,14 @@ export default {
     }
   },
   methods: {
-    search() {
+    search(toFirstPage) {
+      if (toFirstPage && this.pagination.page !== 1) {
+        let newOptions = {};
+        Object.assign(newOptions, this.pagination);
+        newOptions.page = 1;
+        this.pagination = newOptions;
+        return;
+      }
       this.alert.show = false;
       this.query();
     },
