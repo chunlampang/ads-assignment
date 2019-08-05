@@ -99,7 +99,12 @@
               <span>Close</span>
             </v-tooltip>
           </v-card-title>
-          <EditForm :id="editDialog.id" :entity="entity" @updated="itemUpdated" />
+          <EditForm
+            :id="editDialog.id"
+            :entity="entity"
+            @updated="itemUpdated"
+            style="overflow-y: auto; max-height:600px"
+          />
         </v-card>
       </v-dialog>
       <v-dialog v-model="deleteDialog.visible" width="400">
