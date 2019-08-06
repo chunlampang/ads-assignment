@@ -17,7 +17,7 @@
     </v-flex>
     <v-flex xs12>
       <v-container grid-list-md class="px-0">
-        <v-layout>
+        <v-layout wrap>
           <v-flex xs12 md6>
             <v-card>
               <v-card-title>
@@ -238,15 +238,21 @@ export default {
                   children: [
                     {
                       id: ++id,
-                      name: 'courseId: "CS101"'
-                    },
-                    {
-                      id: ++id,
-                      name: 'title: "Introduction to Data Science"'
-                    },
-                    {
-                      id: ++id,
-                      name: "level: 6"
+                      name: "course",
+                      children: [
+                        {
+                          id: ++id,
+                          name: 'courseId: "CS101"'
+                        },
+                        {
+                          id: ++id,
+                          name: 'title: "Introduction to Data Science"'
+                        },
+                        {
+                          id: ++id,
+                          name: "level: 6"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -256,15 +262,21 @@ export default {
                   children: [
                     {
                       id: ++id,
-                      name: 'courseId: "CS102"'
-                    },
-                    {
-                      id: ++id,
-                      name: 'title: "Introduction to Computer Science"'
-                    },
-                    {
-                      id: ++id,
-                      name: "level: 5"
+                      name: "course",
+                      children: [
+                        {
+                          id: ++id,
+                          name: 'courseId: "CS102"'
+                        },
+                        {
+                          id: ++id,
+                          name: 'title: "Introduction to Computer Science"'
+                        },
+                        {
+                          id: ++id,
+                          name: "level: 5"
+                        }
+                      ]
                     }
                   ]
                 }

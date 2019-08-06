@@ -1,14 +1,19 @@
 <template>
   <div>
-    <v-app-bar color="primary" dark>
-      <v-app-bar-nav-icon @click="showNav = !showNav" />
+    <v-app-bar app color="primary" dark elevate-on-scroll>
+      <v-app-bar-nav-icon class="hidden-lg-and-up" @click.stop="showNav = !showNav" />
       <v-toolbar-title class="headline font-weight-light" @click="gotoHome" style="cursor:pointer">
-        <v-icon>mdi-school</v-icon> Advanced Database Systems - Assignment 2 (Part B)
+        <v-icon class="mr-3">mdi-school</v-icon>Advanced Database Systems - Assignment 2 (Part B)
       </v-toolbar-title>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="showNav" app width="250" temporary>
-      <v-list shaped class="py-0">
+    <v-navigation-drawer
+      v-model="showNav"
+      app
+      width="250"
+      :expand-on-hover="$vuetify.breakpoint.lg"
+    >
+      <v-list shaped>
         <v-list-item-group color="primary">
           <v-list-item :to="{ name: 'index' }" exact>
             <v-list-item-icon>

@@ -2,7 +2,7 @@
   <v-app v-if="ready">
     <AppToolbar :menu="menu" />
     <v-content>
-      <v-container class="pb-5" fluid>
+      <v-container fluid fill-height>
         <v-layout row wrap justify-center>
           <v-flex xs11 sm10 md9 lg8 xl7>
             <v-container>
@@ -120,6 +120,11 @@ export default {
     ]);
 
     this.ready = true;
+  },
+  methods: {
+    toggleNav(v) {
+      this.showNav = v;
+    }
   }
 };
 </script>
