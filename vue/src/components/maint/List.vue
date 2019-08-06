@@ -29,6 +29,15 @@
             <v-divider class="mx-2" vertical inset></v-divider>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
+                <v-btn @click="resetSort()" v-on="on" icon>
+                  <v-icon>mdi-sort-variant</v-icon>
+                </v-btn>
+              </template>
+              <span>Clear Sort</span>
+            </v-tooltip>
+            <v-divider class="mx-2" vertical inset></v-divider>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
                 <v-btn @click="search" v-on="on" icon>
                   <v-icon>mdi-refresh</v-icon>
                 </v-btn>
@@ -240,12 +249,22 @@ export default {
     }
   },
   methods: {
+    resetSort() {
+      let newOptions = {};
+      Object.assign(newOptions, this.pagination);
+      newOptions.sortBy = [];
+      newOptions.sortDesc = [];
+      this.pagination = newOptions;
+    },
+    resetPage() {
+      let newOptions = {};
+      Object.assign(newOptions, this.pagination);
+      newOptions.page = 1;
+      this.pagination = newOptions;
+    },
     search(toFirstPage) {
       if (toFirstPage && this.pagination.page !== 1) {
-        let newOptions = {};
-        Object.assign(newOptions, this.pagination);
-        newOptions.page = 1;
-        this.pagination = newOptions;
+        this.resetPage();
         return;
       }
       this.alert.show = false;
