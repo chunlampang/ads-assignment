@@ -20,7 +20,10 @@
               <v-card>
                 <v-card-title>{{field.label}}</v-card-title>
                 <v-card-text>
-                  <EditFields v-model="value[fieldName]" :fields="field.fields" />
+                  <EditFields
+                    v-model="value[fieldName]"
+                    :fields="configs.fieldsets[field.fieldset].fields"
+                  />
                 </v-card-text>
               </v-card>
             </template>
