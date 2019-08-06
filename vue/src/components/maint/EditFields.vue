@@ -17,15 +17,19 @@
               :clearable="!readonly(field)"
             />
             <template v-else-if="field.type === 'fieldset'">
-              <v-card>
-                <v-card-title>{{field.label}}</v-card-title>
-                <v-card-text>
-                  <EditFields
-                    v-model="value[fieldName]"
-                    :fields="configs.fieldsets[field.fieldset].fields"
-                  />
-                </v-card-text>
-              </v-card>
+              <v-expansion-panels v-model="fieldsetPanels[fieldName]" class="mb-4">
+                <v-expansion-panel>
+                  <v-expansion-panel-header ripple>
+                    <h4 class="title font-weight-regular">{{field.label}}</h4>
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <EditFields
+                      v-model="value[fieldName]"
+                      :fields="configs.fieldsets[field.fieldset].fields"
+                    />
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
             </template>
             <template v-else-if="field.type === 'list'">
               <v-card>
@@ -101,15 +105,26 @@ export default {
     value: Object,
     id: String | Number
   },
+  inject: ["configs"],
   data() {
     return {
       loading: true,
-      rulesCache: {}
+      rulesCache: {},
+      fieldsetPanels: {}
     };
   },
   async created() {
     await this.initOptions(this.fields, "edit");
 
+    for (let fieldName in this.fields) {
+      const field = this.fields[fieldName];
+      if (!field.view.includes("edit")) continue;
+
+      if (field.type === "fieldset") {
+        this.fieldsetPanels[fieldName] = 0;
+        continue;
+      }
+    }
     this.loading = false;
   },
   methods: {
