@@ -51,7 +51,7 @@ export default {
   },
   data() {
     return {
-      showNav: false
+      showNav: this.$vuetify.breakpoint.lg
     };
   },
   methods: {
@@ -61,3 +61,11 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.v-list--shaped .v-list-item,
+.v-list--shaped .v-list-item:before,
+.v-list--shaped .v-ripple__container {
+  border-top-right-radius: 0 !important;
+}
+</style>
