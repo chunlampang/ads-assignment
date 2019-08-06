@@ -1,5 +1,6 @@
 module.exports = {
     collection: 'departments',
+    icon: 'mdi-home-modern',
     plural: 'Departments',
     singular: 'Department',
     fields: {

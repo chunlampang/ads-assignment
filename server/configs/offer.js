@@ -1,5 +1,6 @@
 module.exports = {
     collection: 'offers',
+    icon: 'mdi-account-check-outline',
     plural: 'Offers',
     singular: 'Offer',
     fields: {

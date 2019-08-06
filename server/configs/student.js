@@ -1,5 +1,6 @@
 module.exports = {
     collection: 'students',
+    icon: 'mdi-account-multiple',
     plural: 'Students',
     singular: 'Student',
     fields: {

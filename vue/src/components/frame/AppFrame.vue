@@ -106,7 +106,7 @@ export default {
       //append menu
       this.menu.push({
         title: entity.plural,
-        icon: "mdi-wrench",
+        icon: entity.icon || "mdi-wrench",
         link: { name: routeName }
       });
     }
