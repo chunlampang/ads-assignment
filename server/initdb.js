@@ -62,7 +62,7 @@ const mongoPool = require('./utils/mongoPool');
                 if (Math.random() < 0.2)
                     continue;
 
-                department.courses.push(course);
+                department.courses.push({ course });
             }
         }
     }
