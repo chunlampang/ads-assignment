@@ -52,7 +52,7 @@ export default {
             sort = '-_id';
         return this.sendRequest('get', '/offers', {
             filter,
-            join: ['course', 'department'],
+            join: ['department'],
             page, sort
         });
     },

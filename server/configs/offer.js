@@ -12,8 +12,8 @@ module.exports = {
             view: ['filter', 'list', 'edit']
         },
         course: {
-            type: 'entity',
-            entity: 'course',
+            type: 'fieldset',
+            fieldset: 'course',
             label: 'Course',
             rules: ['required'],
             view: ['filter', 'list', 'edit']
@@ -47,6 +47,7 @@ module.exports = {
         enrolled: {
             type: 'list',
             label: 'Enrolled',
+            view: ['edit'],
             fields: {
                 student: {
                     type: 'entity',
@@ -64,8 +65,7 @@ module.exports = {
                     default: 'new Date',
                     view: ['edit']
                 }
-            },
-            view: ['edit']
+            }
         },
     },
 }

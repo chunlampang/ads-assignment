@@ -29,7 +29,7 @@ module.exports = class Controller {
                 case 'datetime':
                     data[fieldName] = queryHelper.parseDate(field.label, data[fieldName]);
                     break;
-                case 'object':
+                case 'fieldset':
                     this.parseData(field.fields, data[fieldName]);
                     break;
                 case 'list':

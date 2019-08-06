@@ -1,12 +1,8 @@
 module.exports = {
-    collection: 'courses',
-    plural: 'Courses',
-    singular: 'Course',
     fields: {
-        _id: {
+        courseId: {
             type: 'string',
             label: 'Course ID',
-            readonly: 1,
             rules: ['required'],
             view: ['filter', 'list', 'edit']
         },
@@ -24,7 +20,7 @@ module.exports = {
         }
     },
     desc: {
-        key: '_id',
+        key: 'courseId',
         label: 'title'
     }
 }

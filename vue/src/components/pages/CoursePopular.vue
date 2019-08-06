@@ -23,7 +23,7 @@
               <v-list-item-title>
                 <h4
                   class="primary--text title font-weight-regular"
-                >{{item.course + ' - ' + item._join.course.title}}</h4>
+                >{{item.course.courseId + ' - ' + item.course.title}}</h4>
               </v-list-item-title>
               <v-list-item-subtitle>{{item._join.department.deptName + ` (${item.year})`}}</v-list-item-subtitle>
               <v-list-item-subtitle>Enrolled: {{item.enrolledCount}}/{{item.classSize}}</v-list-item-subtitle>

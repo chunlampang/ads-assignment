@@ -144,54 +144,65 @@ export default {
   props: {
     entity: Object
   },
-  inject: ["entities"],
+  inject: ["configs", "entities"],
   data() {
     const headers = [{ text: "Actions", value: "", sortable: false }];
     const listFields = [];
     const joinEntity = [];
 
-    const fields = this.entity.fields;
-    for (let fieldName in fields) {
-      const field = fields[fieldName];
-      if (!field.view.includes("list")) continue;
+    let instance = this;
+    initList(this.entity.fields);
 
-      if (field.type === "entity") {
-        let entity = this.entities[field.entity];
+    function initList(fields, namespace) {
+      for (let fieldName in fields) {
+        const field = fields[fieldName];
+        if (!field.view.includes("list")) continue;
 
-        if (entity.desc) {
-          joinEntity.push(field.entity);
+        if (namespace) fieldName = namespace + "." + fieldName;
 
-          if (entity.desc.key) {
-            let key = entity.fields[entity.desc.key];
-            let dotKey = `_join.${field.entity}.${entity.desc.key}`;
-            headers.push({
-              text: key.label,
-              type: field.type + "-key",
-              value: dotKey
-            });
-            listFields.push(dotKey);
+        if (field.type === "entity") {
+          let entity = instance.entities[field.entity];
+
+          if (entity.desc) {
+            joinEntity.push(field.entity);
+
+            if (entity.desc.key) {
+              let key = entity.fields[entity.desc.key];
+              let dotKey = `_join.${field.entity}.${entity.desc.key}`;
+              headers.push({
+                text: key.label,
+                type: field.type + "-key",
+                value: dotKey
+              });
+              listFields.push(dotKey);
+            }
+
+            if (entity.desc.label) {
+              let label = entity.fields[entity.desc.label];
+              let dotLabel = `_join.${field.entity}.${entity.desc.label}`;
+              headers.push({
+                text: label.label,
+                type: field.type + "-label",
+                value: dotLabel
+              });
+              listFields.push(dotLabel);
+            }
+            continue;
           }
-
-          if (entity.desc.label) {
-            let label = entity.fields[entity.desc.label];
-            let dotLabel = `_join.${field.entity}.${entity.desc.label}`;
-            headers.push({
-              text: label.label,
-              type: field.type + "-label",
-              value: dotLabel
-            });
-            listFields.push(dotLabel);
-          }
+          //else (no desc) -> default
+        } else if (field.type === "fieldset") {
+          let fieldset = instance.configs.fieldsets[field.fieldset];
+          initList(fieldset.fields, fieldName);
           continue;
-        } //else default
+        }
+        //default
+        headers.push({
+          text: field.label,
+          type: field.type,
+          value: fieldName
+        });
+        listFields.push(fieldName);
       }
-      //default
-      headers.push({
-        text: field.label,
-        type: field.type,
-        value: fieldName
-      });
-      listFields.push(fieldName);
     }
 
     return {

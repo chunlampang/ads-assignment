@@ -21,6 +21,20 @@ module.exports = {
             label: 'Location',
             rules: ['required'],
             view: ['filter', 'list', 'edit']
+        },
+        courses: {
+            type: 'list',
+            label: 'Courses',
+            view: ['edit'],
+            fields: {
+                course: {
+                    type: 'fieldset',
+                    fieldset: 'course',
+                    label: 'Course',
+                    rules: ['required'],
+                    view: ['filter', 'list', 'edit']
+                }
+            }
         }
     },
     desc: {

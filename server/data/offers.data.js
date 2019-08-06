@@ -10,7 +10,7 @@ module.exports = function (departments, courses, students) {
 
             let offer = {
                 department: getRandomItem(departments)._id,
-                course: course._id,
+                course: course,
                 year: year,
                 classSize: getRandomItem(classSize),
                 enrolled: []
