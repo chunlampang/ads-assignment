@@ -15,6 +15,8 @@ module.exports = class Controller {
     }
 
     parseData(fields, data, checkRequired) {
+        let calOrder = [];
+
         for (let fieldName in fields) {
             const field = fields[fieldName];
 
@@ -24,19 +26,32 @@ module.exports = class Controller {
                 continue;
             }
 
-            switch (field.type) {
-                case 'date':
-                case 'datetime':
-                    data[fieldName] = queryHelper.parseDate(field.label, data[fieldName]);
-                    break;
-                case 'fieldset':
-                    this.parseData(field.fields, data[fieldName]);
-                    break;
-                case 'list':
-                    for (let item in data[fieldName]) {
-                        this.parseData(field.fields, item);
-                    }
-                    break;
+            if (field.cal) {
+                if (!calOrder[field.cal.order])
+                    calOrder[field.cal.order] = [];
+                calOrder[field.cal.order].push({ field: fieldName, fc: field.cal.fc });
+            } else {
+                switch (field.type) {
+                    case 'date':
+                    case 'datetime':
+                        data[fieldName] = queryHelper.parseDate(field.label, data[fieldName]);
+                        break;
+                    case 'fieldset':
+                        this.parseData(field.fields, data[fieldName]);
+                        break;
+                    case 'list':
+                        for (let item in data[fieldName]) {
+                            this.parseData(field.fields, item);
+                        }
+                        break;
+                }
+            }
+        }
+
+        for (let calIndex in calOrder) {
+            let fcItems = calOrder[calIndex];
+            for (let fcItem of fcItems) {
+                runCal(data, fcItem);
             }
         }
 
@@ -213,3 +228,6 @@ module.exports = class Controller {
     }
 }
 
+function runCal(item, _fcItem) {
+    item[_fcItem.field] = eval(_fcItem.fc);
+}
