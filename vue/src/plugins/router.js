@@ -20,12 +20,6 @@ export default new Router({
       component: () => import('@/components/pages/Index')
     },
     {
-      path: '/offer-courses',
-      name: 'offers',
-      meta: { menu: { title: "Offer Courses", icon: "mdi-book" } },
-      component: () => import('@/components/pages/Courses')
-    },
-    {
       path: '/courses-popular',
       name: 'coursePopular',
       meta: { menu: { title: "Popular Courses", icon: "mdi-trophy" } },

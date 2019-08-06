@@ -42,40 +42,8 @@ export default {
             return out;
         }
     },
-    getDepartments({ page, sort } = {}) {
-        if (!sort)
-            sort = '-_id';
-        return this.sendRequest('get', '/departments', { page, sort });
-    },
     /**
-     * Find Student by name for e)
-     * @param {*} filter { stuName }
-     * @param {Object} options { page, sort }
-     */
-    getStudents(filter, { page, sort } = {}) {
-        if (!sort)
-            sort = '-_id';
-        return this.sendRequest('get', '/students', { filter, page, sort });
-    },
-    /**
-     * a) Find the titles of courses offered by the CS department in 2016.
-     * e) List the courses offered by the CS department that the student Chan Tai Man has enrolled in 2016.
-     * @param {*} filter { department, year, student }
-     * @param {Object} options { page, sort }
-     */
-    async getCoursesTitle(filter, { page, sort } = {}) {
-        if (!sort)
-            sort = '-_id';
-        return this.sendRequest('get', '/offers', {
-            filter,
-            join: ['course'],
-            fields: ['year', 'department', '_join.course'],
-            page, sort
-        });
-    },
-    /**
-     * b) List the information of courses offered by the CS or IS departments in 2016.
-     * c) Find the information of the course which is the most popular course enrolled by students.
+     * for popular course
      * @param {Object} filter { department, year }
      * @param {Object} options { page, sort }
      */
@@ -85,19 +53,6 @@ export default {
         return this.sendRequest('get', '/offers', {
             filter,
             join: ['course', 'department'],
-            page, sort
-        });
-    },
-    /**
-     * d) List the numbers of students for each course, who have enrolled the course offered by the CS department in 2016.
-     * @param {Object} filter { department, year }
-     * @param {Object} options { page, sort }
-     */
-    async getOffers(filter, { page, sort } = {}) {
-        if (!sort)
-            sort = '-_id';
-        return this.sendRequest('get', '/offers', {
-            filter,
             page, sort
         });
     },
