@@ -24,7 +24,7 @@
                 <div class="headline">Model 1</div>
               </v-card-title>
               <v-card-text>
-                <v-treeview :items="model1" dense open-on-click open-all>
+                <v-treeview :items="model1" dense open-on-click open-all activatable>
                   <template v-slot:prepend="{ item, open }">
                     <v-icon color="primary">{{getIcon(item)}}</v-icon>
                   </template>
@@ -41,7 +41,7 @@
                 </div>
               </v-card-title>
               <v-card-text>
-                <v-treeview :items="model2" dense open-on-click open-all>
+                <v-treeview :items="model2" dense open-on-click open-all activatable>
                   <template v-slot:prepend="{ item, open }">
                     <v-icon color="primary">{{getIcon(item)}}</v-icon>
                   </template>
@@ -58,70 +58,145 @@
 <script>
 export default {
   data() {
+    let id = 0;
     return {
       model1: [
         {
-          id: 1,
+          id: ++id,
           name: "departments",
           collection: true,
           children: [
-            { name: "_id: ObjectId", key: true },
-            { name: 'deptId: "CS"', unique: true },
-            { name: 'deptName: "Computer Science"' },
-            { name: 'location: "Green Zone"' }
+            {
+              id: ++id,
+              name: "_id: ObjectId",
+              key: true
+            },
+            {
+              id: ++id,
+              name: 'deptId: "CS"',
+              unique: true
+            },
+            {
+              id: ++id,
+              name: 'deptName: "Computer Science"'
+            },
+            {
+              id: ++id,
+              name: 'location: "Green Zone"'
+            }
           ]
         },
         {
-          id: 2,
+          id: ++id,
           name: "courses",
           collection: true,
           children: [
-            { name: "_id: ObjectId", key: true },
-            { name: 'courseId: "CS101"', unique: true },
-            { name: 'title: "Introduction to Data Science"' },
-            { name: "level: 6" },
-            { name: "department: ObjectId(department._id)" }
+            {
+              id: ++id,
+              name: "_id: ObjectId",
+              key: true
+            },
+            {
+              id: ++id,
+              name: 'courseId: "CS101"',
+              unique: true
+            },
+            {
+              id: ++id,
+              name: 'title: "Introduction to Data Science"'
+            },
+            {
+              id: ++id,
+              name: "level: 6"
+            },
+            {
+              id: ++id,
+              name: "department: ObjectId(department._id)"
+            }
           ]
         },
         {
-          id: 3,
+          id: ++id,
           name: "offer",
           collection: true,
           children: [
-            { name: "_id: ObjectId", key: true },
-            { name: "course: ObjectId(course._id)", unique: true },
-            { name: "year: 2016", unique: true },
-            { name: "classSize: 40" },
-            { name: "availablePlaces: 39" },
-            { name: "enrolledCount: 1" }
+            {
+              id: ++id,
+              name: "_id: ObjectId",
+              key: true
+            },
+            {
+              id: ++id,
+              name: "course: ObjectId(course._id)",
+              unique: true
+            },
+            {
+              id: ++id,
+              name: "year: 2016",
+              unique: true
+            },
+            {
+              id: ++id,
+              name: "classSize: 40"
+            },
+            {
+              id: ++id,
+              name: "availablePlaces: 39"
+            },
+            {
+              id: ++id,
+              name: "enrolledCount: 1"
+            }
           ]
         },
         {
-          id: 4,
+          id: ++id,
           name: "students",
           collection: true,
           children: [
-            { name: '_id: "15101010"', key: true },
-            { name: 'stuName: "Chan Tai Man"' },
-            { name: 'dOB: new Date("1997-05-15")' },
             {
-              id: 41,
+              id: ++id,
+              name: '_id: "15101010"',
+              key: true
+            },
+            {
+              id: ++id,
+              name: 'stuName: "Chan Tai Man"'
+            },
+            {
+              id: ++id,
+              name: 'dOB: new Date("1997-05-15")'
+            },
+            {
+              id: ++id,
               name: "enrolled",
               children: [
                 {
-                  id: 411,
+                  id: ++id,
                   name: "0",
                   children: [
-                    { name: "courseID: ObjectId(course._id)" },
-                    { name: 'enrolDate: new Date("2016-05-15 08:30:00")' }
+                    {
+                      id: ++id,
+                      name: "courseID: ObjectId(course._id)"
+                    },
+                    {
+                      id: ++id,
+                      name: 'enrolDate: new Date("2016-05-15 08:30:00")'
+                    }
                   ]
                 },
                 {
-                  id: 412,
+                  id: ++id,
                   name: "1",
                   children: [
-                    { name: "courseID: ObjectId(course._id)" },
-                    { name: 'enrolDate: new Date("2017-05-15 10:30:00")' }
+                    {
+                      id: ++id,
+                      name: "courseID: ObjectId(course._id)"
+                    },
+                    {
+                      id: ++id,
+                      name: 'enrolDate: new Date("2017-05-15 10:30:00")'
+                    }
                   ]
                 }
               ]
@@ -131,34 +206,66 @@ export default {
       ],
       model2: [
         {
-          id: 1,
+          id: ++id,
           name: "departments",
           collection: true,
           children: [
-            { name: "_id: ObjectId", key: true },
-            { name: 'deptId: "CS"', unique: true },
-            { name: 'deptName: "Computer Science"' },
-            { name: 'location: "Green Zone"' },
             {
-              id: 11,
+              id: ++id,
+              name: "_id: ObjectId",
+              key: true
+            },
+            {
+              id: ++id,
+              name: 'deptId: "CS"',
+              unique: true
+            },
+            {
+              id: ++id,
+              name: 'deptName: "Computer Science"'
+            },
+            {
+              id: ++id,
+              name: 'location: "Green Zone"'
+            },
+            {
+              id: ++id,
               name: "courses",
               children: [
                 {
-                  id: 111,
+                  id: ++id,
                   name: "0",
                   children: [
-                    { name: 'courseId: "CS101"' },
-                    { name: 'title: "Introduction to Data Science"' },
-                    { name: "level: 6" }
+                    {
+                      id: ++id,
+                      name: 'courseId: "CS101"'
+                    },
+                    {
+                      id: ++id,
+                      name: 'title: "Introduction to Data Science"'
+                    },
+                    {
+                      id: ++id,
+                      name: "level: 6"
+                    }
                   ]
                 },
                 {
-                  id: 112,
+                  id: ++id,
                   name: "1",
                   children: [
-                    { name: 'courseId: "CS102"' },
-                    { name: 'title: "Introduction to Computer Science"' },
-                    { name: "level: 5" }
+                    {
+                      id: ++id,
+                      name: 'courseId: "CS102"'
+                    },
+                    {
+                      id: ++id,
+                      name: 'title: "Introduction to Computer Science"'
+                    },
+                    {
+                      id: ++id,
+                      name: "level: 5"
+                    }
                   ]
                 }
               ]
@@ -166,43 +273,85 @@ export default {
           ]
         },
         {
-          id: 2,
+          id: ++id,
           name: "offer",
           collection: true,
           children: [
-            { name: "_id: ObjectId", key: true },
             {
-              id: 21,
+              id: ++id,
+              name: "_id: ObjectId",
+              key: true
+            },
+            {
+              id: ++id,
               name: "course",
               children: [
-                { name: 'courseId: "CS101"', unique: true },
-                { name: 'title: "Introduction to Data Science"' },
-                { name: "level: 6" }
+                {
+                  id: ++id,
+                  name: 'courseId: "CS101"',
+                  unique: true
+                },
+                {
+                  id: ++id,
+                  name: 'title: "Introduction to Data Science"'
+                },
+                {
+                  id: ++id,
+                  name: "level: 6"
+                }
               ]
             },
-            { name: "year: 2016", unique: true },
-            { name: "department: ObjectId(department._id)" },
-            { name: "classSize: 40" },
-            { name: "availablePlaces: 39" },
-            { name: "enrolledCount: 1" },
             {
-              id: 22,
+              id: ++id,
+              name: "year: 2016",
+              unique: true
+            },
+            {
+              id: ++id,
+              name: "department: ObjectId(department._id)"
+            },
+            {
+              id: ++id,
+              name: "classSize: 40"
+            },
+            {
+              id: ++id,
+              name: "availablePlaces: 39"
+            },
+            {
+              id: ++id,
+              name: "enrolledCount: 1"
+            },
+            {
+              id: ++id,
               name: "enrolled",
               children: [
                 {
-                  id: 221,
+                  id: ++id,
                   name: "0",
                   children: [
-                    { name: 'student: "15101010"' },
-                    { name: 'enrolDate: new Date("2016-05-15 08:30:00")' }
+                    {
+                      id: ++id,
+                      name: 'student: "15101010"'
+                    },
+                    {
+                      id: ++id,
+                      name: 'enrolDate: new Date("2016-05-15 08:30:00")'
+                    }
                   ]
                 },
                 {
-                  id: 222,
+                  id: ++id,
                   name: "1",
                   children: [
-                    { name: 'student: "15101011"' },
-                    { name: 'enrolDate: new Date("2017-05-15 10:30:00")' }
+                    {
+                      id: ++id,
+                      name: 'student: "15101011"'
+                    },
+                    {
+                      id: ++id,
+                      name: 'enrolDate: new Date("2017-05-15 10:30:00")'
+                    }
                   ]
                 }
               ]
@@ -210,13 +359,23 @@ export default {
           ]
         },
         {
-          id: 3,
+          id: ++id,
           name: "students",
           collection: true,
           children: [
-            { name: '_id: "15101010"', key: true },
-            { name: 'stuName: "Chan Tai Man"' },
-            { name: 'dOB: new Date("1997-05-15")' }
+            {
+              id: ++id,
+              name: '_id: "15101010"',
+              key: true
+            },
+            {
+              id: ++id,
+              name: 'stuName: "Chan Tai Man"'
+            },
+            {
+              id: ++id,
+              name: 'dOB: new Date("1997-05-15")'
+            }
           ]
         }
       ]
