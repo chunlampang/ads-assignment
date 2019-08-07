@@ -28,7 +28,7 @@ module.exports = {
         key: '_id',
         label: 'stuName'
     },
-    refs: {
+    references: {
         enrolled: {
             label: 'Enrolled',
             entity: 'offer',

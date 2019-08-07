@@ -1,16 +1,16 @@
 <template>
   <div>
     <v-card v-if="item">
-      <template v-if="entity.refs && id !== 'new'">
+      <template v-if="entity.references && id !== 'new'">
         <v-tabs>
           <v-tab>
             <v-icon>mdi-information-variant</v-icon>
           </v-tab>
           <v-tab
-            v-for="(ref, refName) in entity.refs"
+            v-for="(reference, refName) in entity.references"
             :key="refName"
             :href="'#tab-' + refName"
-          >{{ ref.label }}</v-tab>
+          >{{ reference.label }}</v-tab>
 
           <v-tab-item>
             <EditForm
@@ -23,13 +23,11 @@
             />
           </v-tab-item>
           <v-tab-item
-            v-for="(ref, refName) in entity.refs"
+            v-for="(reference, refName) in entity.references"
             :key="refName"
             :value="'tab-' + refName"
           >
-            <v-card flat tile>
-              <v-card-text>{{ getRef(ref) }}</v-card-text>
-            </v-card>
+            <RefView :reference="reference"/>
           </v-tab-item>
         </v-tabs>
       </template>
@@ -64,9 +62,10 @@
 <script>
 import BaseAlert from "@/components/blocks/BaseAlert";
 import EditForm from "./EditForm";
+import RefView from "./RefView";
 
 export default {
-  components: { BaseAlert, EditForm },
+  components: { BaseAlert, EditForm, RefView },
   props: {
     entity: Object,
     id: String | Number,
@@ -149,9 +148,6 @@ export default {
         this.$refs.form.resetValidation();
         this.getItem();
       }
-    },
-    getRef(ref) {
-      console.log("ref", ref);
     }
   }
 };
