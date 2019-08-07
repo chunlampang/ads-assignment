@@ -11,16 +11,16 @@
       <BaseAlert :value="alert.show" :type="alert.type" :msg="alert.msg" />
     </v-flex>
     <v-flex xs12>
-      <EditForm :id="id" :entity="entity" :alert="alert" @updated="updated" />
+      <EditView :id="id" :entity="entity" :alert="alert" @updated="updated" />
     </v-flex>
   </v-layout>
 </template>
 <script>
 import BaseAlert from "@/components/blocks/BaseAlert";
-import EditForm from "./EditForm";
+import EditView from "./EditView";
 
 export default {
-  components: { BaseAlert, EditForm },
+  components: { BaseAlert, EditView },
   props: {
     entity: Object
   },

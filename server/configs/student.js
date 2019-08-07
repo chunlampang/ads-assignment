@@ -27,5 +27,12 @@ module.exports = {
     desc: {
         key: '_id',
         label: 'stuName'
+    },
+    refs: {
+        enrolled: {
+            label: 'Enrolled',
+            entity: 'offer',
+            field: 'enrolled.student'
+        }
     }
 }

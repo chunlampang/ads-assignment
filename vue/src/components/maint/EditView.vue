@@ -1,18 +1,66 @@
 <template>
   <div>
-    <v-form v-if="item" ref="form" v-model="valid" @submit.prevent="submit">
-      <v-card>
-        <v-card-text>
-          <BaseAlert v-if="alert.self" :value="alert.show" :type="alert.type" :msg="alert.msg" />
-          <EditFields v-model="item" :id="id" :fields="entity.fields" />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn @click="reset" color="warning" text class="text-none">Reset</v-btn>
-          <v-btn type="submit" :disabled="!valid" color="primary" text class="text-none">Submit</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-form>
+    <v-card v-if="item">
+      <template v-if="entity.refs">
+        <v-tabs>
+          <v-tab>
+            <v-icon>mdi-information-variant</v-icon>
+          </v-tab>
+          <v-tab
+            v-for="(ref, refName) in entity.refs"
+            :key="refName"
+            :href="'#tab-' + refName"
+          >{{ ref.label }}</v-tab>
+
+          <v-tab-item>
+            <v-form ref="form" v-model="valid" @submit.prevent="submit">
+              <v-card-text>
+                <BaseAlert
+                  v-if="alert.self"
+                  :value="alert.show"
+                  :type="alert.type"
+                  :msg="alert.msg"
+                />
+                <EditFields v-model="item" :id="id" :fields="entity.fields" />
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer />
+                <v-btn @click="reset" color="warning" text class="text-none">Reset</v-btn>
+                <v-btn
+                  type="submit"
+                  :disabled="!valid"
+                  color="primary"
+                  text
+                  class="text-none"
+                >Submit</v-btn>
+              </v-card-actions>
+            </v-form>
+          </v-tab-item>
+          <v-tab-item
+            v-for="(ref, refName) in entity.refs"
+            :key="refName"
+            :value="'tab-' + refName"
+          >
+            <v-card flat tile>
+              <v-card-text>{{ ref }}</v-card-text>
+            </v-card>
+          </v-tab-item>
+        </v-tabs>
+      </template>
+      <template v-else>
+        <v-form ref="form" v-model="valid" @submit.prevent="submit">
+          <v-card-text>
+            <BaseAlert v-if="alert.self" :value="alert.show" :type="alert.type" :msg="alert.msg" />
+            <EditFields v-model="item" :id="id" :fields="entity.fields" />
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn @click="reset" color="warning" text class="text-none">Reset</v-btn>
+            <v-btn type="submit" :disabled="!valid" color="primary" text class="text-none">Submit</v-btn>
+          </v-card-actions>
+        </v-form>
+      </template>
+    </v-card>
     <v-card v-else-if="loading">
       <v-card-text>
         <h3 class="primary--text font-weight-light">Loading {{entity.singular}}... Please wait</h3>

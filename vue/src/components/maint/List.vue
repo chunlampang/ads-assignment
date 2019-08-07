@@ -113,7 +113,7 @@
               <span>Close</span>
             </v-tooltip>
           </v-card-title>
-          <EditForm
+          <EditView
             :id="editDialog.id"
             :entity="entity"
             @updated="itemUpdated"
@@ -137,10 +137,10 @@
 <script>
 import BaseAlert from "@/components/blocks/BaseAlert";
 import ListFilter from "./ListFilter";
-import EditForm from "./EditForm";
+import EditView from "./EditView";
 
 export default {
-  components: { BaseAlert, ListFilter, EditForm },
+  components: { BaseAlert, ListFilter, EditView },
   props: {
     entity: Object
   },
