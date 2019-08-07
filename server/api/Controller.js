@@ -66,55 +66,59 @@ module.exports = class Controller {
                 const $match = {};
 
                 const fields = this.entity.fields;
-                for (let fieldName in fields) {
+
+                for (let fieldName in filter) {
+                    if(!filter[fieldName])
+                        continue;
+
                     const field = fields[fieldName];
 
-                    if (!filter[fieldName]) continue;
-
-                    switch (field.type) {
-                        case "entity":
-                            let ids = queryHelper.parseArray(fieldName, filter[fieldName]);
-                            if (!entities[field.entity].fields._id) {
-                                let _ids = [];
-                                for (let id of ids)
-                                    _ids.push(ObjectId(id));
-                                ids = _ids;
-                            }
-
-                            $match[fieldName] = { $in: ids };
-                            break;
-                        case "number":
-                        case "date":
-                        case "datetime":
-                            let { from, to } = filter[fieldName];
-                            let parseFunc;
-                            if (field.type === 'number') {
-                                if (field.rules && field.rules.includes("integer")) {
-                                    if (field.rules.includes("positive"))
-                                        parseFunc = 'parsePositiveInteger';
-                                    else
-                                        parseFunc = 'parseInteger';
-                                } else {
-                                    parseFunc = 'parseNumber';
+                    if (field) {
+                        switch (field.type) {
+                            case "entity":
+                                let ids = queryHelper.parseArray(fieldName, filter[fieldName]);
+                                if (!entities[field.entity].fields._id) {
+                                    let _ids = [];
+                                    for (let id of ids)
+                                        _ids.push(ObjectId(id));
+                                    ids = _ids;
                                 }
-                            } else {
-                                parseFunc = 'parseDate';
-                            }
-                            if (from || to) {
-                                $match[fieldName] = {};
-                                if (from)
-                                    $match[fieldName].$gte = queryHelper[parseFunc](fieldName + '.from', from);
-                                if (to)
-                                    $match[fieldName].$lte = queryHelper[parseFunc](fieldName + '.to', to);
-                            }
-                            break;
-                        case "string":
-                            $match[fieldName] = new RegExp(queryHelper.parseString(fieldName, filter[fieldName]), 'i')
-                            break;
-                        default:
-                            $match[fieldName] = filter[fieldName];
+
+                                $match[fieldName] = { $in: ids };
+                                continue;
+                            case "number":
+                            case "date":
+                            case "datetime":
+                                let { from, to } = filter[fieldName];
+                                let parseFunc;
+                                if (field.type === 'number') {
+                                    if (field.rules && field.rules.includes("integer")) {
+                                        if (field.rules.includes("positive"))
+                                            parseFunc = 'parsePositiveInteger';
+                                        else
+                                            parseFunc = 'parseInteger';
+                                    } else {
+                                        parseFunc = 'parseNumber';
+                                    }
+                                } else {
+                                    parseFunc = 'parseDate';
+                                }
+                                if (from || to) {
+                                    $match[fieldName] = {};
+                                    if (from)
+                                        $match[fieldName].$gte = queryHelper[parseFunc](fieldName + '.from', from);
+                                    if (to)
+                                        $match[fieldName].$lte = queryHelper[parseFunc](fieldName + '.to', to);
+                                }
+                                continue;
+                            case "string":
+                                $match[fieldName] = new RegExp(queryHelper.parseString(fieldName, filter[fieldName]), 'i');
+                                continue;
+                        }
                     }
+                    $match[fieldName] = filter[fieldName];
                 }
+
                 console.log('$match:', $match);
                 options.push({ $match });
             }
