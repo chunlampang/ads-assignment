@@ -13,28 +13,14 @@
           >{{ ref.label }}</v-tab>
 
           <v-tab-item>
-            <v-form ref="form" v-model="valid" @submit.prevent="submit">
-              <v-card-text>
-                <BaseAlert
-                  v-if="alert.self"
-                  :value="alert.show"
-                  :type="alert.type"
-                  :msg="alert.msg"
-                />
-                <EditFields v-model="item" :id="id" :fields="entity.fields" />
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn @click="reset" color="warning" text class="text-none">Reset</v-btn>
-                <v-btn
-                  type="submit"
-                  :disabled="!valid"
-                  color="primary"
-                  text
-                  class="text-none"
-                >Submit</v-btn>
-              </v-card-actions>
-            </v-form>
+            <EditForm
+              v-model="item"
+              :alert="alert"
+              :id="id"
+              :fields="entity.fields"
+              @submit="submit"
+              @reset="reset"
+            />
           </v-tab-item>
           <v-tab-item
             v-for="(ref, refName) in entity.refs"
@@ -42,23 +28,20 @@
             :value="'tab-' + refName"
           >
             <v-card flat tile>
-              <v-card-text>{{ ref }}</v-card-text>
+              <v-card-text>{{ getRef(ref) }}</v-card-text>
             </v-card>
           </v-tab-item>
         </v-tabs>
       </template>
       <template v-else>
-        <v-form ref="form" v-model="valid" @submit.prevent="submit">
-          <v-card-text>
-            <BaseAlert v-if="alert.self" :value="alert.show" :type="alert.type" :msg="alert.msg" />
-            <EditFields v-model="item" :id="id" :fields="entity.fields" />
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn @click="reset" color="warning" text class="text-none">Reset</v-btn>
-            <v-btn type="submit" :disabled="!valid" color="primary" text class="text-none">Submit</v-btn>
-          </v-card-actions>
-        </v-form>
+        <EditForm
+          v-model="item"
+          :alert="alert"
+          :id="id"
+          :fields="entity.fields"
+          @submit="submit"
+          @reset="reset"
+        />
       </template>
     </v-card>
     <v-card v-else-if="loading">
@@ -80,10 +63,10 @@
 </template>
 <script>
 import BaseAlert from "@/components/blocks/BaseAlert";
-import EditFields from "./EditFields";
+import EditForm from "./EditForm";
 
 export default {
-  components: { BaseAlert, EditFields },
+  components: { BaseAlert, EditForm },
   props: {
     entity: Object,
     id: String | Number,
@@ -132,9 +115,6 @@ export default {
       }
     },
     async submit() {
-      this.alert.show = false;
-      if (!this.$refs.form.validate()) return;
-
       let result;
       if (this.id === "new")
         result = await this.$api.insert(
@@ -164,12 +144,14 @@ export default {
       }
     },
     reset() {
-      this.alert.show = false;
       if (this.id === "new") this.$refs.form.reset();
       else {
         this.$refs.form.resetValidation();
         this.getItem();
       }
+    },
+    getRef(ref) {
+      console.log("ref", ref);
     }
   }
 };
