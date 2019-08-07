@@ -91,7 +91,7 @@
                       :item-text="fieldName"
                       :search-input="autoInput[fieldName].input"
                       @update:search-input="autoInput[fieldName].input = $event"
-                      @keyup.13="search"
+                      @keyup.enter="search"
                       no-filter
                       dense
                       hide-selected
@@ -112,14 +112,7 @@
             <v-card-actions>
               <v-spacer />
               <v-btn @click="resetFilter" color="warning" text class="text-none">Reset</v-btn>
-              <v-btn
-                @click="search"
-                type="submit"
-                :disabled="!valid"
-                color="primary"
-                text
-                class="text-none"
-              >Search</v-btn>
+              <v-btn ref="btnSubmit" type="submit" :disabled="!valid" color="primary" text class="text-none">Search</v-btn>
             </v-card-actions>
           </v-card>
         </v-form>

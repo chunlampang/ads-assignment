@@ -12,10 +12,11 @@
   </v-form>
 </template>
 <script>
+import BaseAlert from "@/components/blocks/BaseAlert";
 import EditFields from "./EditFields";
 
 export default {
-  components: { EditFields },
+  components: { BaseAlert, EditFields },
   props: {
     value: Object,
     alert: Object,

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card v-if="item">
-      <template v-if="entity.refs">
+      <template v-if="entity.refs && id !== 'new'">
         <v-tabs>
           <v-tab>
             <v-icon>mdi-information-variant</v-icon>
