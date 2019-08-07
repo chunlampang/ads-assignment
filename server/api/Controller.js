@@ -20,17 +20,16 @@ module.exports = class Controller {
         for (let fieldName in fields) {
             const field = fields[fieldName];
 
-            if (!data[fieldName]) {
-                if (checkRequired && field.rules && field.rules.includes('required'))
-                    throw new Error(field.label + ' is required.');
-                continue;
-            }
-
             if (field.cal) {
                 if (!calOrder[field.cal.order])
                     calOrder[field.cal.order] = [];
                 calOrder[field.cal.order].push({ field: fieldName, fc: field.cal.fc });
             } else {
+                if (!data[fieldName]) {
+                    if (checkRequired && field.rules && field.rules.includes('required'))
+                        throw new Error(field.label + ' is required.');
+                    continue;
+                }
                 switch (field.type) {
                     case 'date':
                     case 'datetime':
