@@ -9,13 +9,13 @@ module.exports = {
             label: 'Stu ID',
             readonly: 1,
             rules: ['required'],
-            view: ['filter', 'list', 'edit']
+            view: ['filter', 'list', 'edit', 'title']
         },
         stuName: {
             type: 'string',
             label: 'Stu Name',
             rules: ['required'],
-            view: ['filter', 'list', 'edit']
+            view: ['filter', 'list', 'edit', 'title']
         },
         dOB: {
             type: 'date',

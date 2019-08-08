@@ -9,40 +9,40 @@ module.exports = {
             entity: 'department',
             label: 'Department',
             rules: ['required'],
-            view: ['filter', 'list', 'edit']
+            view: ['list', 'edit']
         },
         course: {
             type: 'fieldset',
             fieldset: 'course',
             label: 'Course',
             rules: ['required'],
-            view: ['filter', 'list', 'edit']
+            view: ['list', 'edit', 'title']
         },
         year: {
             type: 'number',
             label: 'Year',
             rules: ['required', 'integer', 'positive'],
-            view: ['filter', 'list', 'edit']
+            view: ['list', 'edit', 'title']
         },
         classSize: {
             type: 'number',
             label: 'Class Size',
             rules: ['required', 'integer', 'positive'],
-            view: ['filter', 'list', 'edit']
+            view: ['list', 'edit']
         },
         enrolledCount: {
             type: 'number',
             label: 'Enrolled Count',
             readonly: 2,
             cal: { order: 1, fc: 'item.enrolled.length' },
-            view: ['filter', 'list', 'edit']
+            view: ['list', 'edit']
         },
         availablePlaces: {
             type: 'number',
             label: 'Available Places',
             readonly: 2,
             cal: { order: 2, fc: 'item.classSize - item.enrolledCount' },
-            view: ['filter', 'list', 'edit']
+            view: ['list', 'edit']
         },
         enrolled: {
             type: 'list',

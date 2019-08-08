@@ -1,6 +1,6 @@
 <template>
   <v-layout row wrap :key="id">
-    <v-flex class="mb-4" xs12>
+    <v-flex xs12>
       <div class="headline">{{entity.plural}}</div>
       <v-divider class="primary" />
       <v-breadcrumbs :items="breadcrumbs" class="pt-0">
@@ -10,7 +10,7 @@
       </v-breadcrumbs>
       <BaseAlert :value="alert.show" :type="alert.type" :msg="alert.msg" />
     </v-flex>
-    <v-flex xs12>
+    <v-flex class="mt-4" xs12>
       <EditView :id="id" :entity="entity" :alert="alert" @updated="updated" />
     </v-flex>
   </v-layout>

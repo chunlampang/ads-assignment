@@ -8,19 +8,19 @@ module.exports = {
             type: 'string',
             label: 'Dept ID',
             rules: ['required'],
-            view: ['filter', 'list', 'edit']
+            view: ['list', 'edit', 'title']
         },
         deptName: {
             type: 'string',
             label: 'Dept Name',
             rules: ['required'],
-            view: ['filter', 'list', 'edit']
+            view: ['list', 'edit', 'title']
         },
         location: {
             type: 'string',
             label: 'Location',
             rules: ['required'],
-            view: ['filter', 'list', 'edit']
+            view: ['list', 'edit']
         },
         courses: {
             type: 'list',
@@ -32,7 +32,7 @@ module.exports = {
                     fieldset: 'course',
                     label: 'Course',
                     rules: ['required'],
-                    view: ['filter', 'list', 'edit']
+                    view: ['list', 'edit']
                 }
             }
         }

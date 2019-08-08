@@ -3,16 +3,17 @@
     <v-card v-if="item">
       <template v-if="entity.references && id !== 'new'">
         <v-tabs>
-          <v-tab>
+          <v-tab :href="'#tabmain'">
             <v-icon>mdi-information-variant</v-icon>
           </v-tab>
           <v-tab
             v-for="(reference, refName) in entity.references"
             :key="refName"
             :href="'#tab-' + refName"
+            class="text-none"
           >{{ reference.label }}</v-tab>
 
-          <v-tab-item>
+          <v-tab-item value="tabmain">
             <EditForm
               v-model="item"
               :alert="alert"
@@ -27,7 +28,18 @@
             :key="refName"
             :value="'tab-' + refName"
           >
-            <RefView :reference="reference"/>
+            <v-card flat>
+              <v-card-text>
+                <ListView
+                  :alert="alert"
+                  :entity="entities[reference.entity]"
+                  viewType="title"
+                  readonly
+                  dense
+                  :constFilter="getReferenceFilter(reference)"
+                />
+              </v-card-text>
+            </v-card>
           </v-tab-item>
         </v-tabs>
       </template>
@@ -62,10 +74,10 @@
 <script>
 import BaseAlert from "@/components/blocks/BaseAlert";
 import EditForm from "./EditForm";
-import RefView from "./RefView";
 
 export default {
-  components: { BaseAlert, EditForm, RefView },
+  name: "EditView",
+  components: { BaseAlert, EditForm },
   props: {
     entity: Object,
     id: String | Number,
@@ -148,6 +160,11 @@ export default {
         this.$refs.form.resetValidation();
         this.getItem();
       }
+    },
+    getReferenceFilter(reference) {
+      let filter = {};
+      filter[reference.field] = this.id;
+      return filter;
     }
   }
 };
