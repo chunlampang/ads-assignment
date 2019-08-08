@@ -47,7 +47,7 @@
           </v-container>
         </template>
         <v-select
-          v-if="field.type === 'entity'"
+          v-else-if="field.type === 'entity'"
           v-model="value[fieldName]"
           item-value="_id"
           :item-text="$api.getOptionItemText(entities[field.entity])"
@@ -81,6 +81,21 @@
             </v-list-item-content>
           </template>
         </v-combobox>
+        <v-card v-else-if="field.type === 'fieldset'">
+          <v-card-title>
+            <h4 class="title font-weight-regular">{{field.label}}</h4>
+          </v-card-title>
+          <v-card-text>
+            {{field}}
+            <ListFilterFields
+              :fields="configs.fieldsets[field.fieldset].fields"
+              :viewType="viewType"
+              :value="value[fieldName].$match"
+              :collection="collection"
+              :namespace="fieldName"
+            />
+          </v-card-text>
+        </v-card>
       </v-flex>
     </v-layout>
   </v-container>
@@ -89,17 +104,19 @@
 import DateField from "@/components/blocks/DateField";
 import DatetimeField from "@/components/blocks/DatetimeField";
 import loadOptionsMixin from "./loadOptionsMixin";
+import ListFilterFields from "./ListFilterFields";
 
 export default {
   name: "ListFilterFields",
   mixins: [loadOptionsMixin],
-  components: { DateField, DatetimeField },
+  components: { DateField, DatetimeField, ListFilterFields },
   props: {
     fields: Object,
     viewType: String,
     value: Object,
     collection: String
   },
+  inject: ["configs"],
   data() {
     const fields = this.fields;
     const filterFields = {};
@@ -111,6 +128,11 @@ export default {
       filterFields[fieldName] = field;
 
       switch (field.type) {
+        case "fieldset":
+          this.value[fieldName] = {
+              $match:{}
+          };
+          break;
         case "number":
         case "date":
         case "datetime":
@@ -139,7 +161,7 @@ export default {
     };
   },
   async created() {
-    await this.initOptions(this.fields, this.viewType);
+    await this.initOptions(this.filterFields);
     this.loading = false;
   },
   mounted() {

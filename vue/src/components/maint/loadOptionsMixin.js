@@ -5,10 +5,9 @@ export default {
         optionsRequests: { default: [] }
     },
     methods: {
-        async initOptions(fields, viewType) {
+        async initOptions(fields) {
             for (let fieldName in fields) {
                 const field = fields[fieldName];
-                if (!field.view.includes(viewType)) continue;
                 if (field.type === "entity" || field.type === "entities") {
                     if (!this.options[field.entity]) {
                         this.options[field.entity] = [];
