@@ -89,7 +89,7 @@
             <ListFilterFields
               :fields="configs.fieldsets[field.fieldset].fields"
               :viewType="viewType"
-              :value="value[fieldName].$match"
+              :value="value[fieldName]"
               :collection="collection"
               :namespace="fieldName"
             />
@@ -129,9 +129,7 @@ export default {
 
       switch (field.type) {
         case "fieldset":
-          this.value[fieldName] = {
-              $match:{}
-          };
+          this.value[fieldName] = {};
           break;
         case "number":
         case "date":
