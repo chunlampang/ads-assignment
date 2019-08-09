@@ -15,7 +15,7 @@
         <ListFilter v-model="filter" :entity="entity" :viewType="viewType" @search="search(true)" />
         <!-- tool -->
         <v-toolbar color="primary" dark dense flat>
-          <v-btn @click="showEditDialog('new')" class="text-none" text>{{'New ' + entity.singular}}</v-btn>
+          <v-btn v-if="!readonly" @click="showEditDialog('new')" class="text-none" text>{{'New ' + entity.singular}}</v-btn>
           <v-spacer />
           <v-divider class="mx-2" vertical inset></v-divider>
           <v-tooltip bottom>
