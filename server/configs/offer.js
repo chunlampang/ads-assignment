@@ -61,7 +61,6 @@ module.exports = {
                 enrolDate: {
                     type: 'datetime',
                     label: 'Enrol Date',
-                    readonly: 2,
                     default: 'new Date',
                     view: ['edit']
                 }
