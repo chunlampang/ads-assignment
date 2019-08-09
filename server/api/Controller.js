@@ -117,7 +117,7 @@ module.exports = class Controller {
                     if (!field)
                         throw new Error('Unknown field: ' + fieldName);
 
-                    if (dotSegs.length > 0) {
+                    if (dotSegs.length > 1) {
                         if (field.type !== 'fieldset') {
                             throw new Error('Unknown field: ' + fieldName);
                         }
@@ -137,7 +137,9 @@ module.exports = class Controller {
                         }
                         field = fieldset.fields[dotSeg];
                     }
-                    $match[fieldName] = this.parseQueryField(field, fieldName, filter);
+                    let operation = this.parseQueryField(field, fieldName, filter);
+                    if (operation)
+                        $match[fieldName] = operation;
                 }
 
                 console.log('$match:', $match);
