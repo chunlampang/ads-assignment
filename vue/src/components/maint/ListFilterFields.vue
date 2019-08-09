@@ -81,7 +81,7 @@
             </v-list-item-content>
           </template>
         </v-combobox>
-        <v-card v-else-if="field.type === 'fieldset'">
+        <v-card v-else-if="field.type === 'fieldset'" class="mb-4 mt-2">
           <v-card-title>
             <h4 class="title font-weight-regular">{{field.label}}</h4>
           </v-card-title>

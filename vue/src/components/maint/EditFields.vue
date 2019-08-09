@@ -17,7 +17,7 @@
               :clearable="!readonly(field)"
             />
             <template v-else-if="field.type === 'fieldset'">
-              <v-expansion-panels v-model="activeFieldsetPanels[fieldName]" class="mb-4">
+              <v-expansion-panels v-model="activeFieldsetPanels[fieldName]" class="mb-4 mt-2">
                 <v-expansion-panel>
                   <v-expansion-panel-header ripple>
                     <h4 class="title font-weight-regular">{{field.label}}</h4>
