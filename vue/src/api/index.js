@@ -18,15 +18,21 @@ export default {
     async getConfigs() {
         return await this.sendRequest('get', '/configs');
     },
-    async sendRequest(method, path, params) {
+    async sendRequest(method, path, data) {
         let out;
         try {
-            let response = await axios.request({
+            const options = {
                 baseURL: 'http://localhost/api',
                 paramsSerializer: handleNestedParams,
                 url: path,
-                method, params
-            });
+                method
+            };
+            if (method === 'get')
+                options.params = data;
+            else
+                options.data = data;
+
+            let response = await axios.request(options);
             console.log(method, path, response);
 
             out = response.data;

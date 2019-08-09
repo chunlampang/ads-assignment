@@ -203,7 +203,7 @@ module.exports = class Controller {
 
     async insert(req, res) {
         let out;
-        let data = req.query;
+        let data = req.body;
         try {
             this.parseData(this.entity.fields, data, true);
 
@@ -233,7 +233,7 @@ module.exports = class Controller {
 
     async update(req, res) {
         let out;
-        let data = req.query;
+        let data = req.body;
         try {
             this.parseData(this.entity.fields, data, false);
 
