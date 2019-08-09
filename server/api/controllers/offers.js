@@ -11,19 +11,6 @@ const itemRouter = router.route(`/${entity.collection}/:id`);
 
 route.get((req, res) => controller.query(req, res, (query, options)=>{
     let join = queryHelper.parseArray('join', query.join);
-    if (join.includes('course')) {
-        options.push(
-            {
-                $lookup: {
-                    from: 'courses',
-                    localField: 'course',
-                    foreignField: '_id',
-                    as: '_join.course'
-                }
-            },
-            { $unwind: '$_join.course' }
-        );
-    }
     if (join.includes('department')) {
         options.push(
             {
