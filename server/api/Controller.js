@@ -56,8 +56,19 @@ module.exports = class Controller {
 
     }
 
-    parseQueryField(field, fieldName, val) {
+    parseQueryField($match, field, fieldName, val) {
         switch (field.type) {
+            case 'fieldset':
+                if (typeof val[fieldName] === 'object') {
+                    let subFilter = {};
+
+                    for (let childFieldName in val[fieldName]) {
+                        subFilter[fieldName+'.'+childFieldName] = val[fieldName][childFieldName];
+                    }
+                    console.log('subFilter',subFilter)
+                    this.appendMatch($match, subFilter);
+                }
+                return;
             case "entity":
                 let ids = queryHelper.parseArray(fieldName, val[fieldName]);
                 if (!entities[field.entity].fields._id) {
@@ -98,6 +109,46 @@ module.exports = class Controller {
         }
     }
 
+    appendMatch($match, filter){
+        for (let fieldName in filter) {
+            if (!filter[fieldName])
+                continue;
+
+            let dotSegs = fieldName.split('.');
+
+            let field = this.entity.fields[dotSegs[0]];
+            if (!field)
+                throw new Error('Unknown field: ' + fieldName);
+
+            if (field.type === 'fieldset') {
+                if (dotSegs.length > 1) {
+
+                    let fieldset, dotSeg;
+                    let currField = field;
+                    for (let i = 1; i < dotSegs.length; i++) {
+                        dotSeg = dotSegs[i];
+
+                        fieldset = fieldsets[currField.fieldset];
+
+                        currField = fieldset.fields[dotSeg];
+                        if (!currField)
+                            throw new Error('Unknown field: ' + fieldName);
+                        if (i !== dotSegs.length - 1 && currField.type !== 'fieldset')
+                            throw new Error('Unknown field: ' + fieldName);
+                    }
+                    field = fieldset.fields[dotSeg];
+                }
+            } else {
+                if (dotSegs.length > 1) {
+                    throw new Error('Unknown field: ' + fieldName);
+                }
+            }
+            let operation = this.parseQueryField($match, field, fieldName, filter);
+            if (operation)
+                $match[fieldName] = operation;
+        }
+    }
+
     async query(req, res, appendJoinOptions) {
         let out;
         try {
@@ -106,42 +157,7 @@ module.exports = class Controller {
             let filter = req.query.filter;
             if (filter) {
                 const $match = {};
-
-                for (let fieldName in filter) {
-                    if (!filter[fieldName])
-                        continue;
-
-                    let dotSegs = fieldName.split('.');
-
-                    let field = this.entity.fields[dotSegs[0]];
-                    if (!field)
-                        throw new Error('Unknown field: ' + fieldName);
-
-                    if (dotSegs.length > 1) {
-                        if (field.type !== 'fieldset') {
-                            throw new Error('Unknown field: ' + fieldName);
-                        }
-
-                        let fieldset, dotSeg;
-                        let currField = field;
-                        for (let i = 1; i < dotSegs.length; i++) {
-                            dotSeg = dotSegs[i];
-
-                            fieldset = fieldsets[currField.fieldset];
-
-                            currField = fieldset.fields[dotSeg];
-                            if (!currField)
-                                throw new Error('Unknown field: ' + fieldName);
-                            if (i !== dotSegs.length - 1 && currField.type !== 'fieldset')
-                                throw new Error('Unknown field: ' + fieldName);
-                        }
-                        field = fieldset.fields[dotSeg];
-                    }
-                    let operation = this.parseQueryField(field, fieldName, filter);
-                    if (operation)
-                        $match[fieldName] = operation;
-                }
-
+                this.appendMatch($match, filter);
                 console.log('$match:', $match);
                 options.push({ $match });
             }
