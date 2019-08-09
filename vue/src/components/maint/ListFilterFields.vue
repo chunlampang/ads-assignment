@@ -38,10 +38,10 @@
           <v-container pa-0 grid-list-xl>
             <v-layout>
               <v-flex xs6>
-                <DateField v-model="value[fieldName].from" :label="field.label + ' (From)'" />
+                <DatetimeField v-model="value[fieldName].from" :label="field.label + ' (From)'" />
               </v-flex>
               <v-flex xs6>
-                <DateField v-model="value[fieldName].to" :label="field.label + ' (To)'" />
+                <DatetimeField v-model="value[fieldName].to" :label="field.label + ' (To)'" />
               </v-flex>
             </v-layout>
           </v-container>
