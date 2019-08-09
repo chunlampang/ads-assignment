@@ -122,6 +122,8 @@ module.exports = class Controller {
                                 field = fieldset.fields[dotSeg];
                             } else if (field.type === 'list')
                                 field = field.fields[dotSeg];
+                            else
+                                field = null;
 
                             if (!field)
                                 throw new Error('Unknown field: ' + fieldName);
