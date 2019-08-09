@@ -98,7 +98,7 @@ module.exports = class Controller {
         }
     }
 
-    appendMatch($match, filter){
+    appendMatch($match, filter) {
         for (let fieldName in filter) {
             if (!filter[fieldName])
                 continue;
@@ -109,41 +109,40 @@ module.exports = class Controller {
             if (!field)
                 throw new Error('Unknown field: ' + fieldName);
 
-            if (field.type === 'fieldset') {
-                if (dotSegs.length > 1) {
-                    //validate dot notation
-                    let fieldset, dotSeg;
-                    let currField = field;
-                    for (let i = 1; i < dotSegs.length; i++) {
-                        dotSeg = dotSegs[i];
+            if (dotSegs.length > 1) {
+                switch (field.type) {
+                    case 'fieldset':
+                    case 'list':
+                        //validate dot notation
+                        for (let i = 1; i < dotSegs.length; i++) {
+                            let dotSeg = dotSegs[i];
 
-                        fieldset = fieldsets[currField.fieldset];
+                            if (field.type === 'fieldset') {
+                                let fieldset = fieldsets[field.fieldset];
+                                field = fieldset.fields[dotSeg];
+                            } else if (field.type === 'list')
+                                field = field.fields[dotSeg];
 
-                        currField = fieldset.fields[dotSeg];
-                        if (!currField)
-                            throw new Error('Unknown field: ' + fieldName);
-                        if (i !== dotSegs.length - 1 && currField.type !== 'fieldset')
-                            throw new Error('Unknown field: ' + fieldName);
-                    }
-                    field = fieldset.fields[dotSeg];
-                }
-            
-                if (field.type === 'fieldset') {
-                    //object to dot notation
-                    if (typeof filter[fieldName] === 'object') {
-                        let subFilter = {};
-    
-                        for (let childFieldName in filter[fieldName]) {
-                            subFilter[fieldName+'.'+childFieldName] = filter[fieldName][childFieldName];
+                            if (!field)
+                                throw new Error('Unknown field: ' + fieldName);
                         }
-                        this.appendMatch($match, subFilter);
+                        break;
+                    default:
+                        throw new Error('Unknown field: ' + fieldName);
+                }
+            }
+
+            if (field.type === 'fieldset' || field.type === 'list') {
+                //object to dot notation
+                if (typeof filter[fieldName] === 'object') {
+                    let subFilter = {};
+
+                    for (let childFieldName in filter[fieldName]) {
+                        subFilter[fieldName + '.' + childFieldName] = filter[fieldName][childFieldName];
                     }
-                    continue;
+                    this.appendMatch($match, subFilter);
                 }
-            } else {
-                if (dotSegs.length > 1) {
-                    throw new Error('Unknown field: ' + fieldName);
-                }
+                continue;
             }
             let operation = this.parseQueryField(field, fieldName, filter);
             if (operation)
