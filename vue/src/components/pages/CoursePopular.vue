@@ -6,7 +6,7 @@
       <BaseAlert :value="alert.show" :type="alert.type" :msg="alert.msg" />
     </v-flex>
     <v-flex class="mt-4" xs12>
-      <ListFilter v-model="filter" :entity="entities.offer" viewType="list" @search="search()" />
+      <ListFilter v-model="filter" :entity="entities.offer" viewType="title" @search="search()" />
     </v-flex>
     <v-flex xs12>
       <v-list dense three-line class="py-0">

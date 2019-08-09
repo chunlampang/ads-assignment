@@ -9,7 +9,7 @@ module.exports = {
             entity: 'department',
             label: 'Department',
             rules: ['required'],
-            view: ['list', 'edit']
+            view: ['list', 'edit', 'title']
         },
         course: {
             type: 'fieldset',
