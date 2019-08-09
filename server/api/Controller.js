@@ -56,19 +56,8 @@ module.exports = class Controller {
 
     }
 
-    parseQueryField($match, field, fieldName, val) {
+    parseQueryField(field, fieldName, val) {
         switch (field.type) {
-            case 'fieldset':
-                if (typeof val[fieldName] === 'object') {
-                    let subFilter = {};
-
-                    for (let childFieldName in val[fieldName]) {
-                        subFilter[fieldName+'.'+childFieldName] = val[fieldName][childFieldName];
-                    }
-                    console.log('subFilter',subFilter)
-                    this.appendMatch($match, subFilter);
-                }
-                return;
             case "entity":
                 let ids = queryHelper.parseArray(fieldName, val[fieldName]);
                 if (!entities[field.entity].fields._id) {
@@ -122,7 +111,7 @@ module.exports = class Controller {
 
             if (field.type === 'fieldset') {
                 if (dotSegs.length > 1) {
-
+                    //validate dot notation
                     let fieldset, dotSeg;
                     let currField = field;
                     for (let i = 1; i < dotSegs.length; i++) {
@@ -138,12 +127,25 @@ module.exports = class Controller {
                     }
                     field = fieldset.fields[dotSeg];
                 }
+            
+                if (field.type === 'fieldset') {
+                    //object to dot notation
+                    if (typeof filter[fieldName] === 'object') {
+                        let subFilter = {};
+    
+                        for (let childFieldName in filter[fieldName]) {
+                            subFilter[fieldName+'.'+childFieldName] = filter[fieldName][childFieldName];
+                        }
+                        this.appendMatch($match, subFilter);
+                    }
+                    continue;
+                }
             } else {
                 if (dotSegs.length > 1) {
                     throw new Error('Unknown field: ' + fieldName);
                 }
             }
-            let operation = this.parseQueryField($match, field, fieldName, filter);
+            let operation = this.parseQueryField(field, fieldName, filter);
             if (operation)
                 $match[fieldName] = operation;
         }
