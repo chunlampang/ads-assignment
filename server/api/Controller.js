@@ -14,7 +14,7 @@ module.exports = class Controller {
         return req.params.id;
     }
 
-    parseData(fields, data, checkRequired) {
+    parseData(fields, data, insert) {
         let calOrder = [];
 
         for (let fieldName in fields) {
@@ -26,9 +26,13 @@ module.exports = class Controller {
                 calOrder[field.cal.order].push({ field: fieldName, fc: field.cal.fc });
             } else {
                 if (!data[fieldName]) {
-                    if (checkRequired && field.rules && field.rules.includes('required'))
-                        throw new Error(field.label + ' is required.');
-                    continue;
+                    if (insert) {
+                        if (field.default)
+                            data[fieldName] = eval(field.default);
+                        else if (field.rules && field.rules.includes('required'))
+                            throw new Error(field.label + ' is required.');
+                    } else
+                        continue;
                 }
                 switch (field.type) {
                     case 'date':
@@ -36,11 +40,11 @@ module.exports = class Controller {
                         data[fieldName] = queryHelper.parseDate(field.label, data[fieldName]);
                         break;
                     case 'fieldset':
-                        this.parseData(field.fields, data[fieldName]);
+                        this.parseData(field.fields, data[fieldName], insert);
                         break;
                     case 'list':
                         for (let item in data[fieldName]) {
-                            this.parseData(field.fields, item);
+                            this.parseData(field.fields, item, insert);
                         }
                         break;
                 }
