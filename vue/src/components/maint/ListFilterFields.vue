@@ -86,7 +86,6 @@
             <h4 class="title font-weight-regular">{{field.label}}</h4>
           </v-card-title>
           <v-card-text>
-            {{field}}
             <ListFilterFields
               :fields="configs.fieldsets[field.fieldset].fields"
               :viewType="viewType"
@@ -114,7 +113,8 @@ export default {
     fields: Object,
     viewType: String,
     value: Object,
-    collection: String
+    collection: String,
+    namespace: String
   },
   inject: ["configs"],
   data() {
@@ -186,6 +186,7 @@ export default {
       const autoInput = this.autoInput[fieldName];
       autoInput.loading = true;
 
+      if (this.namespace) fieldName = this.namespace + "." + fieldName;
       let filter = {};
       filter[fieldName] = ".*" + val + ".*";
 
@@ -197,7 +198,14 @@ export default {
       if (result.error) {
         console.error(result.error);
       } else {
-        autoInput.items = result.data;
+        if (this.namespace) {
+          autoInput.items = [];
+          for (let item of result.data) {
+            autoInput.items.push(
+              this.$utils.getVarByDotNotation(item, this.namespace)
+            );
+          }
+        } else autoInput.items = result.data;
       }
 
       autoInput.loading = false;

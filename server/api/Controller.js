@@ -1,7 +1,7 @@
 const mongoPool = require.main.require('./utils/mongoPool');
 const queryHelper = require.main.require('./utils/queryHelper');
 const { ObjectId } = require('mongodb');
-const { entities } = require.main.require('./configs');
+const { entities, fieldsets } = require.main.require('./configs');
 
 module.exports = class Controller {
     constructor(entity) {
@@ -56,6 +56,48 @@ module.exports = class Controller {
 
     }
 
+    parseQueryField(field, fieldName, val) {
+        switch (field.type) {
+            case "entity":
+                let ids = queryHelper.parseArray(fieldName, val[fieldName]);
+                if (!entities[field.entity].fields._id) {
+                    let _ids = [];
+                    for (let id of ids)
+                        _ids.push(ObjectId(id));
+                    ids = _ids;
+                }
+                return { $in: ids };
+            case "number":
+            case "date":
+            case "datetime":
+                let { from, to } = val[fieldName];
+                let parseFunc;
+                if (field.type === 'number') {
+                    if (field.rules && field.rules.includes("integer")) {
+                        if (field.rules.includes("positive"))
+                            parseFunc = 'parsePositiveInteger';
+                        else
+                            parseFunc = 'parseInteger';
+                    } else {
+                        parseFunc = 'parseNumber';
+                    }
+                } else {
+                    parseFunc = 'parseDate';
+                }
+                let operation;
+                if (from || to) {
+                    operation = {};
+                    if (from)
+                        operation.$gte = queryHelper[parseFunc](fieldName + '.from', from);
+                    if (to)
+                        operation.$lte = queryHelper[parseFunc](fieldName + '.to', to);
+                }
+                return operation;
+            case "string":
+                return new RegExp(queryHelper.parseString(fieldName, val[fieldName]), 'i');
+        }
+    }
+
     async query(req, res, appendJoinOptions) {
         let out;
         try {
@@ -65,58 +107,37 @@ module.exports = class Controller {
             if (filter) {
                 const $match = {};
 
-                const fields = this.entity.fields;
-
                 for (let fieldName in filter) {
-                    if(!filter[fieldName])
+                    if (!filter[fieldName])
                         continue;
 
-                    const field = fields[fieldName];
+                    let dotSegs = fieldName.split('.');
 
-                    if (field) {
-                        switch (field.type) {
-                            case "entity":
-                                let ids = queryHelper.parseArray(fieldName, filter[fieldName]);
-                                if (!entities[field.entity].fields._id) {
-                                    let _ids = [];
-                                    for (let id of ids)
-                                        _ids.push(ObjectId(id));
-                                    ids = _ids;
-                                }
+                    let field = this.entity.fields[dotSegs[0]];
+                    if (!field)
+                        throw new Error('Unknown field: ' + fieldName);
 
-                                $match[fieldName] = { $in: ids };
-                                continue;
-                            case "number":
-                            case "date":
-                            case "datetime":
-                                let { from, to } = filter[fieldName];
-                                let parseFunc;
-                                if (field.type === 'number') {
-                                    if (field.rules && field.rules.includes("integer")) {
-                                        if (field.rules.includes("positive"))
-                                            parseFunc = 'parsePositiveInteger';
-                                        else
-                                            parseFunc = 'parseInteger';
-                                    } else {
-                                        parseFunc = 'parseNumber';
-                                    }
-                                } else {
-                                    parseFunc = 'parseDate';
-                                }
-                                if (from || to) {
-                                    $match[fieldName] = {};
-                                    if (from)
-                                        $match[fieldName].$gte = queryHelper[parseFunc](fieldName + '.from', from);
-                                    if (to)
-                                        $match[fieldName].$lte = queryHelper[parseFunc](fieldName + '.to', to);
-                                }
-                                continue;
-                            case "string":
-                                $match[fieldName] = new RegExp(queryHelper.parseString(fieldName, filter[fieldName]), 'i');
-                                continue;
+                    if (dotSegs.length > 0) {
+                        if (field.type !== 'fieldset') {
+                            throw new Error('Unknown field: ' + fieldName);
                         }
+
+                        let fieldset, dotSeg;
+                        let currField = field;
+                        for (let i = 1; i < dotSegs.length; i++) {
+                            dotSeg = dotSegs[i];
+
+                            fieldset = fieldsets[currField.fieldset];
+
+                            currField = fieldset.fields[dotSeg];
+                            if (!currField)
+                                throw new Error('Unknown field: ' + fieldName);
+                            if (i !== dotSegs.length - 1 && currField.type !== 'fieldset')
+                                throw new Error('Unknown field: ' + fieldName);
+                        }
+                        field = fieldset.fields[dotSeg];
                     }
-                    $match[fieldName] = filter[fieldName];
+                    $match[fieldName] = this.parseQueryField(field, fieldName, filter);
                 }
 
                 console.log('$match:', $match);
