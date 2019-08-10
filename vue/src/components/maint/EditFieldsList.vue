@@ -42,7 +42,11 @@
               </v-tooltip>
             </v-card-title>
             <v-card-text>
-              <EditFields v-model="editDialog.item" :fields="fields" />
+              <EditFields
+                v-model="editDialog.item"
+                :fields="fields"
+                :id="editDialog.index===-1?'new':editDialog.index"
+              />
             </v-card-text>
             <v-card-actions>
               <v-spacer />
@@ -141,10 +145,13 @@ export default {
       width: 120
     });
 
+    const newItemObj = {};
+
     const listFields = [];
     const joinEntity = [];
 
     let instance = this;
+
     initList(this.fields);
 
     function initList(fields, namespace) {
@@ -159,6 +166,10 @@ export default {
           initList(fieldset.fields, fieldName);
           continue;
         }
+        if (field.type === "list") {
+          initList(field.fields, fieldName);
+          continue;
+        }
         //default
         headers.push({
           text: field.label,
@@ -170,17 +181,33 @@ export default {
       }
     }
 
-    let editFields = {};
-    for (let fieldName in this.fields) {
-      const field = this.fields[fieldName];
-      if (!field.view.includes("edit")) continue;
-      editFields[fieldName] = field;
+    initEdit(this.fields);
+
+    function initEdit(fields, namespace) {
+      for (let fieldName in fields) {
+        const field = fields[fieldName];
+        if (!field.view.includes("edit")) continue;
+
+        if (namespace) fieldName = namespace + "." + fieldName;
+
+        instance.$utils.setVarByDotNotation(newItemObj, fieldName, null);
+
+        if (field.type === "fieldset") {
+          let fieldset = instance.configs.fieldsets[field.fieldset];
+          initEdit(fieldset.fields, fieldName);
+          continue;
+        }
+        if (field.type === "list") {
+          initEdit(field.fields, fieldName);
+          continue;
+        }
+      }
     }
 
     return {
       headers,
       selected: [],
-      newItemObj: null,
+      newItemObj,
       editDialog: { visible: false, item: null, valid: false, index: -1 },
       deleteDialog: {
         visible: false,
@@ -209,7 +236,7 @@ export default {
       } else {
         this.editDialog.index = this.value.indexOf(item);
       }
-      console.log(this.editDialog.index);
+      console.log(this.editDialog.index, item);
       this.editDialog.item = this.$utils.cloneVarDeep(item);
       this.editDialog.visible = true;
     },

@@ -33,8 +33,15 @@ export default {
     cloneVarDeep(v) {
         return JSON.parse(JSON.stringify(v));
     },
-    getVarByDotNotation(obj, str) {
-        return str.split('.').reduce((o, i) => o[i], obj);
+    getVarByDotNotation(obj, dotNotation) {
+        return dotNotation.split('.').reduce((o, i) => o[i], obj);
+    },
+    setVarByDotNotation(obj, dotNotation, value) {
+        let i;
+        dotNotation = dotNotation.split('.');
+        for (i = 0; i < dotNotation.length - 1; i++)
+            obj = obj[dotNotation[i]] || {};
+        obj[dotNotation[i]] = value;
     },
     removeItemsFromArray(list, items) {
         for (let item of items)
