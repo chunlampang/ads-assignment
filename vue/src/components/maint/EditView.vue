@@ -67,7 +67,13 @@
             <v-card-actions>
               <v-spacer />
               <v-btn @click="reset" color="warning" text class="text-none">Reset</v-btn>
-              <v-btn type="submit" :disabled="!valid" color="primary" text class="text-none">Submit</v-btn>
+              <v-btn
+                type="submit"
+                :disabled="!valid || submitting"
+                color="primary"
+                text
+                class="text-none"
+              >{{ submitting ? 'Submitting' : 'Submit' }}</v-btn>
             </v-card-actions>
           </v-card>
         </template>
@@ -114,7 +120,8 @@ export default {
     return {
       item: null,
       loading: true,
-      valid: false
+      valid: false,
+      submitting: false
     };
   },
   async created() {
@@ -127,7 +134,7 @@ export default {
         if (this.id === "new") {
           let newItemObj = {};
           let instance = this;
-          
+
           initEdit(this.entity.fields);
           function initEdit(fields, namespace) {
             for (let fieldName in fields) {
@@ -169,7 +176,7 @@ export default {
       if (!this.$refs.form.validate()) return;
 
       this.$emit("submit");
-
+      this.submitting = true;
       let result;
       if (this.id === "new")
         result = await this.$api.insert(
@@ -185,6 +192,7 @@ export default {
           data
         );
       }
+      this.submitting = false;
       if (result.ok) {
         this.alert.type = "success";
         this.alert.msg = "Saved.";
