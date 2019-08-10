@@ -11,7 +11,13 @@
       <BaseAlert :value="alert.show" :type="alert.type" :msg="alert.msg" />
     </v-flex>
     <v-flex class="mt-4" xs12>
-      <EditView :id="id" :entity="entity" :alert="alert" @updated="updated" />
+      <EditView
+        :id="id"
+        :entity="entity"
+        :alert="alert"
+        @updated="updated"
+        @submit="$vuetify.goTo(0)"
+      />
     </v-flex>
   </v-layout>
 </template>
