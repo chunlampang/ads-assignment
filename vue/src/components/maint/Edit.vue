@@ -17,6 +17,7 @@
         :alert="alert"
         @updated="updated"
         @submit="$vuetify.goTo(0)"
+        @reset="$vuetify.goTo(0)"
       />
     </v-flex>
   </v-layout>

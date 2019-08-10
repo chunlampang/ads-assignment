@@ -183,6 +183,7 @@ export default {
         this.$refs.form.resetValidation();
         this.getItem();
       }
+      this.$emit("reset");
     },
     getReferenceFilter(reference) {
       let filter = {};

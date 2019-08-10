@@ -75,6 +75,7 @@
             :entity="entity"
             @updated="itemUpdated"
             @submit="dialogScrollToTop()"
+            @reset="dialogScrollToTop()"
             class="edit-dialog"
             style="overflow-y: auto; max-height:600px"
           />
