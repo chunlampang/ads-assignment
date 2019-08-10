@@ -13,6 +13,8 @@ import ListView from './components/maint/ListView';
 Vue.component('ListView', ListView);
 import EditView from './components/maint/EditView';
 Vue.component('EditView', EditView);
+import EditFields from './components/maint/EditFields';
+Vue.component('EditFields', EditFields);
 
 Vue.config.productionTip = false;
 
