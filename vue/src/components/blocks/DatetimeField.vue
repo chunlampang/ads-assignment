@@ -1,4 +1,5 @@
 <template>
+<div class="datetime-field">
   <v-dialog v-model="showPicker" :disabled="readonly" max-width="330">
     <template v-slot:activator="{ on }">
       <v-text-field
@@ -42,6 +43,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+</div>
 </template>
 
 <script>
@@ -102,3 +104,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.datetime-field >>> .v-dialog__container{
+  display: none!important;
+}
+</style>
