@@ -215,15 +215,11 @@ export default {
       }
     };
   },
-  created() {},
   computed: {
     selectedCount() {
       let count = 0;
-      let checkboxs = this.selected;
-      for (let i = 0; i < checkboxs.length; i++) {
-        if (checkboxs[i]) {
-          count++;
-        }
+      for (let i = 0; i < this.selected.length; i++) {
+        if (this.selected[i]) count++;
       }
       return count;
     }
@@ -259,6 +255,7 @@ export default {
     },
     showDeleteDialog() {
       let items = [];
+      
       for (let i = 0; i < this.selected.length; i++) {
         if (this.selected[i]) items.push(this.value[i]);
       }
@@ -269,9 +266,7 @@ export default {
       this.$utils.removeItemsFromArray(this.value, this.deleteDialog.items);
       this.deleteDialog.visible = false;
       this.deleteDialog.items = [];
-      for (let i = 0; i < this.selected.length; i++) {
-        this.selected[i] = false;
-      }
+      this.selected = [];
     }
   }
 };
