@@ -52,17 +52,15 @@ const mongoPool = require('./utils/mongoPool');
     }
 
     function appendCourseToDepartments(departments, courses) {
+        let courseIndex = 0;
+        for (let department of departments) {
+            department.courses = [];
 
-        for (let course of courses) {
-            for (let department of departments) {
-                if (!department.courses)
-                    department.courses = [];
-                else if (department.courses.length > 5)
-                    continue;
-                if (Math.random() < 0.2)
-                    continue;
+            for (let i = 0; i < 5; i++) {
+                if (!courses[courseIndex])
+                    break;
 
-                department.courses.push({ course });
+                department.courses.push({ course: courses[courseIndex++] });
             }
         }
     }
