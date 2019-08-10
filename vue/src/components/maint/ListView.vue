@@ -1,128 +1,132 @@
 <template>
-  <div>
-    <v-data-table
-      :headers="headers"
-      :items="items.data"
-      :server-items-length="items.meta.total"
-      :options.sync="pagination"
-      :loading="loading"
-      multi-sort
-      :dense="dense"
-      class="elevation-1"
-      id="maint-data-list"
-    >
-      <template v-slot:top>
-        <ListFilter v-model="filter" :entity="entity" :viewType="viewType" @search="search(true)" />
-        <!-- tool -->
-        <v-toolbar color="primary" dark dense flat>
-          <v-btn v-if="!readonly" @click="showEditDialog('new')" class="text-none" text>{{'New ' + entity.singular}}</v-btn>
-          <v-spacer />
-          <v-divider class="mx-2" vertical inset></v-divider>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn @click="resetSort()" v-on="on" icon>
-                <v-icon>mdi-sort-variant</v-icon>
-              </v-btn>
-            </template>
-            <span>Clear Sort</span>
-          </v-tooltip>
-          <v-divider class="mx-2" vertical inset></v-divider>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn @click="search" v-on="on" icon>
-                <v-icon>mdi-refresh</v-icon>
-              </v-btn>
-            </template>
-            <span>Refresh</span>
-          </v-tooltip>
-        </v-toolbar>
-      </template>
-      <!-- List -->
-      <template v-slot:item="{ item }">
-        <tr>
-          <td v-if="!readonly">
-            <!-- Actions -->
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-btn @click="showEditDialog(item._id)" v-on="on" small icon>
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </template>
-              <span>Edit</span>
-            </v-tooltip>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on }">
-                <v-btn @click="showDeleteDialog(item)" v-on="on" small icon>
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
-              </template>
-              <span>Delete</span>
-            </v-tooltip>
-          </td>
-          <template v-for="(header, index) in headers">
-            <template v-if="readonly || index > 0">
-              <td
-                v-if="header.type === 'date'"
-                :key="header.value"
-              >{{$utils.dateToString(item[header.value])}}</td>
-              <td
-                v-else-if="header.type === 'datetime'"
-                :key="header.value"
-              >{{$utils.datetimeToString(item[header.value])}}</td>
-              <td v-else :key="header.value">{{$utils.getVarByDotNotation(item,header.value)}}</td>
-            </template>
+  <v-data-table
+    :headers="headers"
+    :items="items.data"
+    :server-items-length="items.meta.total"
+    :options.sync="pagination"
+    :loading="loading"
+    multi-sort
+    :dense="dense"
+    class="elevation-1"
+    id="maint-data-list"
+  >
+    <template v-slot:top>
+      <ListFilter v-model="filter" :entity="entity" :viewType="viewType" @search="search(true)" />
+      <!-- tool -->
+      <v-toolbar color="primary" dark dense flat>
+        <v-btn
+          v-if="!readonly"
+          @click="showEditDialog('new')"
+          class="text-none"
+          text
+        >{{'New ' + entity.singular}}</v-btn>
+        <v-spacer />
+        <v-divider class="mx-2" vertical inset></v-divider>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn @click="resetSort()" v-on="on" icon>
+              <v-icon>mdi-sort-variant</v-icon>
+            </v-btn>
           </template>
-        </tr>
-      </template>
-    </v-data-table>
-    <v-dialog v-model="editDialog.visible" width="800">
-      <v-card v-if="editDialog.visible">
-        <v-card-title class="primary white--text">
-          {{(editDialog.id==='new'?'New ':'Edit ') + entity.singular}}
-          <v-spacer />
+          <span>Clear Sort</span>
+        </v-tooltip>
+        <v-divider class="mx-2" vertical inset></v-divider>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn @click="search" v-on="on" icon>
+              <v-icon>mdi-refresh</v-icon>
+            </v-btn>
+          </template>
+          <span>Refresh</span>
+        </v-tooltip>
+      </v-toolbar>
+
+      <v-dialog v-model="editDialog.visible" width="800">
+        <v-card v-if="editDialog.visible">
+          <v-card-title class="primary white--text">
+            {{(editDialog.id==='new'?'New ':'Edit ') + entity.singular}}
+            <v-spacer />
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  :to="{ name: 'maint-' + entity.singular, params: { id: editDialog.id }}"
+                  target="_blank"
+                  v-on="on"
+                  dark
+                  small
+                  icon
+                >
+                  <v-icon>mdi-open-in-new</v-icon>
+                </v-btn>
+              </template>
+              <span>Open in new tab</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn @click="editDialog.visible = false" v-on="on" dark small icon>
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </template>
+              <span>Close</span>
+            </v-tooltip>
+          </v-card-title>
+          <EditView
+            :id="editDialog.id"
+            :entity="entity"
+            @updated="itemUpdated"
+            style="overflow-y: auto; max-height:600px"
+          />
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="deleteDialog.visible" width="400">
+        <v-card>
+          <v-card-title class="headline" primary-title>Are you confirm to delete?</v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text @click="deleteDialog.visible = false">Cancel</v-btn>
+            <v-btn color="primary" text @click="deleteItem(deleteDialog.item)">Delete</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </template>
+    <!-- List -->
+    <template v-slot:item="{ item }">
+      <tr>
+        <td v-if="!readonly">
+          <!-- Actions -->
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
-              <v-btn
-                :to="{ name: 'maint-' + entity.singular, params: { id: editDialog.id }}"
-                target="_blank"
-                v-on="on"
-                dark
-                small
-                icon
-              >
-                <v-icon>mdi-open-in-new</v-icon>
+              <v-btn @click="showEditDialog(item._id)" v-on="on" small icon>
+                <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </template>
-            <span>Open in new tab</span>
+            <span>Edit</span>
           </v-tooltip>
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
-              <v-btn @click="editDialog.visible = false" v-on="on" dark small icon>
-                <v-icon>mdi-close</v-icon>
+              <v-btn @click="showDeleteDialog(item)" v-on="on" small icon>
+                <v-icon>mdi-delete</v-icon>
               </v-btn>
             </template>
-            <span>Close</span>
+            <span>Delete</span>
           </v-tooltip>
-        </v-card-title>
-        <EditView
-          :id="editDialog.id"
-          :entity="entity"
-          @updated="itemUpdated"
-          style="overflow-y: auto; max-height:600px"
-        />
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="deleteDialog.visible" width="400">
-      <v-card>
-        <v-card-title class="headline" primary-title>Are you confirm to delete?</v-card-title>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text @click="deleteDialog.visible = false">Cancel</v-btn>
-          <v-btn color="primary" text @click="deleteItem(deleteDialog.item)">Delete</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </div>
+        </td>
+        <template v-for="(header, index) in headers">
+          <template v-if="readonly || index > 0">
+            <td
+              v-if="header.type === 'date'"
+              :key="header.value"
+            >{{$utils.dateToString(item[header.value])}}</td>
+            <td
+              v-else-if="header.type === 'datetime'"
+              :key="header.value"
+            >{{$utils.datetimeToString(item[header.value])}}</td>
+            <td v-else :key="header.value">{{$utils.getVarByDotNotation(item,header.value)}}</td>
+          </template>
+        </template>
+      </tr>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
