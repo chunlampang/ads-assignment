@@ -94,8 +94,9 @@ export default {
   inject: ["configs"],
   data() {
     let editFields = {},
-      activeFieldsetPanels = {},
-      calFields = [];
+      activeFieldsetPanels = {};
+
+    let calOrder = [];
 
     for (let fieldName in this.fields) {
       const field = this.fields[fieldName];
@@ -117,33 +118,51 @@ export default {
       }
 
       if (field.cal) {
-        console.log(field.cal);
-
-        calFields[fieldName] = field.cal.fc;
-        /*
-        this.$watch('calFields.'+fieldName, v => {
-          this.value[fieldName] = v;
+        if (!calOrder[field.cal.order]) calOrder[field.cal.order] = [];
+        calOrder[field.cal.order].push({
+          field: fieldName,
+          fc: eval(`item => ${field.cal.fc}`)
         });
-        */
       }
     }
 
     return {
       loading: true,
       rulesCache: {},
-      calFields,
       deleteDialog: {
         visible: false,
         fieldName: null
       },
       activeFieldsetPanels,
-      editFields
+      editFields,
+      calOrder
     };
   },
   async created() {
     await this.initOptions(this.editFields);
 
+    for (let fieldName in this.editFields) {
+      const field = this.fields[fieldName];
+      if (field.cal) {
+        this.$watch("calFields." + fieldName, v => {
+          this.value[fieldName] = v;
+        });
+      }
+    }
     this.loading = false;
+  },
+  computed: {
+    calFields() {
+      let calFields = {};
+
+      for (let calIndex in this.calOrder) {
+        let fcItems = this.calOrder[calIndex];
+        for (let fcItem of fcItems) {
+          calFields[fcItem.field] = fcItem.fc(this.value);
+        }
+      }
+      return calFields;
+    }
   },
   methods: {
     getRules(field) {
