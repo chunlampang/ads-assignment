@@ -106,14 +106,10 @@ export default {
       switch (field.type) {
         case "fieldset":
           activeFieldsetPanels[fieldName] = 0;
-          if (this.id === "new") {
-            this.value[fieldName] = {};
-          }
+          if (!this.value[fieldName]) this.value[fieldName] = {};
           continue;
         case "list":
-          if (this.id === "new") {
-            this.value[fieldName] = [];
-          }
+          if (!this.value[fieldName]) this.value[fieldName] = [];
           continue;
       }
 
