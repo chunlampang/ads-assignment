@@ -29,7 +29,7 @@
 
         <v-list-item-group color="primary">
           <template v-for="(item, index) in menu">
-            <v-list-item :key="index" :to="item.link" exact>
+            <v-list-item :key="index" :to="item.link">
               <v-list-item-icon>
                 <v-icon>{{item.icon}}</v-icon>
               </v-list-item-icon>
