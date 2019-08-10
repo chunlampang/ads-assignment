@@ -45,8 +45,22 @@ export default {
       rulesWithFormat: [
         ...this.rules,
         v => !v || !isNaN(this.$utils.stringToDate(v)) || "Invalid Format"
-      ]
+      ],
+      date: ""
     };
+  },
+  watch: {
+    date(v) {
+      if (!this.showPicker) {
+        //when date selected
+        this.$emit("valChange", moment(v, "YYYY-MM-DD").toDate());
+      }
+    },
+    showPicker(v) {
+      if (v) {
+        this.date = this.value && moment(this.value).format("YYYY-MM-DD");
+      }
+    }
   },
   computed: {
     valueStr: {
@@ -55,15 +69,6 @@ export default {
       },
       set(v) {
         this.$emit("valChange", !v ? v : this.$utils.stringToDate(v));
-      }
-    },
-    date: {
-      get() {
-        if (!this.value) return "";
-        return moment(this.value).format("YYYY-MM-DD");
-      },
-      set(v) {
-        this.valueStr = moment(v, "YYYY-MM-DD").toDate();
       }
     }
   }
