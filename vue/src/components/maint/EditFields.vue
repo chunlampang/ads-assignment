@@ -7,12 +7,12 @@
             <v-select
               v-if="field.type === 'entity'"
               v-model="value[fieldName]"
+              :label="field.label + (required(field)?' *':'')"
               :rules="getRules(field)"
+              :readonly="readonly(field)"
               item-value="_id"
               :item-text="$api.getOptionItemText(entities[field.entity])"
               :items="options[field.entity]"
-              :label="field.label + (required(field)?' *':'')"
-              :readonly="readonly(field)"
               :append-icon="readonly(field)?'mdi-pencil-off':null"
               :clearable="!readonly(field)"
             />
@@ -27,40 +27,40 @@
                       v-model="value[fieldName]"
                       :fields="configs.fieldsets[field.fieldset].fields"
                       :id="id"
+                      :valueRoot="valueRoot || value"
                     />
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
             </template>
-            <template v-else-if="field.type === 'list'">
-              <EditFieldsList
-                v-model="value[fieldName]"
-                :rules="field.rules"
-                :label="field.label"
-                :readonly="readonly(field)"
-                :fields="field.fields"
-              />
-            </template>
+            <EditFieldsList
+              v-else-if="field.type === 'list'"
+              v-model="value[fieldName]"
+              :label="field.label"
+              :rules="field.rules"
+              :readonly="readonly(field)"
+              :fields="field.fields"
+            />
             <DateField
               v-else-if="field.type === 'date'"
               v-model="value[fieldName]"
-              :rules="getRules(field)"
               :label="field.label + (required(field)?' *':'')"
+              :rules="getRules(field)"
               :readonly="readonly(field)"
             />
             <DatetimeField
               v-else-if="field.type === 'datetime'"
               v-model="value[fieldName]"
-              :rules="getRules(field)"
               :label="field.label + (required(field)?' *':'')"
+              :rules="getRules(field)"
               :readonly="readonly(field)"
             />
             <v-text-field
               v-else
-              v-model="value[fieldName]"
               :type="field.type === 'number'? 'number' : 'text'"
-              :rules="getRules(field)"
+              v-model="value[fieldName]"
               :label="field.label +(required(field)?' *':'')"
+              :rules="getRules(field)"
               :readonly="readonly(field)"
               :append-icon="readonly(field)?'mdi-pencil-off':null"
               :clearable="!readonly(field)"
@@ -89,14 +89,14 @@ export default {
   props: {
     fields: Object,
     value: Object,
-    id: String | Number
+    valueRoot: Object,
+    id: String | Number,
   },
   inject: ["configs"],
   data() {
-    let editFields = {},
-      activeFieldsetPanels = {};
-
-    let calOrder = [];
+    const editFields = {},
+      activeFieldsetPanels = {},
+      calOrder = [];
 
     for (let fieldName in this.fields) {
       const field = this.fields[fieldName];
