@@ -40,5 +40,13 @@ module.exports = {
     desc: {
         key: 'deptId',
         label: 'deptName'
+    },
+    references: {
+        offer: {
+            label: 'Offer',
+            entity: 'offer',
+            field: 'department',
+            view: 'dept'
+        }
     }
 }

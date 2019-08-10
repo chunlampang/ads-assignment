@@ -16,26 +16,26 @@ module.exports = {
             fieldset: 'course',
             label: 'Course',
             rules: ['required'],
-            view: ['list', 'edit', 'title']
+            view: ['list', 'edit', 'title', 'dept']
         },
         year: {
             type: 'number',
             label: 'Year',
             rules: ['required', 'integer', 'positive'],
-            view: ['list', 'edit', 'title']
+            view: ['list', 'edit', 'title', 'dept']
         },
         classSize: {
             type: 'number',
             label: 'Class Size',
             rules: ['required', 'integer', 'positive'],
-            view: ['list', 'edit']
+            view: ['list', 'edit', 'dept']
         },
         enrolledCount: {
             type: 'number',
             label: 'Enrolled Count',
             readonly: 2,
             cal: { order: 1, fc: 'item.enrolled.length' },
-            view: ['list', 'edit']
+            view: ['list', 'edit', 'dept']
         },
         availablePlaces: {
             type: 'number',

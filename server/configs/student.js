@@ -32,7 +32,8 @@ module.exports = {
         enrolled: {
             label: 'Enrolled',
             entity: 'offer',
-            field: 'enrolled.student'
+            field: 'enrolled.student',
+            view: 'title'
         }
     }
 }

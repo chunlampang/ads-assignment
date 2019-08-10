@@ -4,13 +4,13 @@ module.exports = {
             type: 'string',
             label: 'Course ID',
             rules: ['required'],
-            view: ['list', 'edit', 'title']
+            view: ['list', 'edit', 'title', 'dept']
         },
         title: {
             type: 'string',
             label: 'Title',
             rules: ['required'],
-            view: ['list', 'edit', 'title']
+            view: ['list', 'edit', 'title', 'dept']
         },
         level: {
             type: 'number',

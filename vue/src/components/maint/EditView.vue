@@ -33,7 +33,7 @@
                 <ListView
                   :alert="alert"
                   :entity="entities[reference.entity]"
-                  viewType="title"
+                  :viewType="reference.view"
                   readonly
                   dense
                   :constFilter="getReferenceFilter(reference)"
