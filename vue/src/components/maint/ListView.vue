@@ -92,27 +92,45 @@
     <!-- List -->
     <template v-slot:item="{ item }">
       <tr>
-        <td v-if="!readonly">
+        <td>
           <!-- Actions -->
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn @click="showEditDialog(item._id)" v-on="on" small icon>
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-            </template>
-            <span>Edit</span>
-          </v-tooltip>
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on }">
-              <v-btn @click="showDeleteDialog(item)" v-on="on" small icon>
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </template>
-            <span>Delete</span>
-          </v-tooltip>
+          <template v-if="readonly">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  :to="{ name: 'maint-' + entity.singular, params: { id: item._id }}"
+                  target="_blank"
+                  v-on="on"
+                  small
+                  icon
+                >
+                  <v-icon>mdi-open-in-new</v-icon>
+                </v-btn>
+              </template>
+              <span>Open in new tab</span>
+            </v-tooltip>
+          </template>
+          <template v-else>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn @click="showEditDialog(item._id)" v-on="on" small icon>
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+              </template>
+              <span>Edit</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn @click="showDeleteDialog(item)" v-on="on" small icon>
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </template>
+              <span>Delete</span>
+            </v-tooltip>
+          </template>
         </td>
         <template v-for="(header, index) in headers">
-          <template v-if="readonly || index > 0">
+          <template v-if="index > 0">
             <td
               v-if="header.type === 'date'"
               :key="header.value"
@@ -154,10 +172,9 @@ export default {
   },
   inject: ["configs", "entities"],
   data() {
-    const headers = [];
-    if (!this.readonly) {
-      headers.push({ text: "Actions", value: "", sortable: false, width: 120 });
-    }
+    const headers = [
+      { text: "Actions", value: "", sortable: false, width: 120 }
+    ];
 
     const listFields = [];
     const joinEntity = [];
