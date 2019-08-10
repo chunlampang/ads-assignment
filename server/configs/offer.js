@@ -56,13 +56,14 @@ module.exports = {
                     rules: [
                         'required'
                     ],
-                    view: ['edit']
+                    readonly: 1,
+                    view: ['list', 'edit', 'title']
                 },
                 enrolDate: {
                     type: 'datetime',
                     label: 'Enrol Date',
                     default: 'new Date',
-                    view: ['edit']
+                    view: ['list', 'edit']
                 }
             }
         },

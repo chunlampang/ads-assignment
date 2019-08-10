@@ -30,6 +30,9 @@ export default {
         }
         return null;
     },
+    cloneVarDeep(v) {
+        return JSON.parse(JSON.stringify(v));
+    },
     getVarByDotNotation(obj, str) {
         return str.split('.').reduce((o, i) => o[i], obj);
     },
