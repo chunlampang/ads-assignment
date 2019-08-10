@@ -77,7 +77,7 @@
     <template v-slot:item="{ item }">
       <tr>
         <td v-if="!readonly">
-          <v-checkbox v-model="selected[item]" />
+          <v-checkbox v-model="selected[value.indexOf(item)]" />
         </td>
         <td>
           <!-- Actions -->
@@ -254,17 +254,24 @@ export default {
       );
     },
     showDeleteDialogSingle(item) {
-      this.deleteDialog.visible = true;
       this.deleteDialog.items = [item];
+      this.deleteDialog.visible = true;
     },
     showDeleteDialog() {
+      let items = [];
+      for (let i = 0; i < this.selected.length; i++) {
+        if (this.selected[i]) items.push(this.value[i]);
+      }
+      this.deleteDialog.items = items;
       this.deleteDialog.visible = true;
-      let indexs = this.selected;
     },
     deleteItem() {
       this.$utils.removeItemsFromArray(this.value, this.deleteDialog.items);
       this.deleteDialog.visible = false;
       this.deleteDialog.items = [];
+      for (let i = 0; i < this.selected.length; i++) {
+        this.selected[i] = false;
+      }
     }
   }
 };
