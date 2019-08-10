@@ -16,8 +16,8 @@
         :entity="entity"
         :alert="alert"
         @updated="updated"
-        @submit="$vuetify.goTo(0)"
-        @reset="$vuetify.goTo(0)"
+        @submit="$vuetify.goTo(0, { duration: 300 })"
+        @reset="$vuetify.goTo(0, { duration: 300 })"
       />
     </v-flex>
   </v-layout>
