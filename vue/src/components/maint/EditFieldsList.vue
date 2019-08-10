@@ -242,7 +242,6 @@ export default {
       } else {
         this.editDialog.index = this.value.indexOf(item);
       }
-      console.log(this.editDialog.index, item);
       this.editDialog.item = this.$utils.cloneVarDeep(item);
       this.editDialog.visible = true;
     },

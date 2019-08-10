@@ -116,6 +116,8 @@ export default {
           continue;
       }
 
+      this.value[fieldName] = field.default ? eval(field.default) : null;
+
       if (field.cal) {
         console.log(field.cal);
 
