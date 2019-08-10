@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import goTo from 'vuetify/es5/services/goto';
 
 Vue.use(Router);
 
@@ -7,11 +8,17 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   scrollBehavior(to, from, savedPosition) {
-    if (savedPosition)
-      return savedPosition;
-    if (to.hash)
-      return { selector: to.hash };
-    return { x: 0, y: 0 };
+    let scrollTo = 0;
+
+    if (to.hash) {
+      scrollTo = to.hash
+    } else if (savedPosition) {
+      scrollTo = savedPosition.y
+    }
+
+    return goTo(scrollTo, {
+      duration: 300
+    });
   },
   routes: [
     {
