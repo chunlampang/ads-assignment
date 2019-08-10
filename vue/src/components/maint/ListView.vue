@@ -74,6 +74,8 @@
             :id="editDialog.id"
             :entity="entity"
             @updated="itemUpdated"
+            @submit="dialogScrollToTop()"
+            class="edit-dialog"
             style="overflow-y: auto; max-height:600px"
           />
         </v-card>
@@ -289,6 +291,9 @@ export default {
     }
   },
   methods: {
+    dialogScrollToTop() {
+      document.getElementsByClassName("edit-dialog")[0].scrollTop = 0;
+    },
     resetSort() {
       let newOptions = {};
       Object.assign(newOptions, this.pagination);
