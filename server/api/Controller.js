@@ -43,7 +43,7 @@ module.exports = class Controller {
                         this.parseData(field.fields, data[fieldName], insert);
                         break;
                     case 'list':
-                        for (let item in data[fieldName]) {
+                        for (let item of data[fieldName]) {
                             this.parseData(field.fields, item, insert);
                         }
                         break;

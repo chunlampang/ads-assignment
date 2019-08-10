@@ -53,15 +53,14 @@ module.exports = {
                     type: 'entity',
                     entity: 'student',
                     label: 'Student',
-                    rules: [
-                        'required'
-                    ],
+                    rules: ['required'],
                     readonly: 1,
                     view: ['list', 'edit', 'title']
                 },
                 enrolDate: {
                     type: 'datetime',
                     label: 'Enrol Date',
+                    rules: ['required'],
                     default: 'new Date',
                     view: ['list', 'edit']
                 }

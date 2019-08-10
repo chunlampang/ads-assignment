@@ -74,6 +74,9 @@
         </v-card>
       </v-dialog>
     </template>
+    <template v-slop:header.checkall="{ header }">
+      <v-checkbox v-model="selectAll" />
+    </template>
     <template v-slot:item="{ item }">
       <tr>
         <td v-if="!readonly">
@@ -133,8 +136,8 @@ export default {
     const headers = [];
     if (!this.readonly)
       headers.push({
-        text: "check",
-        value: "check",
+        text: "checkall",
+        value: "checkall",
         sortable: false,
         width: 60
       });
@@ -190,15 +193,12 @@ export default {
 
         if (namespace) fieldName = namespace + "." + fieldName;
 
-        instance.$utils.setVarByDotNotation(newItemObj, fieldName, null);
+        let val = field.default ? eval(field.default) : null;
+        instance.$utils.setVarByDotNotation(newItemObj, fieldName, val);
 
         if (field.type === "fieldset") {
           let fieldset = instance.configs.fieldsets[field.fieldset];
           initEdit(fieldset.fields, fieldName);
-          continue;
-        }
-        if (field.type === "list") {
-          initEdit(field.fields, fieldName);
           continue;
         }
       }
@@ -222,6 +222,16 @@ export default {
         if (this.selected[i]) count++;
       }
       return count;
+    },
+    selectAll: {
+      get() {
+        return this.selectedCount === this.selected.length;
+      },
+      set(v) {
+        for (let i = 0; i < this.selected.length; i++) {
+          this.selected[i] = v;
+        }
+      }
     }
   },
   methods: {
@@ -255,7 +265,7 @@ export default {
     },
     showDeleteDialog() {
       let items = [];
-      
+
       for (let i = 0; i < this.selected.length; i++) {
         if (this.selected[i]) items.push(this.value[i]);
       }

@@ -125,7 +125,28 @@ export default {
       this.loading = true;
       try {
         if (this.id === "new") {
-          this.item = {};
+          let newItemObj = {};
+          let instance = this;
+          
+          initEdit(this.entity.fields);
+          function initEdit(fields, namespace) {
+            for (let fieldName in fields) {
+              const field = fields[fieldName];
+              if (!field.view.includes("edit")) continue;
+
+              if (namespace) fieldName = namespace + "." + fieldName;
+
+              let val = field.default ? eval(field.default) : null;
+              instance.$utils.setVarByDotNotation(newItemObj, fieldName, val);
+
+              if (field.type === "fieldset") {
+                let fieldset = instance.configs.fieldsets[field.fieldset];
+                initEdit(fieldset.fields, fieldName);
+                continue;
+              }
+            }
+          }
+          this.item = newItemObj;
           return;
         }
 
