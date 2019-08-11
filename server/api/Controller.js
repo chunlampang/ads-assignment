@@ -39,6 +39,15 @@ module.exports = class Controller {
                     case 'datetime':
                         data[fieldName] = queryHelper.parseDate(field.label, data[fieldName]);
                         break;
+                    case "number":
+                        if (field.rules && field.rules.includes("integer")) {
+                            if (field.rules.includes("positive"))
+                                data[fieldName] = queryHelper.parsePositiveInteger(field.label, data[fieldName]);
+                            else
+                                data[fieldName] = queryHelper.parseInteger(field.label, data[fieldName]);
+                        } else {
+                            data[fieldName] = queryHelper.parseNumber(field.label, data[fieldName]);
+                        }
                     case 'fieldset':
                         this.parseData(field.fields, data[fieldName], insert);
                         break;
