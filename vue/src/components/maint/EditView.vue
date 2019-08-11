@@ -198,6 +198,8 @@ export default {
         this.alert.msg = "Saved.";
         this.alert.show = true;
 
+        Object.assign(this.item, result.data);
+
         this.$emit("updated", result.data);
       } else if (result.error) {
         this.alert.type = "error";
