@@ -35,6 +35,10 @@ module.exports = class Controller {
                         continue;
                 }
                 switch (field.type) {
+                    case 'entity':
+                        if (!entities[field.entity].fields._id)
+                            data[fieldName] = ObjectId(data[fieldName]);
+                        break;
                     case 'date':
                     case 'datetime':
                         data[fieldName] = queryHelper.parseDate(field.label, data[fieldName]);
