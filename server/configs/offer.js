@@ -18,18 +18,18 @@ module.exports = {
             rules: ['required'],
             view: ['list', 'edit', 'title', 'dept']
         },
+        year: {
+            type: 'number',
+            label: 'Year',
+            rules: ['required', 'integer', 'positive'],
+            view: ['list', 'edit', 'title', 'dept']
+        },
         department: {
             type: 'entity',
             entity: 'department',
             label: 'Department',
             rules: ['required'],
             view: ['list', 'edit', 'title']
-        },
-        year: {
-            type: 'number',
-            label: 'Year',
-            rules: ['required', 'integer', 'positive'],
-            view: ['list', 'edit', 'title', 'dept']
         },
         classSize: {
             type: 'number',
