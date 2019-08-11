@@ -34,7 +34,10 @@ export default {
         return JSON.parse(JSON.stringify(v));
     },
     getVarByDotNotation(obj, dotNotation) {
-        return dotNotation.split('.').reduce((o, i) => o[i], obj);
+        return dotNotation.split('.').reduce((o, i) => {
+            if (o)
+                return o[i];
+        }, obj);
     },
     setVarByDotNotation(obj, dotNotation, value) {
         let i;

@@ -10,7 +10,7 @@ const route = router.route(`/${entity.collection}`);
 const itemRouter = router.route(`/${entity.collection}/:id`);
 const optionsRouter = router.route(`/${entity.collection}-string-options`);
 
-route.get((req, res) => controller.query(req, res, (query, options)=>{
+route.get((req, res) => controller.query(req, res, (query, options) => {
     let join = queryHelper.parseArray('join', query.join);
     if (join.includes('department')) {
         options.push(
@@ -22,7 +22,12 @@ route.get((req, res) => controller.query(req, res, (query, options)=>{
                     as: '_join.department'
                 }
             },
-            { $unwind: '$_join.department' }
+            {
+                $unwind: {
+                    path: '$_join.department',
+                    preserveNullAndEmptyArrays: true
+                }
+            }
         );
     }
     if (join.includes('students')) {
