@@ -218,7 +218,6 @@ export default {
   },
   methods: {
     sameAsFrom(fieldName) {
-      console.log(fieldName);
       this.value[fieldName].to = this.value[fieldName].from || null;
     },
     resetFilter() {
