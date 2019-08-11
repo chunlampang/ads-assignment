@@ -8,16 +8,27 @@
               <v-flex xs6>
                 <v-text-field
                   type="number"
-                  v-model="value[fieldName].from"
+                  v-model="rangeFields[fieldName].from"
                   :label="field.label + ' (From)'"
                 />
               </v-flex>
               <v-flex xs6>
                 <v-text-field
                   type="number"
-                  v-model="value[fieldName].to"
+                  v-model="rangeFields[fieldName].to"
                   :label="field.label + ' (To)'"
-                />
+                >
+                  <template v-slot:append-outer>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on }">
+                        <v-btn @click="sameAsFrom(fieldName)" v-on="on" small icon>
+                          <v-icon>mdi-content-copy</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Same as From</span>
+                    </v-tooltip>
+                  </template>
+                </v-text-field>
               </v-flex>
             </v-layout>
           </v-container>
@@ -26,10 +37,21 @@
           <v-container pa-0 grid-list-xl>
             <v-layout>
               <v-flex xs6>
-                <DateField v-model="dateFields[fieldName].from" :label="field.label + ' (From)'" />
+                <DateField v-model="rangeFields[fieldName].from" :label="field.label + ' (From)'" />
               </v-flex>
               <v-flex xs6>
-                <DateField v-model="dateFields[fieldName].to" :label="field.label + ' (To)'" />
+                <DateField v-model="rangeFields[fieldName].to" :label="field.label + ' (To)'">
+                  <template v-slot:append-outer>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on }">
+                        <v-btn @click="sameAsFrom(fieldName)" v-on="on" small icon>
+                          <v-icon>mdi-content-copy</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Same as From</span>
+                    </v-tooltip>
+                  </template>
+                </DateField>
               </v-flex>
             </v-layout>
           </v-container>
@@ -38,10 +60,24 @@
           <v-container pa-0 grid-list-xl>
             <v-layout>
               <v-flex xs6>
-                <DatetimeField v-model="dateFields[fieldName].from" :label="field.label + ' (From)'" />
+                <DatetimeField
+                  v-model="rangeFields[fieldName].from"
+                  :label="field.label + ' (From)'"
+                >
+                  <template v-slot:append-outer>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on }">
+                        <v-btn @click="sameAsFrom(fieldName)" v-on="on" small icon>
+                          <v-icon>mdi-content-copy</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Same as From</span>
+                    </v-tooltip>
+                  </template>
+                </DatetimeField>
               </v-flex>
               <v-flex xs6>
-                <DatetimeField v-model="dateFields[fieldName].to" :label="field.label + ' (To)'" />
+                <DatetimeField v-model="rangeFields[fieldName].to" :label="field.label + ' (To)'" />
               </v-flex>
             </v-layout>
           </v-container>
@@ -115,7 +151,7 @@ export default {
     const fields = this.fields;
     const filterFields = {};
     const autoInput = {};
-    const dateFields = {}; //for vue ref problem
+    const rangeFields = {}; //for vue ref problem
 
     for (let fieldName in fields) {
       const field = fields[fieldName];
@@ -127,18 +163,13 @@ export default {
           this.value[fieldName] = {};
           break;
         case "number":
-          this.value[fieldName] = {
-            from: null,
-            to: null
-          };
-          break;
         case "date":
         case "datetime":
           let dateValue = this.value[fieldName];
-          dateFields[fieldName]={
+          rangeFields[fieldName] = {
             from: null,
             to: null
-          }
+          };
           break;
         case "string":
           this.value[fieldName] = "";
@@ -157,7 +188,7 @@ export default {
       loading: true,
       autoInput,
       filterFields,
-      dateFields
+      rangeFields
     };
   },
   async created() {
@@ -175,17 +206,21 @@ export default {
       }
     }
   },
-  watch:{
-    dateFields:{
-      handler(v){
-        for(let fieldName in v){
+  watch: {
+    rangeFields: {
+      handler(v) {
+        for (let fieldName in v) {
           this.value[fieldName] = v[fieldName];
         }
       },
-      deep:true
+      deep: true
     }
   },
   methods: {
+    sameAsFrom(fieldName) {
+      console.log(fieldName);
+      this.value[fieldName].to = this.value[fieldName].from || null;
+    },
     resetFilter() {
       this.$refs.form.reset();
     },

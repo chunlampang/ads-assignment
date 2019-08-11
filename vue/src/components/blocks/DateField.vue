@@ -19,7 +19,11 @@
         v-on="on"
         readonly
         :clearable="!readonly"
-      ></v-text-field>
+      >
+        <template v-slot:append-outer>
+          <slot name="append-outer"></slot>
+        </template>
+      </v-text-field>
     </template>
     <v-date-picker v-model="date" show-current no-title color="primary" @input="showPicker = false"></v-date-picker>
   </v-menu>
