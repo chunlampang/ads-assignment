@@ -190,6 +190,7 @@ export default {
       this.getFieldsetSrcOption();
       this.$watch("fieldsetAutoInput.item", v => {
         if (typeof v === "object") Object.assign(this.value, v);
+        else this.value[this.fieldsetSrc.key] = v;
       });
     }
 
