@@ -6,10 +6,18 @@
           <v-container pa-0 grid-list-xl>
             <v-layout>
               <v-flex xs6>
-                <v-text-field type="number" v-model="field.from" :label="field.label + ' (From)'" />
+                <v-text-field
+                  type="number"
+                  v-model="value[fieldName].from"
+                  :label="field.label + ' (From)'"
+                />
               </v-flex>
               <v-flex xs6>
-                <v-text-field type="number" v-model="field.to" :label="field.label + ' (To)'" />
+                <v-text-field
+                  type="number"
+                  v-model="value[fieldName].to"
+                  :label="field.label + ' (To)'"
+                />
               </v-flex>
             </v-layout>
           </v-container>
@@ -18,10 +26,10 @@
           <v-container pa-0 grid-list-xl>
             <v-layout>
               <v-flex xs6>
-                <DateField v-model="field.from" :label="field.label + ' (From)'" />
+                <DateField v-model="dateFields[fieldName].from" :label="field.label + ' (From)'" />
               </v-flex>
               <v-flex xs6>
-                <DateField v-model="field.to" :label="field.label + ' (To)'" />
+                <DateField v-model="dateFields[fieldName].to" :label="field.label + ' (To)'" />
               </v-flex>
             </v-layout>
           </v-container>
@@ -30,10 +38,10 @@
           <v-container pa-0 grid-list-xl>
             <v-layout>
               <v-flex xs6>
-                <DatetimeField v-model="field.from" :label="field.label + ' (From)'" />
+                <DatetimeField v-model="dateFields[fieldName].from" :label="field.label + ' (From)'" />
               </v-flex>
               <v-flex xs6>
-                <DatetimeField v-model="field.to" :label="field.label + ' (To)'" />
+                <DatetimeField v-model="dateFields[fieldName].to" :label="field.label + ' (To)'" />
               </v-flex>
             </v-layout>
           </v-container>
@@ -107,6 +115,7 @@ export default {
     const fields = this.fields;
     const filterFields = {};
     const autoInput = {};
+    const dateFields = {}; //for vue ref problem
 
     for (let fieldName in fields) {
       const field = fields[fieldName];
@@ -118,12 +127,18 @@ export default {
           this.value[fieldName] = {};
           break;
         case "number":
-        case "date":
-        case "datetime":
           this.value[fieldName] = {
             from: null,
             to: null
           };
+          break;
+        case "date":
+        case "datetime":
+          let dateValue = this.value[fieldName];
+          dateFields[fieldName]={
+            from: null,
+            to: null
+          }
           break;
         case "string":
           this.value[fieldName] = "";
@@ -141,7 +156,8 @@ export default {
     return {
       loading: true,
       autoInput,
-      filterFields
+      filterFields,
+      dateFields
     };
   },
   async created() {
@@ -157,6 +173,16 @@ export default {
           this.autoCompleteSearch(fieldName, val);
         });
       }
+    }
+  },
+  watch:{
+    dateFields:{
+      handler(v){
+        for(let fieldName in v){
+          this.value[fieldName] = v[fieldName];
+        }
+      },
+      deep:true
     }
   },
   methods: {
