@@ -4,8 +4,31 @@
       <template v-for="(field, fieldName) in fields">
         <template v-if="field.view.includes('edit')">
           <v-flex :key="fieldName" xs12>
+            <template v-if="fieldsetSrc && fieldsetSrc.key === fieldName">
+              <v-combobox
+                v-model="fieldsetAutoInput.item"
+                :label="field.label + (required(field)?' *':'')"
+                :rules="getRules(field)"
+                :readonly="readonly(field)"
+                :loading="fieldsetAutoInput.loading"
+                :items="fieldsetAutoInput.items"
+                :item-value="fieldName"
+                :item-text="fieldName"
+                :search-input.sync="fieldsetAutoInput.input"
+                no-filter
+                dense
+                hide-no-data
+              >
+                <template v-slot:item="data">
+                  <v-list-item-content>
+                    <v-list-item-title v-html="data.item[fieldName]"></v-list-item-title>
+                  </v-list-item-content>
+                </template>
+              </v-combobox>
+              <input type="hidden" :value="value[fieldName]" />
+            </template>
             <v-select
-              v-if="field.type === 'entity'"
+              v-else-if="field.type === 'entity'"
               v-model="value[fieldName]"
               :label="field.label + (required(field)?' *':'')"
               :rules="getRules(field)"
@@ -27,6 +50,7 @@
                       v-model="value[fieldName]"
                       :fields="configs.fieldsets[field.fieldset].fields"
                       :id="id"
+                      :fieldsetSrc="field.src"
                       :valueRoot="valueRoot || value"
                     />
                   </v-expansion-panel-content>
@@ -91,6 +115,7 @@ export default {
     value: Object,
     valueRoot: Object,
     id: String | Number,
+    fieldsetSrc: Object
   },
   inject: ["configs"],
   data() {
@@ -122,7 +147,7 @@ export default {
       }
     }
 
-    return {
+    const data = {
       loading: true,
       rulesCache: {},
       deleteDialog: {
@@ -133,9 +158,28 @@ export default {
       editFields,
       calOrder
     };
+
+    if (this.fieldsetSrc) {
+      const fieldsetAutoInput = { loading: false, items: [], input: null };
+
+      fieldsetAutoInput.item = this.value[this.fieldsetSrc.key];
+      data.fieldsetAutoInput = fieldsetAutoInput;
+    }
+
+    return data;
   },
   async created() {
     await this.initOptions(this.editFields);
+    if (this.fieldsetSrc) {
+      this.$watch(
+        "valueRoot." + this.fieldsetSrc.itemkey,
+        this.getFieldsetSrcOption
+      );
+      this.getFieldsetSrcOption();
+      this.$watch("fieldsetAutoInput.item", v => {
+        if (typeof v === "object") Object.assign(this.value, v);
+      });
+    }
 
     for (let fieldName in this.editFields) {
       const field = this.fields[fieldName];
@@ -161,6 +205,31 @@ export default {
     }
   },
   methods: {
+    async getFieldsetSrcOption() {
+      this.fieldsetAutoInput.loading = true;
+      let { entity } = this.fieldsetSrc;
+
+      let filter = {};
+
+      let result;
+      let id = this.valueRoot[this.fieldsetSrc.itemkey];
+      if (id) {
+        result = await this.$api.get(
+          "/" + this.entities[entity].collection,
+          this.valueRoot[this.fieldsetSrc.itemkey]
+        );
+        if (result.error) {
+          console.error(result.error);
+        } else {
+          this.fieldsetAutoInput.items = [];
+
+          for (let item of result.data.courses) {
+            this.fieldsetAutoInput.items.push(item.course);
+          }
+        }
+      }
+      this.fieldsetAutoInput.loading = false;
+    },
     getRules(field) {
       if (this.rulesCache[field.label]) return this.rulesCache[field.label];
 

@@ -14,6 +14,13 @@ module.exports = {
         course: {
             type: 'fieldset',
             fieldset: 'course',
+            src: {
+                type: 'course',
+                entity: 'department',
+                field: 'courses.course',
+                key: 'courseId',
+                itemkey: 'department'
+            },
             label: 'Course',
             rules: ['required'],
             view: ['list', 'edit', 'title', 'dept']
