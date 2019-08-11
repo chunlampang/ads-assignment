@@ -253,15 +253,7 @@ module.exports = class Controller {
             out = { ok: !!result.n, data };
             res.status(201);
         } catch (err) {
-            if (err.code == 11000) {
-                let field;
-                if (this.entity.desc && this.entity.desc.key) {
-                    field = this.entity.desc.key;
-                } else
-                    field = '_id';
-                out = { error: data[field] + ' is used by other.' };
-            } else
-                out = { error: err.message };
+            out = handleError(err);
             res.status(400);
         }
 
@@ -283,10 +275,7 @@ module.exports = class Controller {
 
             out = { ok: !!result.nModified, data };
         } catch (err) {
-            if (err.code == 66)
-                out = { error: '_id must not be updated.' };
-            else
-                out = { error: err.message };
+            out = handleError(err);
             res.status(400);
         }
         res.send(out);
@@ -311,6 +300,21 @@ module.exports = class Controller {
             res.status(400);
         }
         res.send(out);
+    }
+}
+
+function handleError(err) {
+    switch (err.code) {
+        case 11000:
+            let keys = err.message.match(/dup key: {(.*?) }/)[1].split(',');
+            for (let i = 0; i < keys.length; i++) {
+                keys[i] = keys[i].substring(3);
+            }
+            return { error: keys.join(' + ') + ' is already exist.' };
+        case 66:
+            return { error: '_id must not be updated.' };
+        default:
+            return { error: err.message };
     }
 }
 
