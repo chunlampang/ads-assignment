@@ -55,6 +55,7 @@ module.exports = {
             type: 'list',
             label: 'Enrolled',
             view: ['edit'],
+            indexs: [['student']],
             fields: {
                 student: {
                     type: 'entity',

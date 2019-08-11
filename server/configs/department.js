@@ -26,6 +26,7 @@ module.exports = {
             type: 'list',
             label: 'Courses',
             view: ['edit'],
+            indexs: [['course']],
             fields: {
                 course: {
                     type: 'fieldset',

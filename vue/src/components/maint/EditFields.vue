@@ -62,10 +62,8 @@
           <EditFieldsList
             v-else-if="field.type === 'list'"
             v-model="value[fieldName]"
-            :label="field.label"
-            :rules="field.rules"
+            :field="field"
             :readonly="readonly(field)"
-            :fields="field.fields"
           />
           <DateField
             v-else-if="field.type === 'date'"

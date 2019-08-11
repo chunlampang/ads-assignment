@@ -3,7 +3,7 @@
     <template v-slot:top>
       <v-toolbar color="primary" dark dense flat>
         <v-toolbar-title class="mr-2">
-          <h4 class="title font-weight-regular">{{label}}</h4>
+          <h4 class="title font-weight-regular">{{field.label}}</h4>
         </v-toolbar-title>
         <v-divider class="mx-2" inset vertical />
         <v-tooltip v-if="!readonly" bottom>
@@ -12,7 +12,7 @@
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </template>
-          <span>{{'Add ' + label}}</span>
+          <span>{{'Add ' + field.label}}</span>
         </v-tooltip>
         <v-spacer></v-spacer>
         <v-tooltip bottom>
@@ -26,11 +26,11 @@
         <span class="subtitle-1">Selected: {{selectedCount}}</span>
       </v-toolbar>
 
-      <v-dialog v-model="editDialog.visible" width="800">
+      <v-dialog v-model="editDialog.visible" persistent width="800">
         <v-form v-model="editDialog.valid" @submit.prevent="submitItem">
           <v-card v-if="editDialog.visible">
             <v-card-title class="primary white--text">
-              {{(editDialog.index === -1?'New ':'Edit ') + label}}
+              {{(editDialog.index === -1?'New ':'Edit ') + field.label}}
               <v-spacer />
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
@@ -42,6 +42,11 @@
               </v-tooltip>
             </v-card-title>
             <v-card-text>
+              <BaseAlert
+                :value="editDialogAlert.show"
+                :type="editDialogAlert.type"
+                :msg="editDialogAlert.msg"
+              />
               <EditFields
                 v-model="editDialog.item"
                 :fields="fields"
@@ -120,19 +125,21 @@
 </template>
 
 <script>
-import EditFields from "./EditFields";
+import BaseAlert from "@/components/blocks/BaseAlert";
 
 export default {
   name: "EditFieldsList",
+  components: { BaseAlert },
   props: {
-    fields: Object,
+    field: Object,
     value: Array,
-    label: String,
     rules: Array,
     readonly: Boolean
   },
   inject: ["configs"],
   data() {
+    const { fields, rules } = this.field;
+
     const headers = [];
     if (!this.readonly)
       headers.push({
@@ -155,7 +162,7 @@ export default {
 
     let instance = this;
 
-    initList(this.fields);
+    initList(fields);
 
     function initList(fields, namespace) {
       for (let fieldName in fields) {
@@ -184,7 +191,7 @@ export default {
       }
     }
 
-    initEdit(this.fields);
+    initEdit(fields);
 
     function initEdit(fields, namespace) {
       for (let fieldName in fields) {
@@ -205,10 +212,14 @@ export default {
     }
 
     return {
+      fields,
       headers,
       selected: [],
       newItemObj,
       editDialog: { visible: false, item: null, valid: false, index: -1 },
+      editDialogAlert: {
+        show: false
+      },
       deleteDialog: {
         visible: false,
         items: []
@@ -236,6 +247,7 @@ export default {
   },
   methods: {
     showEditDialog(item) {
+      this.editDialogAlert.show = false;
       if (item === "new") {
         this.editDialog.index = -1;
         item = this.newItemObj;
@@ -246,6 +258,40 @@ export default {
       this.editDialog.visible = true;
     },
     submitItem() {
+      this.editDialogAlert.show = false;
+      for (let index of this.field.indexs) {
+        for (let i = 0; i < this.value.length; i++) {
+          if (i === this.editDialog.index) continue;
+          let repeated = 0;
+          let input = [];
+          for (let fieldName of index) {
+            if (this.fields[fieldName].type === "fieldset") {
+              let key = this.configs.fieldsets[this.fields[fieldName].fieldset]
+                .desc.key;
+              if (
+                this.value[i][fieldName][key] ==
+                this.editDialog.item[fieldName][key]
+              ) {
+                if (!input) input = [];
+                input.push(this.value[i][fieldName][key]);
+                repeated++;
+              }
+            } else {
+              if (this.value[i][fieldName] == this.editDialog.item[fieldName]) {
+                if (!input) input = [];
+                input.push(this.value[i][fieldName]);
+                repeated++;
+              }
+            }
+          }
+          if (index.length === repeated) {
+            this.editDialogAlert.type = "error";
+            this.editDialogAlert.msg = input.join(" + ") + " is already exist.";
+            this.editDialogAlert.show = true;
+            return;
+          }
+        }
+      }
       if (this.editDialog.index === -1) {
         this.value.push(this.editDialog.item);
       } else {
@@ -254,6 +300,7 @@ export default {
       this.editDialog.visible = false;
     },
     resetItem() {
+      this.editDialogAlert.show = false;
       this.editDialog.item = this.$utils.cloneVarDeep(
         this.value[this.editDialog.index]
       );
