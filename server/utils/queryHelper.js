@@ -12,16 +12,13 @@ exports.aggregateStringOptions = async function (collection, filter, query) {
         },
         { $unwind: '$value' },
         { $sort: { value: 1 } },
-        { $limit: size },
-        {
-            $project: {
-                _id: '$value',
-                value: '$value'
-            }
-        }
+        { $limit: size }
     ];
 
     let result = await collection.aggregate(options).toArray();
+    for (let item of result) {
+        delete item._id;
+    }
     return {
         data: result
     };

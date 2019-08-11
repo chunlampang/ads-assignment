@@ -6,18 +6,10 @@
           <v-container pa-0 grid-list-xl>
             <v-layout>
               <v-flex xs6>
-                <v-text-field
-                  type="number"
-                  v-model="field.from"
-                  :label="field.label + ' (From)'"
-                />
+                <v-text-field type="number" v-model="field.from" :label="field.label + ' (From)'" />
               </v-flex>
               <v-flex xs6>
-                <v-text-field
-                  type="number"
-                  v-model="field.to"
-                  :label="field.label + ' (To)'"
-                />
+                <v-text-field type="number" v-model="field.to" :label="field.label + ' (To)'" />
               </v-flex>
             </v-layout>
           </v-container>
@@ -63,8 +55,8 @@
           v-model="value[fieldName]"
           :loading="autoInput[fieldName].loading"
           :items="autoInput[fieldName].items"
-          :item-value="fieldName"
-          :item-text="fieldName"
+          item-value="value"
+          item-text="value"
           :search-input="autoInput[fieldName].input"
           @update:search-input="autoInput[fieldName].input = $event"
           @keyup.enter="search"
@@ -74,13 +66,7 @@
           hide-no-data
           :label="field.label"
           :return-object="false"
-        >
-          <template v-slot:item="data">
-            <v-list-item-content>
-              <v-list-item-title v-html="data.item[fieldName]"></v-list-item-title>
-            </v-list-item-content>
-          </template>
-        </v-combobox>
+        />
         <v-card v-else-if="field.type === 'fieldset'" class="mb-4 mt-2">
           <v-card-title>
             <h4 class="title font-weight-regular">{{field.label}}</h4>
@@ -188,22 +174,16 @@ export default {
       let filter = {};
       filter[fieldName] = ".*" + val + ".*";
 
-      let result = await this.$api.query("/" + this.collection, {
-        filter,
-        page: { size: 5 },
-        fields: fieldName
-      });
+      let result = await this.$api.queryStringOptions(
+        this.collection,
+        fieldName,
+        5,
+        filter
+      );
       if (result.error) {
         console.error(result.error);
       } else {
-        if (this.namespace) {
-          autoInput.items = [];
-          for (let item of result.data) {
-            autoInput.items.push(
-              this.$utils.getVarByDotNotation(item, this.namespace)
-            );
-          }
-        } else autoInput.items = result.data;
+        autoInput.items = result.data;
       }
 
       autoInput.loading = false;
