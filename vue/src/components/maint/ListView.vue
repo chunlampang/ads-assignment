@@ -41,7 +41,7 @@
         </v-tooltip>
       </v-toolbar>
 
-      <v-dialog v-model="editDialog.visible" width="800">
+      <v-dialog v-model="editDialog.visible" persistent width="800">
         <v-card v-if="editDialog.visible">
           <v-card-title class="primary white--text">
             {{(editDialog.id==='new'?'New ':'Edit ') + entity.singular}}
