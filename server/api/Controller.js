@@ -156,6 +156,30 @@ module.exports = class Controller {
         }
     }
 
+    async queryStringOptions(req, res) {
+        let out;
+        try {
+            let options = [];
+            //filter
+            let filter = req.query.filter;
+            const $match = {};
+            if (filter) {
+                this.appendMatch($match, filter);
+                console.log('$match:', $match);
+                options.push({ $match });
+            }
+
+            const db = await mongoPool.getDb();
+            const collection = db.collection(this.entity.collection);
+            out = await queryHelper.aggregateStringOptions(collection, $match, req.query);
+        } catch (err) {
+            out = { error: err.message };
+            res.status(400);
+        }
+
+        res.send(out);
+    }
+
     async query(req, res, appendJoinOptions) {
         let out;
         try {

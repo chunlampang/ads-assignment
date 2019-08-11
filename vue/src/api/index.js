@@ -78,6 +78,11 @@ export default {
     async query(path, params) {
         return this.sendRequest('get', path, params);
     },
+    async queryStringOptions(collection, field, size, filter) {
+        return this.sendRequest('get', `/${collection}-string-options`, {
+            field, size, filter
+        });
+    },
 };
 
 function handleNestedParams(params) {

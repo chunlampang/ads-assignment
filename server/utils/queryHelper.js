@@ -1,3 +1,32 @@
+exports.aggregateStringOptions = async function (collection, filter, query) {
+    let field = this.parseString('field', query.field);
+    let size = this.parsePositiveInteger('size', query.size);
+
+    let options = [
+        { $match: filter },
+        {
+            $group: {
+                _id: null,
+                value: { $addToSet: "$" + field }
+            }
+        },
+        { $unwind: '$value' },
+        { $sort: { value: 1 } },
+        { $limit: size },
+        {
+            $project: {
+                _id: '$value',
+                value: '$value'
+            }
+        }
+    ];
+
+    let result = await collection.aggregate(options).toArray();
+    return {
+        data: result
+    };
+};
+
 exports.aggregateList = async function (collection, options = [], query = {}) {
     let { fields, page, sort } = query;
 
