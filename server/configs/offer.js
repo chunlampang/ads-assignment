@@ -4,6 +4,13 @@ module.exports = {
     plural: 'Offers',
     singular: 'Offer',
     fields: {
+        department: {
+            type: 'entity',
+            entity: 'department',
+            label: 'Department',
+            rules: ['required'],
+            view: ['list', 'edit', 'title']
+        },
         course: {
             type: 'fieldset',
             fieldset: 'course',
@@ -23,13 +30,6 @@ module.exports = {
             label: 'Year',
             rules: ['required', 'integer', 'positive'],
             view: ['list', 'edit', 'title', 'dept']
-        },
-        department: {
-            type: 'entity',
-            entity: 'department',
-            label: 'Department',
-            rules: ['required'],
-            view: ['list', 'edit', 'title']
         },
         classSize: {
             type: 'number',

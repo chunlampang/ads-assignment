@@ -1,96 +1,97 @@
 <template>
   <v-container>
     <v-layout v-if="!loading" row wrap>
-      <template v-for="(field, fieldName) in fields">
-        <template v-if="field.view.includes('edit')">
-          <v-flex :key="fieldName" xs12>
-            <template v-if="fieldsetSrc && fieldsetSrc.key === fieldName">
-              <v-combobox
-                v-model="fieldsetAutoInput.item"
-                :label="field.label + (required(field)?' *':'')"
-                :rules="getRules(field)"
-                :readonly="readonly(field)"
-                :loading="fieldsetAutoInput.loading"
-                :items="fieldsetAutoInput.items"
-                :item-value="fieldName"
-                :item-text="fieldName"
-                :search-input.sync="fieldsetAutoInput.input"
-                no-filter
-                dense
-                hide-no-data
-              >
-                <template v-slot:item="data">
-                  <v-list-item-content>
-                    <v-list-item-title v-html="data.item[fieldName]"></v-list-item-title>
-                  </v-list-item-content>
-                </template>
-              </v-combobox>
-              <input type="hidden" :value="value[fieldName]" />
-            </template>
-            <v-select
-              v-else-if="field.type === 'entity'"
-              v-model="value[fieldName]"
+      <template v-for="(field, fieldName) in editFields">
+        <v-flex :key="fieldName" xs12>
+          <template v-if="fieldsetSrc && fieldsetSrc.key === fieldName">
+            <v-combobox
+              v-model="fieldsetAutoInput.item"
               :label="field.label + (required(field)?' *':'')"
               :rules="getRules(field)"
               :readonly="readonly(field)"
-              item-value="_id"
-              :item-text="$api.getOptionItemText(entities[field.entity])"
-              :items="options[field.entity]"
-              :append-icon="readonly(field)?'mdi-pencil-off':null"
-              :clearable="!readonly(field)"
-            />
-            <template v-else-if="field.type === 'fieldset'">
-              <v-expansion-panels v-model="activeFieldsetPanels[fieldName]" class="mb-4 mt-2">
-                <v-expansion-panel>
-                  <v-expansion-panel-header ripple>
-                    <h4 class="title font-weight-regular">{{field.label}}</h4>
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <EditFields
-                      v-model="value[fieldName]"
-                      :fields="configs.fieldsets[field.fieldset].fields"
-                      :id="id"
-                      :fieldsetSrc="field.src"
-                      :valueRoot="valueRoot || value"
-                    />
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-expansion-panels>
-            </template>
-            <EditFieldsList
-              v-else-if="field.type === 'list'"
-              v-model="value[fieldName]"
-              :label="field.label"
-              :rules="field.rules"
-              :readonly="readonly(field)"
-              :fields="field.fields"
-            />
-            <DateField
-              v-else-if="field.type === 'date'"
-              v-model="value[fieldName]"
-              :label="field.label + (required(field)?' *':'')"
-              :rules="getRules(field)"
-              :readonly="readonly(field)"
-            />
-            <DatetimeField
-              v-else-if="field.type === 'datetime'"
-              v-model="value[fieldName]"
-              :label="field.label + (required(field)?' *':'')"
-              :rules="getRules(field)"
-              :readonly="readonly(field)"
-            />
-            <v-text-field
-              v-else
-              :type="field.type === 'number'? 'number' : 'text'"
-              v-model="value[fieldName]"
-              :label="field.label +(required(field)?' *':'')"
-              :rules="getRules(field)"
-              :readonly="readonly(field)"
-              :append-icon="readonly(field)?'mdi-pencil-off':null"
-              :clearable="!readonly(field)"
-            />
-          </v-flex>
-        </template>
+              :loading="fieldsetAutoInput.loading"
+              :items="fieldsetAutoInput.items"
+              :item-value="fieldName"
+              :item-text="fieldName"
+              :search-input.sync="fieldsetAutoInput.input"
+              no-filter
+              dense
+              hide-no-data
+              validate-on-blur
+              :placeholder="`Input '${fieldsRoot[fieldsetSrc.itemkey].label}' first`"
+            >
+              <template v-slot:item="data">
+                <v-list-item-content>
+                  <v-list-item-title v-html="data.item[fieldName]"></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-combobox>
+            <input type="hidden" :value="value[fieldName]" />
+          </template>
+          <v-select
+            v-else-if="field.type === 'entity'"
+            v-model="value[fieldName]"
+            :label="field.label + (required(field)?' *':'')"
+            :rules="getRules(field)"
+            :readonly="readonly(field)"
+            item-value="_id"
+            :item-text="$api.getOptionItemText(entities[field.entity])"
+            :items="options[field.entity]"
+            :append-icon="readonly(field)?'mdi-pencil-off':null"
+            :clearable="!readonly(field)"
+          />
+          <template v-else-if="field.type === 'fieldset'">
+            <v-expansion-panels v-model="activeFieldsetPanels[fieldName]" class="mb-4 mt-2">
+              <v-expansion-panel>
+                <v-expansion-panel-header ripple>
+                  <h4 class="title font-weight-regular">{{field.label}}</h4>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <EditFields
+                    v-model="value[fieldName]"
+                    :fields="configs.fieldsets[field.fieldset].fields"
+                    :id="id"
+                    :fieldsetSrc="field.src"
+                    :fieldsRoot="fieldsRoot"
+                    :valueRoot="valueRoot"
+                  />
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </template>
+          <EditFieldsList
+            v-else-if="field.type === 'list'"
+            v-model="value[fieldName]"
+            :label="field.label"
+            :rules="field.rules"
+            :readonly="readonly(field)"
+            :fields="field.fields"
+          />
+          <DateField
+            v-else-if="field.type === 'date'"
+            v-model="value[fieldName]"
+            :label="field.label + (required(field)?' *':'')"
+            :rules="getRules(field)"
+            :readonly="readonly(field)"
+          />
+          <DatetimeField
+            v-else-if="field.type === 'datetime'"
+            v-model="value[fieldName]"
+            :label="field.label + (required(field)?' *':'')"
+            :rules="getRules(field)"
+            :readonly="readonly(field)"
+          />
+          <v-text-field
+            v-else
+            :type="field.type === 'number'? 'number' : 'text'"
+            v-model="value[fieldName]"
+            :label="field.label +(required(field)?' *':'')"
+            :rules="getRules(field)"
+            :readonly="readonly(field)"
+            :append-icon="readonly(field)?'mdi-pencil-off':null"
+            :clearable="!readonly(field)"
+          />
+        </v-flex>
       </template>
     </v-layout>
     <v-layout v-else row wrap>
@@ -112,8 +113,19 @@ export default {
   components: { DateField, DatetimeField, EditFieldsList },
   props: {
     fields: Object,
+    fieldsRoot: {
+      type: Object,
+      default() {
+        return this.fields;
+      }
+    },
     value: Object,
-    valueRoot: Object,
+    valueRoot: {
+      type: Object,
+      default() {
+        return this.value;
+      }
+    },
     id: String | Number,
     fieldsetSrc: Object
   },
