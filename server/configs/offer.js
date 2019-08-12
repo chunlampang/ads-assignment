@@ -29,6 +29,7 @@ module.exports = {
             type: 'number',
             label: 'Year',
             rules: ['required', 'integer', 'positive'],
+            default: 'new Date().getFullYear()',
             view: ['list', 'edit', 'title', 'dept']
         },
         classSize: {
@@ -41,6 +42,7 @@ module.exports = {
             type: 'number',
             label: 'Enrolled Count',
             readonly: 2,
+            default: '0',
             cal: { order: 1, fc: 'item.enrolled.length' },
             view: ['list', 'edit', 'dept']
         },
@@ -48,6 +50,7 @@ module.exports = {
             type: 'number',
             label: 'Available Places',
             readonly: 2,
+            default: '0',
             cal: { order: 2, fc: 'item.classSize - item.enrolledCount' },
             view: ['list', 'edit']
         },
