@@ -1,5 +1,6 @@
 
 const mongoPool = require('./utils/mongoPool');
+const RandomSeed = require('./utils/RandomSeed');
 
 (async function () {
     try {
@@ -15,15 +16,17 @@ const mongoPool = require('./utils/mongoPool');
             collection.createIndex({ 'course.courseId': 1, year: 1 }, { unique: true });
         });
 
+        let seed = new RandomSeed(8899);
+
         let departments = require('./data/departments.data');
         let courses = require('./data/courses.data');
-        let students = require('./data/students.data');
+        let students = require('./data/students.data').genRecord(seed);
 
         appendCourseToDepartments(departments, courses);
 
         await insert('departments', departments);
         await insert('students', students);
-        await insert('offers', require('./data/offers.data')(departments, courses, students));
+        await insert('offers', require('./data/offers.data').genRecord(seed, departments, courses, students));
 
         console.log('All Completed');
 

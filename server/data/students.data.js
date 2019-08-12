@@ -6,21 +6,23 @@ const stuNames = [
     "Chan Tai Man"
 ];
 
-const students = [];
+exports.genRecord = function(seed){
 
-for (let i = 1; i <= stuNames.length; i++) {
-    let stuName = stuNames[i - 1];
-    let num = (i + '').padStart(3, '0');
-    let year = Math.floor(Math.random() * 10) + 1988;
-    let month = Math.floor(Math.random() * 12) + 1;
-    month = (i + '').padStart(2, '0');
-    let day = Math.floor(Math.random() * 28) + 1;
-    day = (i + '').padStart(2, '0');
-    students.push({
-        _id: `151${month}${num}`,
-        stuName,
-        dOB: new Date(`${year}-${month}-${day}`)
-    });
+    const students = [];
+
+    for (let i = 1; i <= stuNames.length; i++) {
+        let stuName = stuNames[i - 1];
+        let num = (i + '').padStart(3, '0');
+        let year = Math.floor(seed.random() * 10) + 1988;
+        let month = Math.floor(seed.random() * 12) + 1;
+        month = (month + '').padStart(2, '0');
+        let day = Math.floor(seed.random() * 28) + 1;
+        day = (day + '').padStart(2, '0');
+        students.push({
+            _id: `151${month}${num}`,
+            stuName,
+            dOB: new Date(`${year}-${month}-${day}`)
+        });
+    }
+    return students;
 }
-
-module.exports = students;

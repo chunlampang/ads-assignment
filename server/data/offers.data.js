@@ -1,11 +1,14 @@
-module.exports = function (departments, courses, students) {
+exports.genRecord = function (seed, departments, courses, students) {
+    function getRandomItem(array) {
+        return array[parseInt(seed.random() * array.length)];
+    }
 
     const classSize = [20, 30, 40];
 
     const offers = [];
     for (let year = 2010; year <= 2018; year++) {
         for (let course of courses) {
-            if (Math.random() < 0.05)// 5% skip course'
+            if (seed.random() < 0.05)// 5% skip course'
                 continue;
 
             let offer = {
@@ -19,14 +22,14 @@ module.exports = function (departments, courses, students) {
             for (let student of students) {
                 if (offer.enrolled.length >= offer.classSize)
                     break;
-                if (Math.random() < 0.7)
+                if (seed.random() < 0.7)
                     continue;
-                if (offer.enrolled.length > (offer.classSize * 0.6) && Math.random() < 0.1)
+                if (offer.enrolled.length > (offer.classSize * 0.6) && seed.random() < 0.1)
                     break;
 
                 offer.enrolled.push({
                     student: student._id,
-                    enrolDate: new Date(`${year}-05-${parseInt(Math.random() * 29) + 1}`)
+                    enrolDate: new Date(`${year}-05-${parseInt(seed.random() * 29) + 1}`)
                 });
             }
             offer.enrolledCount = offer.enrolled.length;
@@ -36,8 +39,4 @@ module.exports = function (departments, courses, students) {
 
     }
     return offers;
-}
-
-function getRandomItem(array) {
-    return array[parseInt(Math.random() * array.length)];
 }
