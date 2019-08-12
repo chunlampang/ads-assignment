@@ -354,6 +354,7 @@ export default {
       }
     },
     showDeleteDialog(item) {
+      this.alert.show = false;
       this.deleteDialog.visible = true;
       this.deleteDialog.item = item;
     },
@@ -374,9 +375,9 @@ export default {
       }
     },
     showError(msg) {
-      this.alert.show = true;
       this.alert.type = "error";
       this.alert.msg = msg;
+      this.alert.show = true;
     }
   }
 };

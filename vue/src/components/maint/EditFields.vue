@@ -160,10 +160,6 @@ export default {
     const data = {
       loading: true,
       rulesCache: {},
-      deleteDialog: {
-        visible: false,
-        fieldName: null
-      },
       activeFieldsetPanels,
       editFields,
       calOrder
@@ -234,6 +230,7 @@ export default {
         } else {
           this.fieldsetAutoInput.items = [];
 
+          //to be improve
           for (let item of result.data.courses) {
             this.fieldsetAutoInput.items.push(item.course);
           }

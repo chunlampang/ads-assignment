@@ -288,6 +288,22 @@ module.exports = class Controller {
             const collection = db.collection(this.entity.collection);
             let _id = this.getId(req);
 
+            if (this.entity.references) {
+                for (let refName in this.entity.references) {
+                    let ref = this.entity.references[refName];
+                    let refEntity = entities[ref.entity];
+                    let opt = {};
+                    if (this.entity.fields._id)
+                        opt[ref.field] = _id;
+                    else
+                        opt[ref.field] = ObjectId(_id);
+                    let count = await db.collection(refEntity.collection).find(opt).count();
+                    if (count > 0) {
+                        throw new Error(`Item has ${ref.label} record in ${count} ${count > 1 ? refEntity.plural : refEntity.singular}`);
+                    }
+                }
+            }
+
             let { result } = await collection.deleteOne({ _id });
 
             if (result.n > 0) {
