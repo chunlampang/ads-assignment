@@ -19,14 +19,11 @@ const RandomSeed = require('./utils/RandomSeed');
         let seed = new RandomSeed(8899);
 
         let departments = require('./data/departments.data');
-        let courses = require('./data/courses.data');
         let students = require('./data/students.data').genRecord(seed);
-
-        appendCourseToDepartments(departments, courses);
 
         await insert('departments', departments);
         await insert('students', students);
-        await insert('offers', require('./data/offers.data').genRecord(seed, departments, courses, students));
+        await insert('offers', require('./data/offers.data').genRecord(seed, departments, students));
 
         console.log('All Completed');
 
@@ -54,17 +51,4 @@ const RandomSeed = require('./utils/RandomSeed');
         process.exit();
     }
 
-    function appendCourseToDepartments(departments, courses) {
-        let courseIndex = 0;
-        for (let department of departments) {
-            department.courses = [];
-
-            for (let i = 0; i < 5; i++) {
-                if (!courses[courseIndex])
-                    break;
-
-                department.courses.push({ course: courses[courseIndex++] });
-            }
-        }
-    }
 })();
