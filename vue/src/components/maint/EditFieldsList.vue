@@ -133,7 +133,6 @@ export default {
   props: {
     field: Object,
     value: Array,
-    rules: Array,
     readonly: Boolean
   },
   inject: ["configs"],

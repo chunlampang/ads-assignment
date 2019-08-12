@@ -56,6 +56,42 @@ module.exports = class Controller {
                         this.parseData(field.fields, data[fieldName], insert);
                         break;
                     case 'list':
+                        if (field.rules) {
+                            for (let rule of field.rules) {
+                                if (typeof rule === "object") {
+                                    switch (Object.keys(rule)[0]) {
+                                        case "max":
+                                            let max;
+                                            if (Number.isInteger(rule.max)) {
+                                                max = rule.max;
+                                            } else {
+                                                let fc = function (item) {
+                                                    return eval(rule.max);
+                                                };
+                                                max = fc(data);
+                                            }
+                                            if (data[fieldName].length > max) {
+                                                throw new Error(`${field.label} should not more than ${max} items.`);
+                                            }
+                                            break;
+                                        case "min":
+                                            let min;
+                                            if (Number.isInteger(rule.min)) {
+                                                min = rule.min;
+                                            } else {
+                                                let fc = function (item) {
+                                                    return eval(rule.min);
+                                                };
+                                                min = fc(data);
+                                            }
+                                            if (data[fieldName].length < min) {
+                                                throw new Error(`${field.label} should not less than ${max} items.`);
+                                            }
+                                            break;
+                                    }
+                                }
+                            }
+                        }
                         for (let item of data[fieldName]) {
                             this.parseData(field.fields, item, insert);
                         }

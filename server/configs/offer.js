@@ -56,6 +56,7 @@ module.exports = {
             label: 'Enrolled',
             view: ['edit'],
             indexs: [['student']],
+            rules: [{ max: 'item.classSize' }],
             fields: {
                 student: {
                     type: 'entity',
