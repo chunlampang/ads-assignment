@@ -285,7 +285,7 @@ module.exports = class Controller {
             let { result } = await collection.insertOne(data);
             if (!data._id)
                 data._id = result.insertedId;
-            console.log(`${data._id} is inserted`);
+            console.log(`Item is inserted`);
             out = { ok: !!result.n, data };
             res.status(201);
         } catch (err) {
@@ -307,7 +307,7 @@ module.exports = class Controller {
             let _id = this.getId(req);
 
             let { result } = await collection.updateOne({ _id }, { $set: data });
-            console.log(`${_id} is updated`);
+            console.log(`Item is updated`);
 
             out = { ok: !!result.nModified, data };
         } catch (err) {
@@ -335,7 +335,7 @@ module.exports = class Controller {
                         opt[ref.field] = ObjectId(_id);
                     let count = await db.collection(refEntity.collection).find(opt).count();
                     if (count > 0) {
-                        throw new Error(`${_id} has ${ref.label} record in ${count} ${count > 1 ? refEntity.plural : refEntity.singular}`);
+                        throw new Error(`Item has ${ref.label} record in ${count} ${count > 1 ? refEntity.plural : refEntity.singular}`);
                     }
                 }
             }
@@ -343,7 +343,7 @@ module.exports = class Controller {
             let { result } = await collection.deleteOne({ _id });
 
             if (result.n > 0) {
-                console.log(`${_id} is deleted`);
+                console.log(`Item is deleted`);
                 out = { ok: true };
             } else
                 res.status(404);
