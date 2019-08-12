@@ -39,6 +39,7 @@
             :items="options[field.entity]"
             :append-icon="readonly(field)?'mdi-pencil-off':null"
             :clearable="!readonly(field)"
+            :multiple="id==='new' && field.bulk"
           />
           <template v-else-if="field.type === 'fieldset'">
             <v-expansion-panels v-model="activeFieldsetPanels[fieldName]" class="mb-4 mt-2">

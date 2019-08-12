@@ -210,6 +210,14 @@ export default {
       }
     }
 
+    let bulkField = null;
+    for (let fieldName in fields) {
+      let field = fields[fieldName];
+      if (field.bulk) {
+        bulkField = fieldName;
+        break;
+      }
+    }
     return {
       fields,
       headers,
@@ -222,7 +230,8 @@ export default {
       deleteDialog: {
         visible: false,
         items: []
-      }
+      },
+      bulkField
     };
   },
   computed: {
@@ -256,8 +265,7 @@ export default {
       this.editDialog.item = this.$utils.cloneVarDeep(item);
       this.editDialog.visible = true;
     },
-    submitItem() {
-      this.editDialogAlert.show = false;
+    validateItem(item = this.editDialog.item) {
       for (let index of this.field.indexs) {
         for (let i = 0; i < this.value.length; i++) {
           if (i === this.editDialog.index) continue;
@@ -267,16 +275,13 @@ export default {
             if (this.fields[fieldName].type === "fieldset") {
               let key = this.configs.fieldsets[this.fields[fieldName].fieldset]
                 .desc.key;
-              if (
-                this.value[i][fieldName][key] ==
-                this.editDialog.item[fieldName][key]
-              ) {
+              if (this.value[i][fieldName][key] == item[fieldName][key]) {
                 if (!input) input = [];
                 input.push(this.value[i][fieldName][key]);
                 repeated++;
               }
             } else {
-              if (this.value[i][fieldName] == this.editDialog.item[fieldName]) {
+              if (this.value[i][fieldName] == item[fieldName]) {
                 if (!input) input = [];
                 input.push(this.value[i][fieldName]);
                 repeated++;
@@ -287,22 +292,47 @@ export default {
             this.editDialogAlert.type = "error";
             this.editDialogAlert.msg = input.join(" + ") + " is already exist.";
             this.editDialogAlert.show = true;
-            return;
+            return false;
           }
         }
       }
-      if (this.editDialog.index === -1) {
-        this.value.push(this.editDialog.item);
+      return true;
+    },
+    submitItem() {
+      this.editDialogAlert.show = false;
+
+      if (this.editDialog.index === -1 && this.bulkField) {
+        let newItems = [];
+        for (let bulkVal of this.editDialog.item[this.bulkField]) {
+          let newItem = {};
+          Object.assign(newItem, this.editDialog.item);
+          newItem[this.bulkField] = bulkVal;
+          if (!this.validateItem(newItem)) return;
+          newItems.push(newItem);
+        }
+        for (let newItem of newItems) {
+          this.value.push(newItem);
+        }
       } else {
-        Object.assign(this.value[this.editDialog.index], this.editDialog.item);
+        if (!this.validateItem()) return;
+
+        if (this.editDialog.index === -1) {
+          this.value.push(this.editDialog.item);
+        } else {
+          Object.assign(
+            this.value[this.editDialog.index],
+            this.editDialog.item
+          );
+        }
       }
       this.editDialog.visible = false;
     },
     resetItem() {
       this.editDialogAlert.show = false;
-      this.editDialog.item = this.$utils.cloneVarDeep(
-        this.value[this.editDialog.index]
-      );
+      this.editDialog.item =
+        this.editDialog.index !== -1
+          ? this.$utils.cloneVarDeep(this.value[this.editDialog.index])
+          : {};
     },
     showDeleteDialogSingle(item) {
       this.deleteDialog.items = [item];

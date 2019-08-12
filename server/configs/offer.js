@@ -64,7 +64,8 @@ module.exports = {
                     label: 'Student',
                     rules: ['required'],
                     readonly: 1,
-                    view: ['list', 'edit', 'title']
+                    view: ['list', 'edit', 'title'],
+                    bulk: true
                 },
                 enrolDate: {
                     type: 'datetime',
