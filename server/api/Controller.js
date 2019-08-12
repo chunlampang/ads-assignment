@@ -299,7 +299,7 @@ module.exports = class Controller {
                         opt[ref.field] = ObjectId(_id);
                     let count = await db.collection(refEntity.collection).find(opt).count();
                     if (count > 0) {
-                        throw new Error(`Item has ${ref.label} record in ${count} ${count > 1 ? refEntity.plural : refEntity.singular}`);
+                        throw new Error(`${_id} has ${ref.label} record in ${count} ${count > 1 ? refEntity.plural : refEntity.singular}`);
                     }
                 }
             }
