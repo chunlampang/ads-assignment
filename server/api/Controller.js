@@ -242,7 +242,7 @@ module.exports = class Controller {
                 options.push({ $match });
             }
             //join
-            if (req.query.join) {
+            if (appendJoinOptions && req.query.join) {
                 appendJoinOptions(req.query, options);
             }
 

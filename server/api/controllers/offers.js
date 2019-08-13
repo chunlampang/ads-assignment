@@ -52,16 +52,6 @@ route.get((req, res) => controller.query(req, res, (query, options) => {
             });
         }
     }
-    if (join.includes('offers')) {
-        options.push({
-            $lookup: {
-                from: 'offers',
-                localField: '_id',
-                foreignField: 'enrolled.student',
-                as: '_join.offers'
-            }
-        });
-    }
 }));
 route.post((req, res) => controller.insert(req, res));
 itemRouter.get((req, res) => controller.get(req, res));

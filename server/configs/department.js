@@ -43,8 +43,8 @@ module.exports = {
         label: 'deptName'
     },
     references: {
-        offer: {
-            label: 'Offer',
+        offers: {
+            label: 'Offers',
             entity: 'offer',
             field: 'department',
             view: 'dept'
