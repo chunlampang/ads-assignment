@@ -3,10 +3,10 @@ exports.genRecord = function (seed, departments, students) {
         return array[parseInt(seed.random() * array.length)];
     }
 
-    const classSize = [20, 30, 40];
+    const classSize = [20, 30, 30, 30, 40, 60, 80];
 
     const offers = [];
-    for (let year = 2010; year <= 2018; year++) {
+    for (let year = 2012; year <= 2018; year++) {
 
         for (let department of departments) {
             for (let { course } of department.courses) {
@@ -24,7 +24,10 @@ exports.genRecord = function (seed, departments, students) {
                 for (let student of students) {
                     if (!student.enrolled) {
                         student.enrolled = {};
+                        student.eC = 0;
                     }
+                    if (student.eC >= 30)
+                        continue;
                     if (student.enrolled[year] > 10)
                         continue;
                     if (offer.enrolled.length >= offer.classSize)
@@ -34,9 +37,11 @@ exports.genRecord = function (seed, departments, students) {
                     if (offer.enrolled.length > (offer.classSize * 0.6) && seed.random() < 0.1)
                         break;
 
-                    if (!student.enrolled[year])
+                    if (!student.enrolled[year]) {
                         student.enrolled[year] = 0;
+                    }
                     student.enrolled[year]++;
+                    student.eC++;
 
                     offer.enrolled.push({
                         student: student._id,

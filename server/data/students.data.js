@@ -8,17 +8,17 @@ exports.genRecord = function (seed) {
 
     const students = [];
 
-    for (let i = 0; i < 10000; i++) {
+    for (let i = 0; i < 1000; i++) {
         let stuName = getRandomItem(surnames) + ' ' + getRandomItem(givennames);
 
-        let num = (i + '').padStart(4, '0');
+        let num = (i + '').padStart(3, '0');
         let year = Math.floor(seed.random() * 10) + 1988;
         let month = Math.floor(seed.random() * 12) + 1;
         month = (month + '').padStart(2, '0');
         let day = Math.floor(seed.random() * 28) + 1;
         day = (day + '').padStart(2, '0');
         students.push({
-            _id: `15${month}${num}`,
+            _id: `151${month}${num}`,
             stuName,
             dOB: new Date(`${year}-${month}-${day}`)
         });
