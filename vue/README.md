@@ -1,3 +1,6 @@
+# Development use only
+If you are not going to develop the frontend, please skip the following part.
+
 ## Project setup
 ```
 npm install
