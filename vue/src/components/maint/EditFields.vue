@@ -215,6 +215,7 @@ export default {
   methods: {
     async getFieldsetSrcOption() {
       this.fieldsetAutoInput.loading = true;
+      this.fieldsetAutoInput.items = [];
       let { entity } = this.fieldsetSrc;
 
       let filter = {};
@@ -229,8 +230,6 @@ export default {
         if (result.error) {
           console.error(result.error);
         } else {
-          this.fieldsetAutoInput.items = [];
-
           //to be improve
           for (let item of result.data.courses) {
             this.fieldsetAutoInput.items.push(item.course);
