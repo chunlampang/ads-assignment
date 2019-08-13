@@ -33,7 +33,7 @@ export default {
                 options.data = data;
 
             let response = await axios.request(options);
-            console.log(method, path, response);
+            console.debug(method, path, response);
 
             out = response.data;
         } catch (err) {

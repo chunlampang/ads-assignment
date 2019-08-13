@@ -78,7 +78,7 @@ export default {
       this.optionsRequests = [];
     },
     $route(v) {
-      console.log("route", v);
+      console.debug("route", v);
     }
   },
   async created() {
