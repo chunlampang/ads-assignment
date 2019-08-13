@@ -28,7 +28,7 @@
             </v-combobox>
             <input type="hidden" :value="value[fieldName]" />
           </template>
-          <v-select
+          <v-autocomplete
             v-else-if="field.type === 'entity'"
             v-model="value[fieldName]"
             :label="field.label + (required(field)?' *':'')"
@@ -39,7 +39,10 @@
             :items="options[field.entity]"
             :append-icon="readonly(field)?'mdi-pencil-off':null"
             :clearable="!readonly(field)"
+            :chips="id==='new' && field.bulk"
+            :deletable-chips="id==='new' && field.bulk"
             :multiple="id==='new' && field.bulk"
+            :return-object="false"
           />
           <template v-else-if="field.type === 'fieldset'">
             <v-expansion-panels v-model="activeFieldsetPanels[fieldName]" class="mb-4 mt-2">
