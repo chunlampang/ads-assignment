@@ -101,8 +101,7 @@
           :items="autoInput[fieldName].items"
           item-value="value"
           item-text="value"
-          :search-input="autoInput[fieldName].input"
-          @update:search-input="autoInput[fieldName].input = $event"
+          :search-input.sync="autoInput[fieldName].input"
           @keyup.enter="search"
           no-filter
           dense
@@ -218,6 +217,7 @@ export default {
   },
   methods: {
     sameAsFrom(fieldName) {
+      if (!this.value[fieldName]) return;
       this.value[fieldName].to = this.value[fieldName].from || null;
     },
     resetFilter() {
