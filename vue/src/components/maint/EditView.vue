@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card v-if="item">
-      <v-form ref="form" v-model="valid" @submit.prevent="submit">
+      <v-form ref="form" v-model="valid" @submit.prevent="submit" autocomplete="off">
         <template v-if="entity.references && id !== 'new'">
           <v-tabs>
             <v-tab :href="'#tabmain'">
