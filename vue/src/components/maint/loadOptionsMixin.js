@@ -18,8 +18,17 @@ export default {
             await Promise.all(this.optionsRequests);
         },
         async loadOptions(entityName) {
+            let sort;
+            const entity = this.entities[entityName];
+
+            if (entity.desc && entity.desc.key) {
+                sort = entity.desc.key;
+            } else {
+                sort = '_id'
+            }
+
             const result = await this.$api.query(
-                "/" + this.entities[entityName].collection
+                "/" + entity.collection, { sort }
             );
             this.options[entityName] = result.data;
         },
