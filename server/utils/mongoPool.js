@@ -13,6 +13,7 @@ class MongoPool {
         console.log(`Connecting to ${this.config.url}`);
         this.mongoClient = await MongoClient.connect(this.config.url, {
             useNewUrlParser: true,
+            useUnifiedTopology: true,
             poolSize: this.config.poolSize
         });
         this.db = this.mongoClient.db(this.config.name);
