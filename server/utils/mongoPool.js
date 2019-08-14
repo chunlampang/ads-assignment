@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 
-const config = require.main.require('./config');
+const configs = require.main.require('./configs');
 
 class MongoPool {
     constructor(config) {
@@ -26,4 +26,4 @@ class MongoPool {
     }
 }
 
-module.exports = new MongoPool(config.db);
+module.exports = new MongoPool(configs.db);

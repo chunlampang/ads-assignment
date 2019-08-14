@@ -1,6 +1,6 @@
 const express = require('express');
 const history = require('connect-history-api-fallback');
-const config = require('./config');
+const configs = require('./configs');
 
 const app = express();
 //api
@@ -13,7 +13,7 @@ app.use(history());
 app.use(staticFileMiddleware);
 
 //start server
-let port = config.server.port;
+let port = configs.server.port;
 app.listen(port, '0.0.0.0', () => {
   console.log('Server start listening on http://localhost' + (port == 80 ? '' : ':' + port));
 }).on('error', function (err) {
