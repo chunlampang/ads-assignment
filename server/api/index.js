@@ -20,6 +20,13 @@ api.use((req, res, next) => {
   next();
 });
 
+const MaintController = require('./MaintController');
+const { entities } = require.main.require('./configs');
+for (let entityName in entities) {
+  const controller = new MaintController(entities[entityName]);
+  api.use(controller.createRouter());
+}
+
 require("fs").readdirSync(__dirname + '/controllers').forEach((file) => {
   api.use(require("./controllers/" + file));
 });

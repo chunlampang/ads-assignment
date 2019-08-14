@@ -1,3 +1,4 @@
+const express = require('express');
 const mongoPool = require.main.require('./utils/mongoPool');
 const queryHelper = require.main.require('./utils/queryHelper');
 const { ObjectId } = require('mongodb');
@@ -6,6 +7,46 @@ const { entities, fieldsets } = require.main.require('./configs');
 module.exports = class Controller {
     constructor(entity) {
         this.entity = entity;
+        this.entityFields = {};//join one
+        this.entitiesFields = {};//join many
+        this.findEntityFields(this.entity.fields);
+    }
+
+    createRouter(){
+        const router = express.Router();
+        const route = router.route(`/${this.entity.collection}`);
+        const itemRouter = router.route(`/${this.entity.collection}/:id`);
+        const optionsRouter = router.route(`/${this.entity.collection}-string-options`);
+        
+        route.get((req, res) => this.query(req, res));
+        route.post((req, res) => this.insert(req, res));
+        itemRouter.get((req, res) => this.get(req, res));
+        itemRouter.put((req, res) => this.update(req, res));
+        itemRouter.delete((req, res) => this.delete(req, res));
+        optionsRouter.get((req, res) => this.queryStringOptions(req, res));
+
+        return router;
+    }
+
+    findEntityFields(fields, namespace, inList) {
+        for (let fieldName in fields) {
+            let field = fields[fieldName];
+            if (namespace)
+                fieldName = namespace + '.' + fieldName;
+            switch (field.type) {
+                case 'fieldset':
+                    this.findEntityFields(field.fields, fieldName);
+                case 'list':
+                    this.findEntityFields(field.fields, fieldName, true);
+                    continue;
+                case 'entity':
+                    if (inList)
+                        this.entitiesFields[fieldName] = field;
+                    else
+                        this.entityFields[fieldName] = field;
+                    break;
+            }
+        }
     }
 
     getId(req) {
@@ -242,8 +283,47 @@ module.exports = class Controller {
                 options.push({ $match });
             }
             //join
-            if (appendJoinOptions && req.query.join) {
-                appendJoinOptions(req.query, options);
+            if (req.query.join) {
+                let join = queryHelper.parseArray('join', req.query.join);
+
+                for (let fieldName of join) {
+                    let field = this.entityFields[fieldName];
+                    let joinList = false;
+                    if (!field) {
+                        field = this.entitiesFields[fieldName];
+                        joinList = true;
+                    }
+                    if (!field)
+                        throw new Error(`Unknown field ${fieldName} in join.`);
+
+                    if (joinList) {
+                        options.push({
+                            $lookup: {
+                                from: entities[field.entity].collection,
+                                localField: fieldName,
+                                foreignField: '_id',
+                                as: '_join.' + fieldName
+                            }
+                        });
+                    } else {
+                        options.push(
+                            {
+                                $lookup: {
+                                    from: entities[field.entity].collection,
+                                    localField: fieldName,
+                                    foreignField: '_id',
+                                    as: '_join.' + fieldName
+                                }
+                            },
+                            {
+                                $unwind: {
+                                    path: '$_join.' + fieldName,
+                                    preserveNullAndEmptyArrays: true
+                                }
+                            }
+                        );
+                    }
+                }
             }
 
             const db = await mongoPool.getDb();
