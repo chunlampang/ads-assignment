@@ -12,12 +12,12 @@ module.exports = class Controller {
         this.findEntityFields(this.entity.fields);
     }
 
-    createRouter(){
+    createRouter() {
         const router = express.Router();
         const route = router.route(`/${this.entity.collection}`);
         const itemRouter = router.route(`/${this.entity.collection}/:id`);
         const optionsRouter = router.route(`/${this.entity.collection}-string-options`);
-        
+
         route.get((req, res) => this.query(req, res));
         route.post((req, res) => this.insert(req, res));
         itemRouter.get((req, res) => this.get(req, res));
@@ -192,7 +192,7 @@ module.exports = class Controller {
         }
     }
 
-    appendMatch($match, filter) {
+    appendFilterOptions($match, filter) {
         for (let fieldName in filter) {
             if (!filter[fieldName])
                 continue;
@@ -236,13 +236,55 @@ module.exports = class Controller {
                     for (let childFieldName in filter[fieldName]) {
                         subFilter[fieldName + '.' + childFieldName] = filter[fieldName][childFieldName];
                     }
-                    this.appendMatch($match, subFilter);
+                    this.appendFilterOptions($match, subFilter);
                 }
                 continue;
             }
             let operation = this.parseQueryField(field, fieldName, filter);
             if (operation)
                 $match[fieldName] = operation;
+        }
+    }
+
+    appendJoinOptions(join, options) {
+        join = queryHelper.parseArray('join', join);
+        for (let fieldName of join) {
+            let field = this.entityFields[fieldName];
+            let joinList = false;
+            if (!field) {
+                field = this.entitiesFields[fieldName];
+                joinList = true;
+            }
+            if (!field)
+                throw new Error(`Unknown field ${fieldName} in join.`);
+
+            if (joinList) {
+                options.push({
+                    $lookup: {
+                        from: entities[field.entity].collection,
+                        localField: fieldName,
+                        foreignField: '_id',
+                        as: '_join.' + fieldName
+                    }
+                });
+            } else {
+                options.push(
+                    {
+                        $lookup: {
+                            from: entities[field.entity].collection,
+                            localField: fieldName,
+                            foreignField: '_id',
+                            as: '_join.' + fieldName
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: '$_join.' + fieldName,
+                            preserveNullAndEmptyArrays: true
+                        }
+                    }
+                );
+            }
         }
     }
 
@@ -254,7 +296,7 @@ module.exports = class Controller {
             let filter = req.query.filter;
             const $match = {};
             if (filter) {
-                this.appendMatch($match, filter);
+                this.appendFilterOptions($match, filter);
                 console.log('$match:', $match);
                 options.push({ $match });
             }
@@ -270,7 +312,7 @@ module.exports = class Controller {
         res.send(out);
     }
 
-    async query(req, res, appendJoinOptions) {
+    async query(req, res) {
         let out;
         try {
             let options = [];
@@ -278,52 +320,13 @@ module.exports = class Controller {
             let filter = req.query.filter;
             if (filter) {
                 const $match = {};
-                this.appendMatch($match, filter);
+                this.appendFilterOptions($match, filter);
                 console.log('$match:', $match);
                 options.push({ $match });
             }
             //join
             if (req.query.join) {
-                let join = queryHelper.parseArray('join', req.query.join);
-
-                for (let fieldName of join) {
-                    let field = this.entityFields[fieldName];
-                    let joinList = false;
-                    if (!field) {
-                        field = this.entitiesFields[fieldName];
-                        joinList = true;
-                    }
-                    if (!field)
-                        throw new Error(`Unknown field ${fieldName} in join.`);
-
-                    if (joinList) {
-                        options.push({
-                            $lookup: {
-                                from: entities[field.entity].collection,
-                                localField: fieldName,
-                                foreignField: '_id',
-                                as: '_join.' + fieldName
-                            }
-                        });
-                    } else {
-                        options.push(
-                            {
-                                $lookup: {
-                                    from: entities[field.entity].collection,
-                                    localField: fieldName,
-                                    foreignField: '_id',
-                                    as: '_join.' + fieldName
-                                }
-                            },
-                            {
-                                $unwind: {
-                                    path: '$_join.' + fieldName,
-                                    preserveNullAndEmptyArrays: true
-                                }
-                            }
-                        );
-                    }
-                }
+                this.appendJoinOptions(req.query.join, options);
             }
 
             const db = await mongoPool.getDb();
