@@ -228,14 +228,32 @@ export default {
       if (id) {
         result = await this.$api.get(
           "/" + this.entities[entity].collection,
-          this.valueRoot[this.fieldsetSrc.itemkey]
+          this.valueRoot[this.fieldsetSrc.itemkey],
+          { fields: this.fieldsetSrc.field }
         );
         if (result.error) {
           console.error(result.error);
         } else {
-          //to be improve
-          for (let item of result.data.courses) {
-            this.fieldsetAutoInput.items.push(item.course);
+          let fields = this.fieldsetSrc.field.split(".");
+
+          let val = result.data;
+          let items = [];
+          let pos = 0;
+          for (pos = 0; pos < fields.length; pos++) {
+            let field = fields[pos];
+            if (Array.isArray(val)) {
+              break;
+            } else {
+              val = val[field];
+            }
+          }
+
+          for (let item of val) {
+            let v = item;
+            for (let i = pos; i < fields.length; i++) {
+              v = v[fields[i]];
+            }
+            this.fieldsetAutoInput.items.push(v);
           }
         }
       }

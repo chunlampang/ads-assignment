@@ -72,8 +72,8 @@ export default {
     async delete(path, id) {
         return this.sendRequest('delete', path + '/' + id);
     },
-    async get(path, id) {
-        return this.sendRequest('get', path + '/' + id);
+    async get(path, id, params) {
+        return this.sendRequest('get', path + '/' + id, params);
     },
     async query(path, params) {
         return this.sendRequest('get', path, params);
