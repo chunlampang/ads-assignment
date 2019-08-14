@@ -5,7 +5,7 @@ module.exports = {
         poolSize: 20
     },
     server: {
-        port: 8082
+        port: 80
     },
     entities: {
         department: require('./department'),
