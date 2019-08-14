@@ -343,10 +343,20 @@ module.exports = class Controller {
     async get(req, res) {
         let out;
         try {
+
+            let { fields } = req.query;
+            const options = {};
+            if (fields) {
+                let projectOptions = {};
+                for (let field of queryHelper.parseArray('fields', fields)) {
+                    projectOptions[field] = true;
+                }
+                options.projection = projectOptions;
+            }
+
             const db = await mongoPool.getDb();
             const collection = db.collection(this.entity.collection);
-
-            let result = await collection.findOne({ _id: this.getId(req) });
+            let result = await collection.findOne({ _id: this.getId(req) }, options);
 
             out = { data: result };
         } catch (err) {
