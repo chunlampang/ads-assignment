@@ -191,7 +191,7 @@ module.exports = [
         ]
     },
     {
-        deptId: 'BS', deptName: 'Bilingual Studies', location: 'Green Zone',
+        deptId: 'BLS', deptName: 'Bilingual Studies', location: 'Green Zone',
         courses: [
             { course: { courseId: 'CS164', title: 'English Phonetics and Phonology', level: 5 } },
             { course: { courseId: 'CS165', title: 'Advanced Putonghua', level: 5 } },
