@@ -12,9 +12,10 @@ module.exports = [
     {
         deptId: 'CS', deptName: 'Computer Science', location: 'Green Zone',
         courses: [
-            { course: { courseId: 'CS101', title: 'Introduction to Data Science', level: 6 } },
-            { course: { courseId: 'CS102', title: 'Introduction to Computer Science', level: 4 } },
-            { course: { courseId: 'CS103', title: 'Introduction to MongoDB', level: 5 } },
+            { course: { courseId: 'CS101', title: 'Introduction to Data Science', level: 4 } },
+            { course: { courseId: 'CS102', title: 'Introduction to Computer Programming', level: 5 } },
+            { course: { courseId: 'CS103', title: 'Advanced Database Systems', level: 5 } },
+            { course: { courseId: 'CS134', title: 'Knowledge Discovery and Data Mining', level: 5 } },
         ]
     },
     {
@@ -56,7 +57,6 @@ module.exports = [
         deptId: 'AP', deptName: 'Applied Physics', location: 'Green Zone',
         courses: [
             { course: { courseId: 'CS133', title: 'Enhanced Calculus and Linear Algebra I', level: 5 } },
-            { course: { courseId: 'CS134', title: 'Introduction to Computer Programming', level: 5 } },
             { course: { courseId: 'CS135', title: 'Chinese Civilization', level: 5 } },
             { course: { courseId: 'CS136', title: 'English for Science', level: 5 } },
             { course: { courseId: 'CS137', title: 'University English', level: 5 } },
