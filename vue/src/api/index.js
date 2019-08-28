@@ -22,7 +22,7 @@ export default {
         let out;
         try {
             const options = {
-                baseURL: 'http://localhost/api',
+                baseURL: process.env.VUE_APP_API_BASE_URL || 'http://localhost/api',
                 paramsSerializer: handleNestedParams,
                 url: path,
                 method
