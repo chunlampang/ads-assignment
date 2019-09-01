@@ -2,7 +2,7 @@
   <v-app v-if="ready">
     <AppToolbar :menu="menu" />
     <v-content>
-      <v-container fluid fill-height>
+      <v-container fluid>
         <v-layout row wrap justify-center>
           <v-flex xs11 sm10 md9 lg8 xl7>
             <v-container>
@@ -13,8 +13,8 @@
           </v-flex>
         </v-layout>
       </v-container>
+      <AppFooter :menu="menu" />
     </v-content>
-    <AppFooter :menu="menu" />
   </v-app>
 </template>
 

@@ -51,7 +51,7 @@ export default {
   },
   data() {
     return {
-      showNav: this.$vuetify.breakpoint.lg
+      showNav: this.$vuetify.breakpoint.lgAndUp
     };
   },
   methods: {
