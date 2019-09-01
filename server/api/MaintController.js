@@ -453,7 +453,7 @@ function handleError(err) {
         case 11000:
             let keys = err.message.match(/dup key: {(.*?) }/)[1].split(',');
             for (let i = 0; i < keys.length; i++) {
-                keys[i] = keys[i].substring(3);
+                keys[i] = keys[i].match(/: (.*)/)[1];
             }
             return { error: keys.join(' + ') + ' is already exist.' };
         case 66:
