@@ -58,8 +58,10 @@
                       @keyup.13="search"
                       no-filter
                       dense
+                      hide-selected
                       hide-no-data
                       :label="field.label"
+                      :return-object="false"
                     >
                       <template v-slot:item="data">
                         <v-list-item-content>
