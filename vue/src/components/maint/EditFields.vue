@@ -26,14 +26,25 @@
             </template>
             <template v-else-if="field.type === 'objects'">
               <v-card>
-                <v-card-title>{{field.label}}</v-card-title>
+                <v-card-title>
+                  <h4 class="title font-weight-regular">{{field.label}}</h4>
+                </v-card-title>
                 <v-card-text>
-                  <v-card v-for="(item, index) in value[fieldName]" :key="index" class="my-1">
-                    <v-card-title>{{index+1}}</v-card-title>
-                    <v-card-text>
-                      <EditFields v-model="value[fieldName][index]" :fields="field.fields" />
-                    </v-card-text>
-                  </v-card>
+                  <v-data-iterator :items="value[fieldName]" :items-per-page="5">
+                    <template v-slot:default="props">
+                      <v-card v-for="(item, index) in props.items" :key="index" flat>
+                        <v-card-title>
+                          <div
+                            class="body-1 primary--text"
+                          >{{props.pagination.pageStart + index + 1 }}</div>
+                          <v-divider class="primary ml-8" />
+                        </v-card-title>
+                        <v-card-text>
+                          <EditFields v-model="props.items[index]" :fields="field.fields" />
+                        </v-card-text>
+                      </v-card>
+                    </template>
+                  </v-data-iterator>
                 </v-card-text>
               </v-card>
             </template>
@@ -87,7 +98,8 @@ export default {
   },
   inject: {
     entities: {},
-    options: { from: "EditFields", default: {} }
+    options: { default: {} },
+    optionsRequests: { default: [] }
   },
   data() {
     return {
@@ -101,6 +113,10 @@ export default {
     Object.defineProperty(provide, "options", {
       enumerable: true,
       get: () => this.options
+    });
+    Object.defineProperty(provide, "optionsRequests", {
+      enumerable: true,
+      get: () => this.optionsRequests
     });
 
     return provide;
@@ -137,18 +153,17 @@ export default {
       return (this.rulesCache[field.label] = rules);
     },
     async initOptions() {
-      const requests = [];
       for (let fieldName in this.fields) {
         const field = this.fields[fieldName];
         if (!field.view.includes("edit")) continue;
         if (field.type === "entity" || field.type === "entities") {
           if (!this.options[field.entity]) {
             this.options[field.entity] = [];
-            requests.push(this.loadOptions(field.entity));
+            this.optionsRequests.push(this.loadOptions(field.entity));
           }
         }
       }
-      await Promise.all(requests);
+      await Promise.all(this.optionsRequests);
     },
     async loadOptions(entityName) {
       const result = await this.$api.query(
