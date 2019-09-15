@@ -9,7 +9,7 @@ export default {
             for (let fieldName in fields) {
                 const field = fields[fieldName];
                 if (!field.view.includes(viewType)) continue;
-                if (field.viewType === "entity" || field.viewType === "entities") {
+                if (field.type === "entity" || field.type === "entities") {
                     if (!this.options[field.entity]) {
                         this.options[field.entity] = [];
                         this.optionsRequests.push(this.loadOptions(field.entity));
